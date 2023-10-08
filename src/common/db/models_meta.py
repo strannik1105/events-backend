@@ -1,4 +1,4 @@
-from common.base_model import BaseModel
+from common.db.base_model import BaseModel
 
 # include models here
 
