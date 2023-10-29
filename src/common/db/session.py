@@ -1,16 +1,13 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 import settings
 
 # PostgresSQL Client
-engine = create_engine(
+engine = create_async_engine(
     f"postgresql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}/{settings.POSTGRES_DB}",
-    pool_pre_ping=True,
-    pool_size=settings.DB_POOL_SIZE,
-    max_overflow=settings.DB_POOL_SIZE_OVERFLOW,
+    echo=True,
 )
-SessionLocal = sessionmaker(
+SessionLocal = async_sessionmaker(
     autocommit=False,
     autoflush=False,
     expire_on_commit=False,
@@ -18,7 +15,7 @@ SessionLocal = sessionmaker(
 )
 
 
-def get_session() -> Session:
+def get_session() -> AsyncSession:
     db = SessionLocal()
     try:
         yield db

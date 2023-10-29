@@ -1,17 +1,16 @@
-from typing import TypeVar, List, Generic, Type
+from typing import List
 from uuid import UUID
 
 from common.db.session import get_session
 from interfaces.common.repository.repository import IRepository
+from models import User
 
-T = TypeVar("T")
 
-
-class AbstractRepository(IRepository, Generic[T]):
-    def __init__(self, t_model: Type[T]):
+class AbstractRepository[T](IRepository):
+    def __init__(self, t_model: type(T)):
         self.__t_model = t_model
 
-    def get(self, *, sid: UUID) -> Type[T]:
+    def get(self, *, sid: UUID) -> T:
         session = get_session()
         obj = (
             session.query(self.__t_model).filter(self.__t_model.sid == str(sid)).first()
