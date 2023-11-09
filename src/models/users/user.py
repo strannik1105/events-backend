@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Enum, String
+from sqlalchemy import Enum, String
 from sqlalchemy.orm import mapped_column
 
 from common.db.base_model import BaseModel
@@ -6,7 +6,7 @@ from common.db.base_model import BaseModel
 from common.enums.enums import Role
 
 
-USER_SCHEMA = "user"
+USER_SCHEMA = "users"
 
 
 class User(BaseModel):

@@ -2,6 +2,6 @@ from common.db.base_model import BaseModel
 
 # include models here
 
-import models
+from models.users.user import User  # noqa
 
 metadata = BaseModel.metadata

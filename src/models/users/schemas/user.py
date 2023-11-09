@@ -1,20 +1,25 @@
+from typing import Optional
+from uuid import UUID
+
 from pydantic import BaseModel
+
+from common.enums.enums import Role
 
 
 class UserBase(BaseModel):
-    name: str
-    email: str
-    role: str
+    name: Optional[str]
+    email: Optional[str]
+    role: Optional[Role]
 
 
 class User(UserBase):
-    pass
+    sid: UUID
 
 
 class UserCreate(UserBase):
     password: str
 
 
-class UserUpdate:
-    old_password: str
-    new_password: str
+class UserUpdate(UserBase):
+    old_password: Optional[str]
+    new_password: Optional[str]
