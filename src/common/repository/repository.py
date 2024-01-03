@@ -12,14 +12,20 @@ class AbstractRepository[T](IRepository):
         self._t_model = t_model
 
     async def get(self, session: AsyncSession, sid: UUID) -> T:
-        obj = await session.execute(select(self._t_model).filter(self._t_model.sid == sid))
+        obj = await session.execute(
+            select(self._t_model).filter(self._t_model.sid == sid)
+        )
         return obj.scalar()
 
-    async def get_all(self, session: AsyncSession, limit: int = 50, offset: int = 0) -> List[T]:
+    async def get_all(
+        self, session: AsyncSession, limit: int = 50, offset: int = 0
+    ) -> List[T]:
         objs = await session.execute(select(self._t_model).limit(limit).offset(offset))
         return list(objs.scalars().all())
 
-    async def create(self, session: AsyncSession, obj: T, *, with_commit: bool = True) -> T:
+    async def create(
+        self, session: AsyncSession, obj: T, *, with_commit: bool = True
+    ) -> T:
         session.add(obj)
         if with_commit:
             await session.commit()
@@ -34,7 +40,7 @@ class AbstractRepository[T](IRepository):
         await session.commit()
         return db_obj
 
-    async def remove(self, session: AsyncSession, db_obj: T):   # noqa
+    async def remove(self, session: AsyncSession, db_obj: T):  # noqa
         await session.delete(db_obj)
         await session.commit()
         return
