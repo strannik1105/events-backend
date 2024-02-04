@@ -1,0 +1,1 @@
+EVENTS_SCHEMA = "events"

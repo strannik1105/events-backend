@@ -8,6 +8,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from common.db.models_meta import metadata
+from settings import get_local_host
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -30,13 +31,13 @@ target_metadata = metadata
 # ... etc.
 
 
-load_dotenv(os.path.join(os.path.abspath(os.getcwd()), ".env"))
+load_dotenv(os.path.join(os.path.abspath(os.getcwd()), ".env.local"))
 
 
 def get_url():
     user = os.getenv("POSTGRES_USER", "postgres")
     password = os.getenv("POSTGRES_PASSWORD", "postgres")
-    host = os.getenv("POSTGRES_HOST", "0.0.0.0")
+    host = os.getenv("POSTGRES_HOST", get_local_host())
     port = os.getenv("POSTGRES_PORT", "5432")
     db = os.getenv("POSTGRES_DB", "db")
     url = f"postgresql://{user}:{password}@{host}:{port}/{db}"

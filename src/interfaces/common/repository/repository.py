@@ -1,13 +1,14 @@
-from abc import ABC
 from typing import TypeVar, Generic, List
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from common.base.singleton import Singleton
+
 T = TypeVar("T")
 
 
-class IRepository(ABC, Generic[T]):
+class IRepository(Generic[T], metaclass=Singleton):
     def get(self, session: AsyncSession, sid: UUID) -> T:
         raise NotImplementedError
 

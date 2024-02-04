@@ -4,10 +4,11 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from common.base.singleton import Singleton
 from interfaces.common.repository.repository import IRepository
 
 
-class AbstractRepository[T](IRepository):
+class AbstractRepository[T](IRepository, metaclass=Singleton):
     def __init__(self, t_model: type(T)):
         self._t_model = t_model
 
