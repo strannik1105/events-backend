@@ -8,3 +8,11 @@ class EventService(metaclass=Singleton):
     @staticmethod
     async def get_all_events(repository, session):
         return await repository.get_all(session)
+
+    @staticmethod
+    async def get_event_by_id():
+        pass
+
+    @staticmethod
+    async def create_event(self):
+        pass
