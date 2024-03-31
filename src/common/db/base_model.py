@@ -17,7 +17,7 @@ class BaseModel:
         default=lambda: uuid.uuid4().hex,
     )
 
-    # Generate table name automatically
-    @declared_attr
-    def __tablename__(cls) -> str:
-        return cls.__name__.lower()
+    # # Generate table name automatically
+    # @declared_attr
+    # def __tablename__(cls) -> str:
+    #     return cls.__name__.lower()
