@@ -14,6 +14,5 @@ class EventPull(BaseModel):
     event_content_sid = mapped_column(
         ForeignKey("events.event_content.sid"), nullable=False
     )
-    event_content = mapped_column(ForeignKey("EventContent"))
 
     user_sid = mapped_column(ForeignKey("users.user.sid"), nullable=False)

@@ -1,5 +1,5 @@
 from sqlalchemy import String, ForeignKey
-from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import mapped_column
 from common.db.base_model import BaseModel
 from models.events.ext import EVENTS_SCHEMA
 
