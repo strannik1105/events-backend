@@ -34,3 +34,10 @@ class EventContentCreateSchema(EventContentBaseSchema):
 
 class EventContentUpdateSchema(EventContentBaseSchema):
     event_sid: Optional[UUID]
+
+
+class EventPullSchema(BaseModel):
+    event_sid: UUID
+    event_content_sid: UUID
+
+    user_sid: UUID
