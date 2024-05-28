@@ -31,7 +31,7 @@ def get_local_host():
 
 
 HOST = os.getenv("HOST", get_local_host())
-PORT: int = int(os.getenv("PORT", 8001))
+PORT: int = int(os.getenv("PORT", 8000))
 
 POSTGRES_DB: str = os.getenv("POSTGRES_DB", "events")
 POSTGRES_USER: str = os.getenv("POSTGRES_USER", "user")
