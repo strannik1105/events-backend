@@ -14,4 +14,3 @@ class EventContent(BaseModel):
     # datetime_end = mapped_column(DateTime, nullable=False)
 
     event_sid = mapped_column(ForeignKey("events.event.sid"), nullable=False)
-    event = relationship("Event")

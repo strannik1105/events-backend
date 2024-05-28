@@ -1,6 +1,6 @@
-from common.base.singleton import Singleton
 from common.repository.repository import AbstractRepository
+from models.events import Event
 
 
-class EventRepository[T](AbstractRepository[T], metaclass=Singleton):
+class EventRepository(AbstractRepository[Event]):
     pass

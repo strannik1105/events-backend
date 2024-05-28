@@ -9,7 +9,9 @@ from repository.events import event as event_repository
 from repository.users import user as user_repository
 from services import events
 from common.db.session import get_pg_session
+from services.crud_service.crud_service import CRUDService
 from services.auth.auth_service import AuthService
+
 
 PGSession = Annotated[AsyncSession, Depends(get_pg_session)]
 
@@ -47,6 +49,13 @@ EventRepository = Annotated[
     event_repository.EventRepository, Depends(get_event_repository)
 ]
 
+crud_service = CRUDService()
+
+
+def get_crud_service():
+    return crud_service
+
+  
 UserRepository = Annotated[
     user_repository.UserRepository, Depends(get_user_repository)
 ]
