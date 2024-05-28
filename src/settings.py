@@ -14,9 +14,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class AuthJwt(BaseModel):
-    private_key_path: Path = BASE_DIR / 'certs' / 'jwt-private.pem'
-    public_key_path: Path = BASE_DIR / 'certs' / 'jwt-public.pem'
+    private_key_path: Path = BASE_DIR / 'src/certs' / 'jwt-private.pem'
+    public_key_path: Path = BASE_DIR / 'src/certs' / 'jwt-public.pem'
     algorithm: str = 'RS256'
+    access_token_expire_minutes: int = 15
 
 
 def get_local_host():
@@ -30,7 +31,7 @@ def get_local_host():
 
 
 HOST = os.getenv("HOST", get_local_host())
-PORT: int = int(os.getenv("PORT", 8000))
+PORT: int = int(os.getenv("PORT", 8001))
 
 POSTGRES_DB: str = os.getenv("POSTGRES_DB", "events")
 POSTGRES_USER: str = os.getenv("POSTGRES_USER", "user")
