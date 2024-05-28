@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, relationship
 from common.db.base_model import BaseModel
 from models.events.ext import EVENTS_SCHEMA
@@ -6,7 +6,7 @@ from models.events.ext import EVENTS_SCHEMA
 
 class EventPull(BaseModel):
     __tablename__ = "event_content"
-    __table_args__ = {"schema": EVENTS_SCHEMA}
+    __table_args__ = {"schema": EVENTS_SCHEMA, "extend_existing": True}
 
     event_sid = mapped_column(ForeignKey("events.event.sid"), nullable=False)
     event = relationship("Event")
@@ -16,5 +16,4 @@ class EventPull(BaseModel):
     )
     event_content = mapped_column(ForeignKey("EventContent"))
 
-    user_sid = mapped_column("users.user.sid", nullable=False)
-    user = relationship("User")
+    user_sid = mapped_column(ForeignKey("users.user.sid"), nullable=False)

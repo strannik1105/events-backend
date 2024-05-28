@@ -8,7 +8,7 @@ from common.base.singleton import Singleton
 from interfaces.common.repository.repository import IRepository
 
 
-class AbstractRepository[T](IRepository, metaclass=Singleton):
+class AbstractRepository[T](IRepository):
     def __init__(self, t_model: type(T)):
         self._t_model = t_model
 
