@@ -25,6 +25,8 @@ class CRUDService[T]:
     @staticmethod
     async def update(db_session: AsyncSession, repository, sid, changes):
         db_obj = await repository.get(db_session, sid)
+        if db_obj is None:
+            raise HTTPNotFoundError
         db_obj = await repository.update(db_session, db_obj, changes.__dict__)
         return db_obj
 
