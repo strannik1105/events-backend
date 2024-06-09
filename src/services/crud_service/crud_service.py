@@ -19,8 +19,12 @@ class CRUDService[T]:
         return user
 
     @staticmethod
-    async def create(db_session: AsyncSession, repository, t_type, create_schema: BaseModel) -> T:
-        return await repository.create(db_session, t_type(**create_schema.model_dump()))
+    async def create(
+        db_session: AsyncSession, repository, t_type, create_schema: BaseModel
+    ) -> T:
+        return await repository.create(
+            db_session, t_type(**create_schema.model_dump())
+        )
 
     @staticmethod
     async def update(db_session: AsyncSession, repository, sid, changes):

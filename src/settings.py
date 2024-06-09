@@ -1,12 +1,15 @@
 import os
-from dotenv import load_dotenv
+from pathlib import Path
 from sys import platform
 
-from pathlib import Path
+from dotenv import load_dotenv
 from pydantic import BaseModel
 
+
 load_dotenv(
-    os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), ".env.local")
+    os.path.join(
+        os.path.abspath(os.path.join(os.getcwd(), os.pardir)), ".env.local"
+    )
 )
 
 
@@ -14,9 +17,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class AuthJwt(BaseModel):
-    private_key_path: Path = BASE_DIR / 'src/certs' / 'jwt-private.pem'
-    public_key_path: Path = BASE_DIR / 'src/certs' / 'jwt-public.pem'
-    algorithm: str = 'RS256'
+    private_key_path: Path = BASE_DIR / "src/certs" / "jwt-private.pem"
+    public_key_path: Path = BASE_DIR / "src/certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
     access_token_expire_minutes: int = 15
 
 

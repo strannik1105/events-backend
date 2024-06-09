@@ -1,5 +1,3 @@
-from datetime import datetime, UTC
-
 from sqlalchemy import DateTime, ForeignKey, func
 from sqlalchemy.orm import mapped_column
 

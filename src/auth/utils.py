@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 import bcrypt
 import jwt
@@ -7,11 +7,11 @@ import settings
 
 
 def encode_jwt(
-        payload: dict,
-        private_key: str = settings.auth_jwt.private_key_path.read_text(),
-        algorithm: str = settings.auth_jwt.algorithm,
-        expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
-        expire_timedelta: timedelta | None = None,
+    payload: dict,
+    private_key: str = settings.auth_jwt.private_key_path.read_text(),
+    algorithm: str = settings.auth_jwt.algorithm,
+    expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
+    expire_timedelta: timedelta | None = None,
 ) -> str:
     to_encode = payload.copy()
     now = datetime.utcnow()

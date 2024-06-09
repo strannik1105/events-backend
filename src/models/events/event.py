@@ -1,5 +1,6 @@
-from sqlalchemy import String, DateTime
+from sqlalchemy import DateTime, String
 from sqlalchemy.orm import mapped_column
+
 from common.db.base_model import BaseModel
 from models.events.ext import EVENTS_SCHEMA
 from models.mixins.mixins import CreatedChangedMixin

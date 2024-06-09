@@ -1,7 +1,9 @@
 import uuid
+
 from sqlalchemy import UUID
-from sqlalchemy.ext.declarative import declarative_base, as_declarative
-from sqlalchemy.orm import declared_attr, mapped_column
+from sqlalchemy.ext.declarative import as_declarative, declarative_base
+from sqlalchemy.orm import mapped_column
+
 
 decl_base = declarative_base()
 

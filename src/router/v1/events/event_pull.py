@@ -1,14 +1,15 @@
-from typing import Optional, Annotated
+from typing import Annotated, Optional
 from uuid import UUID
+
+from fastapi import APIRouter, Depends, Path
 
 from common.repository.repository import AbstractRepository
 from models.events import EventPull
-from fastapi import APIRouter, Path, Depends
-
 from router import deps
 from router.deps import get_crud_service
 from router.v1.events.schemas import EventPullSchema
 from services.crud_service.crud_service import CRUDService
+
 
 router = APIRouter()
 
@@ -20,8 +21,8 @@ UPDATE_SCHEMA = EventPullSchema
 
 @router.get("/", response_model=Optional[list[GET_SCHEMA]])
 async def get_all(
-        db_session: deps.PGSession,
-        service: Annotated[CRUDService, Depends(get_crud_service)],
+    db_session: deps.PGSession,
+    service: Annotated[CRUDService, Depends(get_crud_service)],
 ):
     repository = AbstractRepository[MODEL](MODEL)
     items = await service.get_all(db_session, repository)
@@ -30,9 +31,9 @@ async def get_all(
 
 @router.get("/{sid}", response_model=Optional[GET_SCHEMA])
 async def get_by_sid(
-        db_session: deps.PGSession,
-        service: Annotated[CRUDService, Depends(get_crud_service)],
-        sid: UUID = Path(...)
+    db_session: deps.PGSession,
+    service: Annotated[CRUDService, Depends(get_crud_service)],
+    sid: UUID = Path(...),
 ):
     repository = AbstractRepository[MODEL](MODEL)
     items = await service.get_by_sid(db_session, repository, sid)
@@ -41,9 +42,9 @@ async def get_by_sid(
 
 @router.post("/", response_model=GET_SCHEMA)
 async def create(
-        db_session: deps.PGSession,
-        service: Annotated[CRUDService, Depends(get_crud_service)],
-        create_schema: CREATE_SCHEMA
+    db_session: deps.PGSession,
+    service: Annotated[CRUDService, Depends(get_crud_service)],
+    create_schema: CREATE_SCHEMA,
 ):
     repository = AbstractRepository[MODEL](MODEL)
     item = await service.create(db_session, repository, MODEL, create_schema)
@@ -52,10 +53,10 @@ async def create(
 
 @router.put("/{sid}", response_model=GET_SCHEMA)
 async def update(
-        db_session: deps.PGSession,
-        service: Annotated[CRUDService, Depends(get_crud_service)],
-        update_schema: UPDATE_SCHEMA,
-        sid: UUID = Path(...)
+    db_session: deps.PGSession,
+    service: Annotated[CRUDService, Depends(get_crud_service)],
+    update_schema: UPDATE_SCHEMA,
+    sid: UUID = Path(...),
 ):
     repository = AbstractRepository[MODEL](MODEL)
     item = await service.update(db_session, repository, sid, update_schema)
@@ -64,9 +65,9 @@ async def update(
 
 @router.delete("/{sid}")
 async def delete(
-        db_session: deps.PGSession,
-        service: Annotated[CRUDService, Depends(get_crud_service)],
-        sid: UUID = Path(...)
+    db_session: deps.PGSession,
+    service: Annotated[CRUDService, Depends(get_crud_service)],
+    sid: UUID = Path(...),
 ):
     repository = AbstractRepository[MODEL](MODEL)
     item = await service.delete(db_session, repository, sid)

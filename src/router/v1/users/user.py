@@ -8,6 +8,7 @@ from models.users import User
 from models.users.schemas import user
 from router.deps import PGSession
 
+
 router = APIRouter()
 
 
@@ -19,7 +20,9 @@ async def get_users(db: PGSession):
 
 
 @router.get("/{sid}", response_model=user.User)
-async def get_user(db: PGSession, sid: UUID = Path(description="сид пользователя")):
+async def get_user(
+    db: PGSession, sid: UUID = Path(description="сид пользователя")
+):
     user_repository = AbstractRepository[User](User)
     db_obj = await user_repository.get(db, sid)
     return db_obj
@@ -46,7 +49,9 @@ async def update_user(
 
 
 @router.delete("/{sid}")
-async def delete_user(db: PGSession, sid: UUID = Path(description="сид пользователя")):
+async def delete_user(
+    db: PGSession, sid: UUID = Path(description="сид пользователя")
+):
     user_response = AbstractRepository[User](User)
     db_obj = await user_response.get(db, sid)
     await user_response.remove(db, db_obj)

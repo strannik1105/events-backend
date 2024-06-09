@@ -4,7 +4,6 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.base.singleton import Singleton
 from interfaces.common.repository.repository import IRepository
 
 
@@ -21,7 +20,9 @@ class AbstractRepository[T](IRepository):
     async def get_all(
         self, session: AsyncSession, limit: int = 50, offset: int = 0
     ) -> List[T]:
-        objs = await session.execute(select(self._t_model).limit(limit).offset(offset))
+        objs = await session.execute(
+            select(self._t_model).limit(limit).offset(offset)
+        )
         return list(objs.scalars().all())
 
     async def create(
@@ -35,7 +36,9 @@ class AbstractRepository[T](IRepository):
         await session.refresh(obj)
         return obj
 
-    async def update(self, session: AsyncSession, db_obj: T, changes: dict) -> T:
+    async def update(
+        self, session: AsyncSession, db_obj: T, changes: dict
+    ) -> T:
         for k in changes:
             setattr(db_obj, k, changes[k])
         await session.commit()

@@ -12,7 +12,7 @@ app-run:
 # --================ Code Style ================--
 .PHONY: style-run
 style-run:
-	black . && isort . && ruff . && mypy . && pip check
+	black . && isort . && ruff check . && mypy . && pip check
 
 
 # --================ Docker ================--
