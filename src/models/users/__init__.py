@@ -3,4 +3,4 @@ __all__ = [
 ]
 
 
-from models.users.user import User
+from .user import User

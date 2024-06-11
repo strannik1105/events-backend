@@ -1,8 +1,8 @@
 from typing import Annotated
 
+from auth import utils as auth_utils
 from fastapi import APIRouter, Depends, Form, Path
 
-from auth import utils as auth_utils
 from router.deps import PGSession, get_auth_service
 from router.v1.auth.schemas import TokenInfo
 from services.auth.auth_service import AuthService

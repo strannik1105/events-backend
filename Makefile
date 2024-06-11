@@ -6,7 +6,7 @@ DC=docker compose
 # --================ App ================--
 .PHONY: app-run
 app-run:
-	$(PYTHON) ./src/main.py
+	$(PYTHON) ./main.py
 
 
 # --================ Code Style ================--
