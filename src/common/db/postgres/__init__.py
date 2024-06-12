@@ -1,12 +1,10 @@
 __all__ = [
-    "PostgresBaseModel",
-    "PostgresMetadata",
-    "PostgresSession",
     "PostgresDBSchemas",
+    "PostgresBaseModel",
+    "PostgresSession",
 ]
 
 
-from .base import PostgresBaseModel
-from .meta import PostgresMetadata
 from .schemas import PostgresDBSchemas
+from .base import PostgresBaseModel
 from .session import PostgresSession
