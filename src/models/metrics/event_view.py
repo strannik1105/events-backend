@@ -3,8 +3,8 @@ from uuid import UUID
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.db import PostgresBaseModel, PostgresDBSchemas
-from models.mixins import CreatedAtMixin
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import CreatedAtMixin, Sid
 
 
 EVENTS_SCHEMA = PostgresDBSchemas.EVENTS
@@ -12,7 +12,7 @@ USERS_SCHEMA = PostgresDBSchemas.USERS
 METRICS_SCHEMA = PostgresDBSchemas.METRICS
 
 
-class EventView(PostgresBaseModel, CreatedAtMixin):
+class EventView(PostgresBaseModel, Sid, CreatedAtMixin):
     __tablename__ = "event_view"
     __table_args__ = {
         "schema": METRICS_SCHEMA,

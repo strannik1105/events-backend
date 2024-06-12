@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import Field
 
-from common.schemas import CoreModel, CreatedAtMixin
+from common.schemas import CoreModel, CreatedAtMixin, Sid
 
 
 class EventViewBase(CoreModel):
@@ -10,5 +10,5 @@ class EventViewBase(CoreModel):
     event_sid: UUID = Field(..., description="Event SID")
 
 
-class EventView(EventViewBase, CreatedAtMixin):
-    sid: UUID = Field(..., description="Event view SID")
+class EventView(EventViewBase, Sid, CreatedAtMixin):
+    pass

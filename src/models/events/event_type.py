@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.db import PostgresBaseModel, PostgresDBSchemas
-from models.mixins import DateTimeMixin
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import DateTimeMixin, Label
 
 
 EVENTS_SCHEMA = PostgresDBSchemas.EVENTS
 
 
-class EventType(PostgresBaseModel, DateTimeMixin):
+class EventType(PostgresBaseModel, Label, DateTimeMixin):
     __tablename__ = "event_type"
     __table_args__ = {
         "schema": EVENTS_SCHEMA,

@@ -1,11 +1,9 @@
-from uuid import UUID
-
 from pydantic import Field, field_validator
 
-from common.schemas import CoreModel, DateTimeMixin
+from common.schemas import CoreModel, DateTimeMixin, Label
 
 
-class EventFileTypeBase(CoreModel):
+class EventFileTypeBase(CoreModel, Label):
     name: str = Field(..., description="Event file type name")
     description: str = Field(..., description="Event file type description")
 
@@ -19,4 +17,4 @@ class EventFileTypeBase(CoreModel):
 
 
 class EventFileType(EventFileTypeBase, DateTimeMixin):
-    sid: UUID = Field(..., description="Event file type SID")
+    pass

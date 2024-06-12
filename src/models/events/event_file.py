@@ -1,16 +1,16 @@
 from uuid import UUID
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import SMALLINT, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.db import PostgresBaseModel, PostgresDBSchemas
-from models.mixins import DateTimeMixin
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import DateTimeMixin, Sid
 
 
 EVENTS_SCHEMA = PostgresDBSchemas.EVENTS
 
 
-class EventFile(PostgresBaseModel, DateTimeMixin):
+class EventFile(PostgresBaseModel, Sid, DateTimeMixin):
     __tablename__ = "event_file"
     __table_args__ = {
         "schema": EVENTS_SCHEMA,
@@ -29,8 +29,11 @@ class EventFile(PostgresBaseModel, DateTimeMixin):
         index=True,
         comment="Event content SID",
     )
-    type_sid: Mapped[UUID] = mapped_column(
-        ForeignKey(f"{EVENTS_SCHEMA}.event_file_type.sid", ondelete="CASCADE"),
+    type_label: Mapped[int] = mapped_column(
+        SMALLINT,
+        ForeignKey(
+            f"{EVENTS_SCHEMA}.event_file_type.label", ondelete="CASCADE"
+        ),
         index=True,
-        comment="Event file type SID",
+        comment="Event file type label",
     )

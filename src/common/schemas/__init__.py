@@ -1,5 +1,7 @@
 __all__ = [
     "CoreModel",
+    "Sid",
+    "Label",
     "CreatedAtMixin",
     "UpdatedAtMixin",
     "DateTimeMixin",
@@ -10,6 +12,6 @@ __all__ = [
 
 
 from .core import CoreModel
-from .mixins import CreatedAtMixin, UpdatedAtMixin, DateTimeMixin
+from .mixins import Sid, Label, CreatedAtMixin, UpdatedAtMixin, DateTimeMixin
 from .email import Email
 from .password import Password, CreatePassword

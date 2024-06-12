@@ -1,12 +1,9 @@
-from uuid import UUID
-
 from pydantic import Field, field_validator
 
-from common.schemas import CoreModel, DateTimeMixin
+from common.schemas import CoreModel, DateTimeMixin, Label
 
 
-class PermissionBase(CoreModel):
-    label: int = Field(..., description="Permission label")
+class PermissionBase(CoreModel, Label):
     name: str = Field(..., description="Permission name")
     description: str = Field(..., description="Permission description")
 
@@ -24,4 +21,4 @@ class PermissionCreate(PermissionBase):
 
 
 class Permission(PermissionBase, DateTimeMixin):
-    sid: UUID = Field(..., description="Permission SID")
+    pass

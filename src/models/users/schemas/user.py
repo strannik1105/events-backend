@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import Field, field_validator
 
-from common.schemas import CoreModel, CreatePassword, DateTimeMixin, Email
+from common.schemas import CoreModel, CreatePassword, DateTimeMixin, Email, Sid
 
 
 class UserBase(CoreModel):
@@ -34,10 +34,9 @@ class UserUpdate(UserBase):
     pass
 
 
-class User(UserBase, Email, DateTimeMixin):
-    sid: UUID = Field(..., description="User SID")
+class User(UserBase, Sid, Email, DateTimeMixin):
     telegram_id: int | None = Field(None, description="User telegram id")
     is_active: bool = Field(True, description="User active status")
     is_verified: bool = Field(True, description="User verified status")
     last_login_at: datetime = Field(..., description="User last login at")
-    role_sid: UUID = Field(..., description="Role SID")
+    role_label: UUID = Field(..., description="Role label")

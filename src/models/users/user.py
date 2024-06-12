@@ -1,18 +1,17 @@
 from datetime import datetime
-from uuid import UUID
 
-from sqlalchemy import BIGINT, DateTime, ForeignKey
+from sqlalchemy import BIGINT, SMALLINT, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.db import PostgresBaseModel, PostgresDBSchemas
-from models.mixins import DateTimeMixin
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import DateTimeMixin, Sid
 
 
 USERS_SCHEMA = PostgresDBSchemas.USERS
 SECURITY_SCHEMA = PostgresDBSchemas.SECURITY
 
 
-class User(PostgresBaseModel, DateTimeMixin):
+class User(PostgresBaseModel, Sid, DateTimeMixin):
     __tablename__ = "user"
     __table_args__ = {
         "schema": USERS_SCHEMA,
@@ -36,10 +35,11 @@ class User(PostgresBaseModel, DateTimeMixin):
         default=False, server_default="false", comment="User verified status"
     )
     last_login_at: Mapped[datetime | None] = mapped_column(
-        DateTime(), omment="User last login at"
+        DateTime(), comment="User last login at"
     )
-    role_sid: Mapped[UUID] = mapped_column(
-        ForeignKey(f"{SECURITY_SCHEMA}.role.sid", ondelete="CASCADE"),
+    role_label: Mapped[int] = mapped_column(
+        SMALLINT,
+        ForeignKey(f"{SECURITY_SCHEMA}.role.label", ondelete="CASCADE"),
         index=True,
-        comment="Role SID",
+        comment="Role label",
     )

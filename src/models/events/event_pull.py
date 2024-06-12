@@ -1,10 +1,10 @@
 from uuid import UUID
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import SMALLINT, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.db import PostgresBaseModel, PostgresDBSchemas
-from models.mixins import DateTimeMixin
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import DateTimeMixin, Sid
 
 
 EVENTS_SCHEMA = PostgresDBSchemas.EVENTS
@@ -12,7 +12,7 @@ USERS_SCHEMA = PostgresDBSchemas.USERS
 SECURITY_SCHEMA = PostgresDBSchemas.SECURITY
 
 
-class EventPull(PostgresBaseModel, DateTimeMixin):
+class EventPull(PostgresBaseModel, Sid, DateTimeMixin):
     __tablename__ = "event_pull"
     __table_args__ = {
         "schema": EVENTS_SCHEMA,
@@ -34,8 +34,9 @@ class EventPull(PostgresBaseModel, DateTimeMixin):
         index=True,
         comment="Event content SID",
     )
-    event_role_sid: Mapped[UUID] = mapped_column(
-        ForeignKey(f"{SECURITY_SCHEMA}.role.sid", ondelete="CASCADE"),
+    event_role_label: Mapped[int] = mapped_column(
+        SMALLINT,
+        ForeignKey(f"{SECURITY_SCHEMA}.role.label", ondelete="CASCADE"),
         index=True,
-        comment="Event role SID",
+        comment="Event role label",
     )

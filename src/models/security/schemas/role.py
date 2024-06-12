@@ -1,12 +1,9 @@
-from uuid import UUID
-
 from pydantic import Field, field_validator
 
-from common.schemas import CoreModel, DateTimeMixin
+from common.schemas import CoreModel, DateTimeMixin, Label
 
 
-class RoleBase(CoreModel):
-    label: int = Field(..., description="Role label")
+class RoleBase(CoreModel, Label):
     name: str = Field(..., description="Role name")
     description: str = Field(..., description="Role description")
 
@@ -24,4 +21,4 @@ class RoleCreate(RoleBase):
 
 
 class Role(RoleBase, DateTimeMixin):
-    sid: UUID = Field(..., description="Role SID")
+    pass

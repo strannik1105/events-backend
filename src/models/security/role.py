@@ -1,19 +1,18 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.db import PostgresBaseModel, PostgresDBSchemas
-from models.mixins import DateTimeMixin
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import DateTimeMixin, Label
 
 
 SECURITY_SCHEMA = PostgresDBSchemas.SECURITY
 
 
-class Role(PostgresBaseModel, DateTimeMixin):
+class Role(PostgresBaseModel, Label, DateTimeMixin):
     __tablename__ = "role"
     __table_args__ = {
         "schema": SECURITY_SCHEMA,
         "comment": "Table with all roles",
     }
 
-    label: Mapped[int] = mapped_column(unique=True, comment="Role label")
     name: Mapped[str] = mapped_column(comment="Role name")
     description: Mapped[str] = mapped_column(comment="Role description")

@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import Field
 
-from common.schemas import CoreModel, DateTimeMixin
+from common.schemas import CoreModel, DateTimeMixin, Sid
 
 
 class SubscribeBase(CoreModel):
@@ -11,5 +11,5 @@ class SubscribeBase(CoreModel):
     is_notify: bool = Field(True, description="Notify status")
 
 
-class Subscribe(SubscribeBase, DateTimeMixin):
-    sid: UUID = Field(..., description="Subscribe SID")
+class Subscribe(SubscribeBase, Sid, DateTimeMixin):
+    pass

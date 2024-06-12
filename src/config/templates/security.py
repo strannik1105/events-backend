@@ -10,29 +10,6 @@ E = enums.PermissionAccessAction.EXPORT
 CRUD = C + R + U + D
 CRUDE = CRUD + E
 
-ALL_PERMISSIONS = [
-    schemas.PermissionTemplate(
-        permission_label=enums.PermissionLabel.USER,
-        access_actions=CRUD,
-    ),
-    schemas.PermissionTemplate(
-        permission_label=enums.PermissionLabel.EVENT,
-        access_actions=CRUD,
-    ),
-    schemas.PermissionTemplate(
-        permission_label=enums.PermissionLabel.EVENT_CONTENT,
-        access_actions=CRUD,
-    ),
-    schemas.PermissionTemplate(
-        permission_label=enums.PermissionLabel.EVENT_FILE,
-        access_actions=CRUDE,
-    ),
-    schemas.PermissionTemplate(
-        permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
-        access_actions=CRUDE,
-    ),
-]
-
 
 class SecurityTemplate:
     @staticmethod
@@ -101,101 +78,141 @@ class SecurityTemplate:
         ]
 
     @staticmethod
-    def get_roles_x_permissions() -> list[schemas.RoleXPermissionTemplate]:
+    def get_roles_x_permissions() -> list[schemas.RoleXPermissionCreate]:
         return [
-            schemas.RoleXPermissionTemplate(
+            schemas.RoleXPermissionCreate(
                 role_label=enums.RoleLabel.SUPERUSER,
-                permissions=ALL_PERMISSIONS,
+                permission_label=enums.PermissionLabel.USER,
+                access_actions=CRUD,
             ),
-            schemas.RoleXPermissionTemplate(
-                role_label=enums.RoleLabel.ADMIN, permissions=ALL_PERMISSIONS
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.SUPERUSER,
+                permission_label=enums.PermissionLabel.EVENT,
+                access_actions=CRUD,
             ),
-            schemas.RoleXPermissionTemplate(
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.SUPERUSER,
+                permission_label=enums.PermissionLabel.EVENT_CONTENT,
+                access_actions=CRUD,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.SUPERUSER,
+                permission_label=enums.PermissionLabel.EVENT_FILE,
+                access_actions=CRUDE,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.SUPERUSER,
+                permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
+                access_actions=CRUDE,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.ADMIN,
+                permission_label=enums.PermissionLabel.USER,
+                access_actions=CRUD,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.ADMIN,
+                permission_label=enums.PermissionLabel.EVENT,
+                access_actions=CRUD,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.ADMIN,
+                permission_label=enums.PermissionLabel.EVENT_CONTENT,
+                access_actions=CRUD,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.ADMIN,
+                permission_label=enums.PermissionLabel.EVENT_FILE,
+                access_actions=CRUDE,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.ADMIN,
+                permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
+                access_actions=CRUDE,
+            ),
+            schemas.RoleXPermissionCreate(
                 role_label=enums.RoleLabel.USER,
-                permissions=[
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.USER,
-                        access_actions=R,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT,
-                        access_actions=R,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_CONTENT,
-                        access_actions=R,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_FILE,
-                        access_actions=R + E,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                        access_actions=R,
-                    ),
-                ],
+                permission_label=enums.PermissionLabel.USER,
+                access_actions=R,
             ),
-            schemas.RoleXPermissionTemplate(
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.USER,
+                permission_label=enums.PermissionLabel.EVENT,
+                access_actions=R,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.USER,
+                permission_label=enums.PermissionLabel.EVENT_CONTENT,
+                access_actions=R,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.USER,
+                permission_label=enums.PermissionLabel.EVENT_FILE,
+                access_actions=R + E,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.RoleLabel.USER,
+                permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
+                access_actions=R,
+            ),
+            schemas.RoleXPermissionCreate(
                 role_label=enums.EventRoleLabel.CREATOR,
-                permissions=[
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT,
-                        access_actions=CRUD,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_CONTENT,
-                        access_actions=CRUD,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_FILE,
-                        access_actions=CRUDE,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                        access_actions=CRUDE,
-                    ),
-                ],
+                permission_label=enums.PermissionLabel.EVENT,
+                access_actions=CRUD,
             ),
-            schemas.RoleXPermissionTemplate(
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.CREATOR,
+                permission_label=enums.PermissionLabel.EVENT_CONTENT,
+                access_actions=CRUD,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.CREATOR,
+                permission_label=enums.PermissionLabel.EVENT_FILE,
+                access_actions=CRUDE,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.CREATOR,
+                permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
+                access_actions=CRUDE,
+            ),
+            schemas.RoleXPermissionCreate(
                 role_label=enums.EventRoleLabel.SPEAKER,
-                permissions=[
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT,
-                        access_actions=R,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_CONTENT,
-                        access_actions=R + U,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_FILE,
-                        access_actions=R + E,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                        access_actions=CRUDE,
-                    ),
-                ],
+                permission_label=enums.PermissionLabel.EVENT,
+                access_actions=R,
             ),
-            schemas.RoleXPermissionTemplate(
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.SPEAKER,
+                permission_label=enums.PermissionLabel.EVENT_CONTENT,
+                access_actions=R + U,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.SPEAKER,
+                permission_label=enums.PermissionLabel.EVENT_FILE,
+                access_actions=R + E,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.SPEAKER,
+                permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
+                access_actions=CRUDE,
+            ),
+            schemas.RoleXPermissionCreate(
                 role_label=enums.EventRoleLabel.MEMBER,
-                permissions=[
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT,
-                        access_actions=R,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_CONTENT,
-                        access_actions=R,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_FILE,
-                        access_actions=R + E,
-                    ),
-                    schemas.PermissionTemplate(
-                        permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                        access_actions=R + E,
-                    ),
-                ],
+                permission_label=enums.PermissionLabel.EVENT,
+                access_actions=R,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.MEMBER,
+                permission_label=enums.PermissionLabel.EVENT_CONTENT,
+                access_actions=R,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.MEMBER,
+                permission_label=enums.PermissionLabel.EVENT_FILE,
+                access_actions=R + E,
+            ),
+            schemas.RoleXPermissionCreate(
+                role_label=enums.EventRoleLabel.MEMBER,
+                permission_label=enums.PermissionLabel.EVENT_SPEAKER_FILE,
+                access_actions=R + E,
             ),
         ]

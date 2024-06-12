@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import Field, field_validator
 
-from common.schemas import CoreModel, DateTimeMixin
+from common.schemas import CoreModel, DateTimeMixin, Sid
 
 
 class EventAddressBase(CoreModel):
@@ -18,5 +18,5 @@ class EventAddressBase(CoreModel):
         return v.strip()
 
 
-class EventAddress(EventAddressBase, DateTimeMixin):
-    sid: UUID = Field(..., description="Event address SID")
+class EventAddress(EventAddressBase, Sid, DateTimeMixin):
+    pass

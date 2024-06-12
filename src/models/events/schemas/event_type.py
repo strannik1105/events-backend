@@ -1,11 +1,9 @@
-from uuid import UUID
-
 from pydantic import Field, field_validator
 
-from common.schemas import CoreModel, DateTimeMixin
+from common.schemas import CoreModel, DateTimeMixin, Label
 
 
-class EventTypeBase(CoreModel):
+class EventTypeBase(CoreModel, Label):
     name: str = Field(..., description="Event type name")
     description: str = Field(..., description="Event type description")
 
@@ -19,4 +17,4 @@ class EventTypeBase(CoreModel):
 
 
 class EventType(EventTypeBase, DateTimeMixin):
-    sid: UUID = Field(..., description="Event type SID")
+    pass

@@ -3,15 +3,15 @@ from uuid import UUID
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.db import PostgresBaseModel, PostgresDBSchemas
-from models.mixins import DateTimeMixin
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import DateTimeMixin, Sid
 
 
 USERS_SCHEMA = PostgresDBSchemas.USERS
 METRICS_SCHEMA = PostgresDBSchemas.METRICS
 
 
-class Subscribe(PostgresBaseModel, DateTimeMixin):
+class Subscribe(PostgresBaseModel, Sid, DateTimeMixin):
     __tablename__ = "subscribe"
     __table_args__ = {
         "schema": METRICS_SCHEMA,

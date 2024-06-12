@@ -4,14 +4,14 @@ from uuid import UUID
 from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.db import PostgresBaseModel, PostgresDBSchemas
-from models.mixins import DateTimeMixin
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import DateTimeMixin, Sid
 
 
 EVENTS_SCHEMA = PostgresDBSchemas.EVENTS
 
 
-class EventAddress(PostgresBaseModel, DateTimeMixin):
+class EventAddress(PostgresBaseModel, Sid, DateTimeMixin):
     __tablename__ = "event_address"
     __table_args__ = {
         "schema": EVENTS_SCHEMA,
