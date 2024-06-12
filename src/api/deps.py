@@ -1,20 +1,26 @@
-from typing import Annotated
+from typing import Annotated, AsyncIterator
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.db.session import get_pg_session
+from common.db.postgres import PostgresSession
 from models.events import Event
 from models.users import User
-from repository.auth.auth_repository import AuthRepository
+from repository.auth.repository import AuthRepository
 from repository.events import event as event_repository
 from repository.users import user as user_repository
 from services import events
-from services.auth.auth_service import AuthService
+from services.auth.service import AuthService
 from services.crud_service.crud_service import CRUDService
 
 
-PGSession = Annotated[AsyncSession, Depends(get_pg_session)]
+async def get_postgres_session() -> AsyncIterator[AsyncSession]:
+    db = PostgresSession.get_async()
+    try:
+        yield db
+    finally:
+        await db.rollback()
+        await db.close()
 
 
 def get_event_service():

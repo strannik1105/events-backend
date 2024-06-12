@@ -1,17 +1,18 @@
 from typing import Annotated
 
-from auth import utils as auth_utils
 from fastapi import APIRouter, Depends, Form, Path
-
+from router import utils as auth_utils
 from router.deps import PGSession, get_auth_service
-from router.v1.auth.schemas import TokenInfo
-from services.auth.auth_service import AuthService
+
+from services.auth.service import AuthService
+
+from .paths import APIPath
 
 
 router = APIRouter()
 
 
-@router.post("/login/{username}", response_model=TokenInfo)
+@router.post(path=APIPath.LOGIN)
 async def login(
     db: PGSession,
     auth_service: Annotated[AuthService, Depends(get_auth_service)],

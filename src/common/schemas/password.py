@@ -2,7 +2,7 @@ import re
 
 from pydantic import BaseModel, Field, field_validator
 
-from config import settings
+from config.settings import settings
 
 
 class Password(BaseModel):

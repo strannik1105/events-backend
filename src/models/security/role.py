@@ -14,5 +14,6 @@ class Role(PostgresBaseModel, DateTimeMixin):
         "comment": "Table with all roles",
     }
 
+    label: Mapped[int] = mapped_column(unique=True, comment="Role label")
     name: Mapped[str] = mapped_column(comment="Role name")
     description: Mapped[str] = mapped_column(comment="Role description")

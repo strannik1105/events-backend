@@ -6,6 +6,7 @@ from common.schemas import CoreModel, DateTimeMixin
 
 
 class RoleBase(CoreModel):
+    label: int = Field(..., description="Role label")
     name: str = Field(..., description="Role name")
     description: str = Field(..., description="Role description")
 
@@ -16,6 +17,10 @@ class RoleBase(CoreModel):
     @field_validator("description", mode="after")
     def validate_description(cls, v: str) -> str:
         return v.strip()
+
+
+class RoleCreate(RoleBase):
+    pass
 
 
 class Role(RoleBase, DateTimeMixin):

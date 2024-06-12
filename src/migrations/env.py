@@ -5,8 +5,7 @@ from alembic import context
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool, sql
 
-from common.db import PostgresDBSchemas
-from common.db.postgres import postgres_metadata
+from common.db.postgres import PostgresDBSchemas, PostgresMetadata
 from config.settings import settings
 
 
@@ -23,7 +22,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = postgres_metadata
+target_metadata = PostgresMetadata.get()
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

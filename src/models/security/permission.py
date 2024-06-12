@@ -14,5 +14,6 @@ class Permission(PostgresBaseModel, DateTimeMixin):
         "comment": "Table with all permissions",
     }
 
+    label: Mapped[int] = mapped_column(unique=True, comment="Permission label")
     name: Mapped[str] = mapped_column(comment="Permission name")
     description: Mapped[str] = mapped_column(comment="Permission description")

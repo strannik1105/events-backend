@@ -1,10 +1,11 @@
 from fastapi import HTTPException
 from starlette import status
 
+from common.base import Iterator
 from config.exceptions import schemas
 
 
-class APIExceptionBook:
+class APIExceptionBody(metaclass=Iterator):
     internal = schemas.APIException(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         detail=schemas.APIExceptionDetail(
@@ -23,10 +24,10 @@ class APIExceptionBook:
 
 class APIException:
     not_found = HTTPException(
-        status_code=APIExceptionBook.internal.status_code,
-        detail=APIExceptionBook.internal.detail,
+        status_code=APIExceptionBody.internal.status_code,
+        detail=APIExceptionBody.internal.detail,
     )
     unauthorized = HTTPException(
-        status_code=APIExceptionBook.unauthorized.status_code,
-        detail=APIExceptionBook.unauthorized.detail,
+        status_code=APIExceptionBody.unauthorized.status_code,
+        detail=APIExceptionBody.unauthorized.detail,
     )

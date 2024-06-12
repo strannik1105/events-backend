@@ -1,9 +1,9 @@
 import bcrypt
 
-from common.exceptions.exceptions import UnauthorizedError
+from config.exceptions import APIException
 
 
-class AuthService:
+class AuthUseCase:
     def __init__(self, auth_repository):
         self._auth_repository = auth_repository
 
@@ -13,9 +13,9 @@ class AuthService:
         )
 
         if not user:
-            raise UnauthorizedError
+            raise APIException.unauthorized
 
         if not bcrypt.checkpw(password.encode(), user.password.encode()):
-            raise UnauthorizedError
+            raise APIException.unauthorized
 
         return user

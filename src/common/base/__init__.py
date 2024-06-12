@@ -4,6 +4,7 @@ __all__ = [
     "LoggerManager",
     "SecurityManager",
     "Singleton",
+    "Iterator",
 ]
 
 
@@ -12,3 +13,4 @@ from .jwt import JWTManager
 from .logger import LoggerManager
 from .security import SecurityManager
 from .singleton import Singleton
+from .iterator import Iterator

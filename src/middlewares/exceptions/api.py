@@ -4,7 +4,7 @@ from fastapi import Request
 from starlette.responses import JSONResponse
 
 from common.base import LoggerManager
-from config import APIExceptionBook
+from config.exceptions import APIExceptionBody
 
 
 class APIExceptionMiddleware:
@@ -16,6 +16,6 @@ class APIExceptionMiddleware:
             logger = LoggerManager.get_base_logger()
             logger.error(f"Internal server error: {exc}", exc_info=True)
             return JSONResponse(
-                status_code=APIExceptionBook.internal.status_code,
-                content=APIExceptionBook.internal.detail,
+                status_code=APIExceptionBody.internal.status_code,
+                content=APIExceptionBody.internal.detail,
             )

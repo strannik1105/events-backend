@@ -1,7 +1,7 @@
 __all__ = [
     "APIException",
-    "APIExceptionBook",
+    "APIExceptionBody",
 ]
 
 
-from .api import APIException, APIExceptionBook
+from .api import APIException, APIExceptionBody

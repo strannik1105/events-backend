@@ -1,4 +1,3 @@
-from typing import List
 from uuid import UUID
 
 from sqlalchemy import select
@@ -8,7 +7,7 @@ from interfaces.common.repository.repository import IRepository
 
 
 class AbstractRepository[T](IRepository):
-    def __init__(self, t_model: type(T)):
+    def __init__(self, t_model: type(T)) -> None:
         self._t_model = t_model
 
     async def get(self, session: AsyncSession, sid: UUID) -> T:
@@ -19,7 +18,7 @@ class AbstractRepository[T](IRepository):
 
     async def get_all(
         self, session: AsyncSession, limit: int = 50, offset: int = 0
-    ) -> List[T]:
+    ) -> list[T]:
         objs = await session.execute(
             select(self._t_model).limit(limit).offset(offset)
         )
@@ -44,7 +43,7 @@ class AbstractRepository[T](IRepository):
         await session.commit()
         return db_obj
 
-    async def remove(self, session: AsyncSession, db_obj: T):  # noqa
+    @staticmethod
+    async def remove(session: AsyncSession, db_obj: T) -> None:
         await session.delete(db_obj)
         await session.commit()
-        return
