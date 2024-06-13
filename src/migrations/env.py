@@ -91,6 +91,7 @@ def run_migrations_online() -> None:
             target_metadata=target_metadata,
             version_table="alembic_version",
             version_table_schema="public",
+            compare_type=True,
             include_schemas=True,
         )
 
