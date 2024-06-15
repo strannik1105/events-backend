@@ -13,7 +13,7 @@ type T = PostgresBaseModel
 
 
 class CoreRepository[T](IRepository[T]):
-    def __init__(self, db: AsyncSession, model: T) -> None:
+    def __init__(self, db: AsyncSession, model: type[T]) -> None:
         self.db = db
         self.model = model
 

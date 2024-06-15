@@ -5,5 +5,5 @@ from repository.postgres.core import CoreRepository
 
 
 class SubscribeRepository(CoreRepository[Subscribe]):
-    def __init__(self, db: AsyncSession, model: Subscribe):
+    def __init__(self, db: AsyncSession, model: type[Subscribe]) -> None:
         super().__init__(db, model)

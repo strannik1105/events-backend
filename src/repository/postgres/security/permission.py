@@ -5,5 +5,5 @@ from repository.postgres.core import CoreRepository
 
 
 class PermissionRepository(CoreRepository[Permission]):
-    def __init__(self, db: AsyncSession, model: Permission):
+    def __init__(self, db: AsyncSession, model: type[Permission]) -> None:
         super().__init__(db, model)

@@ -6,7 +6,7 @@ from repository.postgres.core import CoreRepository
 
 
 class UserRepository(CoreRepository[User]):
-    def __init__(self, db: AsyncSession, model: User):
+    def __init__(self, db: AsyncSession, model: type[User]) -> None:
         super().__init__(db, model)
 
     async def get_by_email(

@@ -5,5 +5,5 @@ from repository.postgres.core import CoreRepository
 
 
 class EventTypeRepository(CoreRepository[EventType]):
-    def __init__(self, db: AsyncSession, model: EventType):
+    def __init__(self, db: AsyncSession, model: type[EventType]) -> None:
         super().__init__(db, model)
