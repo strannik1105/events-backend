@@ -1,4 +1,4 @@
-from config.exceptions import APIExceptionBody
+from config.exceptions import APIExceptionBook
 
 
 class APIDoc:
@@ -7,7 +7,7 @@ class APIDoc:
         return "\n".join(
             [
                 f"| {exc.detail.code} | {exc.status_code} | {exc.detail.description}"
-                for exc in APIExceptionBody
+                for exc in APIExceptionBook
             ]
         )
 

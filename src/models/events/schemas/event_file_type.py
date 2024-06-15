@@ -16,5 +16,9 @@ class EventFileTypeBase(CoreModel, Label):
         return v.strip()
 
 
+class EventFileTypeCreate(EventFileTypeBase):
+    pass
+
+
 class EventFileType(EventFileTypeBase, DateTimeMixin):
     pass

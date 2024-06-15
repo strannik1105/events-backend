@@ -11,7 +11,7 @@ class UserRepository(CoreRepository[User]):
 
     async def get_by_email(
         self, email: str, custom_options: list[ExecutableOption] | None = None
-    ) -> User:
+    ) -> User | None:
         return await self.get_by(
             filter_expression=User.email == email,
             custom_options=custom_options,
