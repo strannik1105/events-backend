@@ -20,8 +20,8 @@ class PostgresConnection:
             cls._logger.info("Ping to postgres")
             response = await db.execute(text("SELECT 1"))
             cls._logger.info(f"Pong: response value - {response.first()}")
-        except Exception as e:
-            cls._logger.error(e)
-            raise e
+        except Exception as exc:
+            cls._logger.error(f"Pong error: {exc}")
+            raise exc
         finally:
             await db.close()

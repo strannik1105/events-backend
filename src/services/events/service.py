@@ -38,10 +38,10 @@ class EventService(CoreService):
 
     async def create_event_file_type(
         self,
-        event_file_typ_in: schemas.EventFileTypeCreate,
+        event_file_type_in: schemas.EventFileTypeCreate,
         with_commit: bool = True,
     ) -> EventFileType:
         return await self.pg_repository.event_file_type.create(
-            obj_in=event_file_typ_in,
+            obj_in=event_file_type_in,
             with_commit=with_commit,
         )

@@ -12,6 +12,10 @@ class DateTimeManager:
     def get_utcnow() -> datetime:
         return datetime.now(UTC)
 
+    @staticmethod
+    def get_utcnow_without_timezone() -> datetime:
+        return datetime.now(UTC).replace(tzinfo=None)
+
     @classmethod
     def get_utcnow_w_timezone(cls, timezone: str | None = None) -> datetime:
         if not timezone:

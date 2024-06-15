@@ -18,7 +18,7 @@ class Label:
 class CreatedAtMixin:
     created_at: Mapped[datetime] = mapped_column(
         DateTime(),
-        default=DateTimeManager.get_utcnow,
+        default=DateTimeManager.get_utcnow_without_timezone,
         comment="Record creating time",
     )
 
@@ -26,8 +26,8 @@ class CreatedAtMixin:
 class UpdatedAtMixin:
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(),
-        default=DateTimeManager.get_utcnow,
-        onupdate=DateTimeManager.get_utcnow,
+        default=DateTimeManager.get_utcnow_without_timezone,
+        onupdate=DateTimeManager.get_utcnow_without_timezone,
         comment="Record updating time",
     )
 
