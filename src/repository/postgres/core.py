@@ -86,6 +86,7 @@ class CoreRepository[T](IRepository[T]):
     async def create(
         self, obj_in: T | BaseModel, with_commit: bool = True
     ) -> T:
+        print(obj_in)
         if isinstance(obj_in, BaseModel):
             obj = self.model(**obj_in.model_dump())
         else:

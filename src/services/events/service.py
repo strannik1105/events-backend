@@ -2,7 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from config.exceptions import APIException
-from models.events import EventFileType, schemas
+from models import events as event_models
+from schemas import events as event_schemas
 from services.core import CoreService
 
 from .utils import EventServiceUtils
@@ -20,7 +21,7 @@ class EventService(CoreService):
         is_exists: bool = True,
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
-    ) -> EventFileType | None:
+    ) -> event_models.EventFileType | None:
         event_file_type = (
             await self.pg_repository.event_file_type.get_by_label(
                 label=label, custom_options=custom_options
@@ -38,9 +39,9 @@ class EventService(CoreService):
 
     async def create_event_file_type(
         self,
-        event_file_type_in: schemas.EventFileTypeCreate,
+        event_file_type_in: event_schemas.EventFileTypeCreate,
         with_commit: bool = True,
-    ) -> EventFileType:
+    ) -> event_models.EventFileType:
         return await self.pg_repository.event_file_type.create(
             obj_in=event_file_type_in,
             with_commit=with_commit,

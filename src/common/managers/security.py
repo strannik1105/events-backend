@@ -3,16 +3,16 @@ from uuid import UUID
 from passlib.context import CryptContext
 
 from config.exceptions import APIException
-from models.security import enums
+from enums import security as security_enums
 
 
 class SecurityManager:
-    _superuser_label = enums.RoleLabel.SUPERUSER
-    _admin_label = enums.RoleLabel.ADMIN
-    _user_label = enums.RoleLabel.USER
-    _event_creator_label = enums.EventRoleLabel.CREATOR
-    _event_speaker_label = enums.EventRoleLabel.SPEAKER
-    _event_member_label = enums.EventRoleLabel.MEMBER
+    _superuser_label = security_enums.RoleLabel.SUPERUSER
+    _admin_label = security_enums.RoleLabel.ADMIN
+    _user_label = security_enums.RoleLabel.USER
+    _event_creator_label = security_enums.EventRoleLabel.CREATOR
+    _event_speaker_label = security_enums.EventRoleLabel.SPEAKER
+    _event_member_label = security_enums.EventRoleLabel.MEMBER
 
     _invalid_role_transitions = {
         (_admin_label, _superuser_label),
@@ -30,7 +30,7 @@ class SecurityManager:
         (_event_member_label, _event_creator_label),
     }
 
-    _pwd_context = CryptContext(schemes=["bcrypt"])
+    _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     @classmethod
     def get_password_hash(cls, password: str) -> str:
@@ -48,8 +48,8 @@ class SecurityManager:
 
     @staticmethod
     async def validate_user_permission(
-        permission: enums.PermissionLabel,
-        action: enums.PermissionAccessAction,
+        permission: security_enums.PermissionLabel,
+        action: security_enums.PermissionAccessAction,
         user_sid: UUID,
         event_sid: UUID | None = None,
         is_raise: bool = True,
@@ -59,7 +59,9 @@ class SecurityManager:
         return True
 
     @classmethod
-    def get_role_label_by_int(cls, role_label: int) -> enums.RoleLabel:
+    def get_role_label_by_int(
+        cls, role_label: int
+    ) -> security_enums.RoleLabel:
         if role_label == cls._superuser_label:
             return cls._superuser_label
         if role_label == cls._admin_label:
@@ -71,7 +73,7 @@ class SecurityManager:
     @classmethod
     def get_event_role_label_by_int(
         cls, event_role_label: int
-    ) -> enums.EventRoleLabel:
+    ) -> security_enums.EventRoleLabel:
         if event_role_label == cls._event_creator_label:
             return cls._event_creator_label
         if event_role_label == cls._event_speaker_label:
@@ -83,8 +85,8 @@ class SecurityManager:
     @classmethod
     def validate_role_branch(
         cls,
-        current_role_label: enums.RoleLabel,
-        target_role_label: enums.RoleLabel,
+        current_role_label: security_enums.RoleLabel,
+        target_role_label: security_enums.RoleLabel,
         is_raise: bool = True,
     ) -> bool | None:
         if (
@@ -99,8 +101,8 @@ class SecurityManager:
     @classmethod
     def validate_event_role_branch(
         cls,
-        current_event_role_label: enums.EventRoleLabel,
-        target_event_role_label: enums.EventRoleLabel,
+        current_event_role_label: security_enums.EventRoleLabel,
+        target_event_role_label: security_enums.EventRoleLabel,
         is_raise: bool = True,
     ) -> bool | None:
         if (

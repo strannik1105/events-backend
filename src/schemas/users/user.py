@@ -1,5 +1,4 @@
 from datetime import datetime
-from uuid import UUID
 
 from pydantic import Field, field_validator
 
@@ -26,8 +25,12 @@ class UserBase(CoreModel):
         return v.strip()
 
 
-class UserCreate(UserBase, Email, CreatePassword):
-    role_label: UUID = Field(..., description="Role label")
+class UserCreateWithoutPassword(UserBase, Email):
+    role_label: int = Field(..., description="Role label")
+
+
+class UserCreate(UserCreateWithoutPassword, CreatePassword):
+    pass
 
 
 class UserUpdate(UserBase):
@@ -39,4 +42,4 @@ class User(UserBase, Sid, Email, DateTimeMixin):
     is_active: bool = Field(True, description="User active status")
     is_verified: bool = Field(True, description="User verified status")
     last_login_at: datetime = Field(..., description="User last login at")
-    role_label: UUID = Field(..., description="Role label")
+    role_label: int = Field(..., description="Role label")

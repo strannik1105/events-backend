@@ -2,7 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from config.exceptions import APIException
-from models.security import Permission, Role, RoleXPermission, schemas
+from models import security as security_models
+from schemas import security as security_schemas
 from services.core import CoreService
 
 from .utils import SecurityServiceUtils
@@ -20,7 +21,7 @@ class SecurityService(CoreService):
         is_exists: bool = True,
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
-    ) -> Role | None:
+    ) -> security_models.Role | None:
         role = await self.pg_repository.role.get_by_label(
             label=label, custom_options=custom_options
         )
@@ -41,7 +42,7 @@ class SecurityService(CoreService):
         is_exists: bool = True,
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
-    ) -> Permission | None:
+    ) -> security_models.Permission | None:
         permission = await self.pg_repository.permission.get_by_label(
             label=label, custom_options=custom_options
         )
@@ -63,7 +64,7 @@ class SecurityService(CoreService):
         is_exists: bool = True,
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
-    ) -> RoleXPermission | None:
+    ) -> security_models.RoleXPermission | None:
         role_x_permission = (
             await self.pg_repository.role_x_permission.get_by_labels(
                 role_label=role_label,
@@ -82,16 +83,18 @@ class SecurityService(CoreService):
         return role_x_permission
 
     async def create_role(
-        self, role_in: schemas.RoleCreate, with_commit: bool = True
-    ) -> Role:
+        self, role_in: security_schemas.RoleCreate, with_commit: bool = True
+    ) -> security_models.Role:
         return await self.pg_repository.role.create(
             obj_in=role_in,
             with_commit=with_commit,
         )
 
     async def create_permission(
-        self, permission_in: schemas.PermissionCreate, with_commit: bool = True
-    ) -> Permission:
+        self,
+        permission_in: security_schemas.PermissionCreate,
+        with_commit: bool = True,
+    ) -> security_models.Permission:
         return await self.pg_repository.permission.create(
             obj_in=permission_in,
             with_commit=with_commit,
@@ -99,9 +102,9 @@ class SecurityService(CoreService):
 
     async def create_role_x_permission(
         self,
-        role_x_permission_in: schemas.RoleXPermissionCreate,
+        role_x_permission_in: security_schemas.RoleXPermissionCreate,
         with_commit: bool = True,
-    ) -> RoleXPermission:
+    ) -> security_models.RoleXPermission:
         return await self.pg_repository.role_x_permission.create(
             obj_in=role_x_permission_in,
             with_commit=with_commit,
