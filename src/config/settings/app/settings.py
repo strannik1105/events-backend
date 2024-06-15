@@ -5,11 +5,6 @@ from ..core import EnvCoreSettings
 
 
 class AppSettings(EnvCoreSettings):
-    HOST: str = Field(...)
-    PORT: int = Field(...)
-
-    V1: str = "/api/v1"
-
     VERSION: str = "1.0.0"
     NAME: str = "Events Platform"
 

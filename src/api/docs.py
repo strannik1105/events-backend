@@ -23,12 +23,12 @@ class APIDoc:
     @classmethod
     def get_description(cls) -> str:
         return f"""
-        <details>
-        <summary>Possible service error codes</summary>
-        <br>
+<details>
+<summary>Possible service error codes</summary>
+<br>
 
-        | Service Error Code | HTTP Error Code | Description |
-        |--------------------|-----------------|-------------|
-        {cls._get_exceptions()}
-        </details>
-        """
+| Service Error Code | HTTP Error Code | Description |
+|--------------------|-----------------|-------------|
+{cls._get_exceptions()}
+</details>
+"""

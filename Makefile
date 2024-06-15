@@ -1,12 +1,12 @@
 PYTHON=python3
 
-DC=docker compose
+DC_LOCAL=docker compose -f docker-compose.local.yaml
 
 
 # --================ App ================--
 .PHONY: app-run
 app-run:
-	$(PYTHON) ./main.py
+	$(PYTHON) ./src/main.py
 
 
 # --================ Code Style ================--
@@ -16,38 +16,38 @@ style-run:
 
 
 # --================ Docker ================--
-.PHONY: docker
-docker:
-	$(DC) up -d --build
+.PHONY: docker-local
+docker-local:
+	$(DC_LOCAL) up -d --build
 
-.PHONY: docker-build
-docker-build:
-	$(DC) build
+.PHONY: docker-local-build
+docker-local-build:
+	$(DC_LOCAL) build
 
-.PHONY: docker-up
-docker-up:
-	$(DC) up -d
+.PHONY: docker-local-up
+docker-local-up:
+	$(DC_LOCAL) up -d
 
-.PHONY: docker-stop
-docker-stop:
-	$(DC) stop
+.PHONY: docker-local-stop
+docker-local-stop:
+	$(DC_LOCAL) stop
 
-.PHONY: docker-start
-docker-start:
-	$(DC) start
+.PHONY: docker-local-start
+docker-local-start:
+	$(DC_LOCAL) start
 
-.PHONY: docker-down
-docker-down:
-	$(DC) down
+.PHONY: docker-local-down
+docker-local-down:
+	$(DC_LOCAL) down
 
-.PHONY: docker-down-v
-docker-down-v:
-	$(DC) down -v
+.PHONY: docker-local-down-v
+docker-local-down-v:
+	$(DC_LOCAL) down -v
 
-.PHONY: docker-logs
-docker-logs:
-	$(DC) logs
+.PHONY: docker-local-logs
+docker-local-logs:
+	$(DC_LOCAL) logs
 
-.PHONY: docker-logs-f
-docker-logs-f:
-	$(DC) logs -f
+.PHONY: docker-local-logs-f
+docker-local-logs-f:
+	$(DC_LOCAL) logs -f

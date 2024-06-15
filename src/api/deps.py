@@ -3,8 +3,8 @@ from typing import Annotated, AsyncIterator
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.db.postgres import PostgresSession
 import usecases
+from common.db.postgres import PostgresSession
 
 
 async def get_pg_session() -> AsyncIterator[AsyncSession]:
@@ -16,7 +16,9 @@ async def get_pg_session() -> AsyncIterator[AsyncSession]:
         await db.close()
 
 
-def get_use_case(pg_db: AsyncSession = Depends(get_pg_session)) -> usecases.UseCase:
+def get_use_case(
+    pg_db: AsyncSession = Depends(get_pg_session),
+) -> usecases.UseCase:
     return usecases.UseCase(pg_db)
 
 

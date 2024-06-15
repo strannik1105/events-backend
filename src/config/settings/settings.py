@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from .api import ApiSettings
 from .app import AppSettings
 from .auth import AuthSettings
 from .jwt import JWTSettings
@@ -12,6 +13,7 @@ from .user import UserSettings
 
 class Settings:
     app = AppSettings()
+    api = ApiSettings()
     postgres = PostgresSettings()
     log = LogSettings()
     unit = UnitSettings()
