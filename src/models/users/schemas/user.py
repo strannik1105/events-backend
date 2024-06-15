@@ -27,7 +27,7 @@ class UserBase(CoreModel):
 
 
 class UserCreate(UserBase, Email, CreatePassword):
-    pass
+    role_label: UUID = Field(..., description="Role label")
 
 
 class UserUpdate(UserBase):

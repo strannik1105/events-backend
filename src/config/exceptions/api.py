@@ -23,60 +23,81 @@ class APIExceptionBook(metaclass=Iterator):
             description="Method not allowed",
         ),
     )
+    violation_role_branch = schemas.APIException(
+        status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+        detail=schemas.APIExceptionDetail(
+            code=101,
+            description="Violation role branch",
+        ),
+    )
+    violation_event_role_branch = schemas.APIException(
+        status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+        detail=schemas.APIExceptionDetail(
+            code=102,
+            description="Violation event role branch",
+        ),
+    )
     invalid_access_token = schemas.APIException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail=schemas.APIExceptionDetail(
-            code=101,
+            code=103,
             description="Invalid access token",
         ),
     )
     invalid_refresh_token = schemas.APIException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail=schemas.APIExceptionDetail(
-            code=102,
+            code=104,
             description="Invalid refresh token",
         ),
     )
     role_already_exists = schemas.APIException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=schemas.APIExceptionDetail(
-            code=103,
+            code=105,
             description="Role already exists",
         ),
     )
     role_not_found = schemas.APIException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=schemas.APIExceptionDetail(
-            code=104,
+            code=106,
             description="Role not found",
         ),
     )
     permission_already_exists = schemas.APIException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=schemas.APIExceptionDetail(
-            code=105,
+            code=107,
             description="Permission already exists",
         ),
     )
     permission_not_found = schemas.APIException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=schemas.APIExceptionDetail(
-            code=106,
+            code=108,
             description="Permission not found",
         ),
     )
     role_x_permission_already_exists = schemas.APIException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=schemas.APIExceptionDetail(
-            code=107,
+            code=109,
             description="Permission of role already exists",
         ),
     )
     role_x_permission_not_found = schemas.APIException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=schemas.APIExceptionDetail(
-            code=108,
+            code=110,
             description="Permission of role not found",
+        ),
+    )
+    invalid_password = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=111,
+            description="Invalid password",
         ),
     )
 
@@ -134,6 +155,14 @@ class APIException:
         status_code=APIExceptionBook.not_allowed.status_code,
         detail=APIExceptionBook.not_allowed.detail,
     )
+    violation_role_branch = HTTPException(
+        status_code=APIExceptionBook.violation_role_branch.status_code,
+        detail=APIExceptionBook.violation_role_branch.detail,
+    )
+    violation_event_role_branch = HTTPException(
+        status_code=APIExceptionBook.violation_event_role_branch.status_code,
+        detail=APIExceptionBook.violation_event_role_branch.detail,
+    )
     invalid_access_token = HTTPException(
         status_code=APIExceptionBook.invalid_access_token.status_code,
         detail=APIExceptionBook.invalid_access_token.detail,
@@ -165,6 +194,10 @@ class APIException:
     role_x_permission_not_found = HTTPException(
         status_code=APIExceptionBook.role_x_permission_not_found.status_code,
         detail=APIExceptionBook.role_x_permission_not_found.detail,
+    )
+    invalid_password = HTTPException(
+        status_code=APIExceptionBook.invalid_password.status_code,
+        detail=APIExceptionBook.invalid_password.detail,
     )
 
     # --================ Auth ================--

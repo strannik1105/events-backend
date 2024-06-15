@@ -22,7 +22,7 @@ class User(PostgresBaseModel, Sid, DateTimeMixin):
     middle_name: Mapped[str | None] = mapped_column(comment="User middle name")
     last_name: Mapped[str] = mapped_column(comment="User last name")
     email: Mapped[str] = mapped_column(unique=True, comment="User email")
-    hashed_password: Mapped[str] = mapped_column(
+    hashed_password: Mapped[str | None] = mapped_column(
         comment="User hashed password"
     )
     telegram_id: Mapped[int | None] = mapped_column(

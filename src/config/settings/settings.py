@@ -7,6 +7,7 @@ from .log import LogSettings
 from .postgres import PostgresSettings
 from .tz import TZSettings
 from .unit import UnitSettings
+from .user import UserSettings
 
 
 class Settings:
@@ -17,6 +18,7 @@ class Settings:
     tz = TZSettings()
     jwt = JWTSettings()
     auth = AuthSettings()
+    user = UserSettings()
 
 
 @lru_cache(maxsize=1)

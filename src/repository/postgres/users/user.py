@@ -16,3 +16,14 @@ class UserRepository(CoreRepository[User]):
             filter_expression=User.email == email,
             custom_options=custom_options,
         )
+
+    async def update_user_password(
+        self, user: User, hashed_password: str, with_commit: bool = True
+    ) -> User:
+        user.hashed_password = hashed_password
+        if with_commit:
+            await self.db.commit()
+            await self.db.refresh(user)
+        else:
+            await self.db.flush()
+        return user

@@ -7,6 +7,29 @@ from models.security import enums
 
 
 class SecurityManager:
+    _superuser_label = enums.RoleLabel.SUPERUSER
+    _admin_label = enums.RoleLabel.ADMIN
+    _user_label = enums.RoleLabel.USER
+    _event_creator_label = enums.EventRoleLabel.CREATOR
+    _event_speaker_label = enums.EventRoleLabel.SPEAKER
+    _event_member_label = enums.EventRoleLabel.MEMBER
+
+    _invalid_role_transitions = {
+        (_admin_label, _superuser_label),
+        (_admin_label, _admin_label),
+        (_superuser_label, _superuser_label),
+        (_user_label, _admin_label),
+        (_user_label, _superuser_label),
+    }
+
+    _invalid_event_role_transitions = {
+        (_event_speaker_label, _event_creator_label),
+        (_event_speaker_label, _event_speaker_label),
+        (_event_creator_label, _event_creator_label),
+        (_event_member_label, _event_speaker_label),
+        (_event_member_label, _event_creator_label),
+    }
+
     _pwd_context = CryptContext(schemes=["bcrypt"])
 
     @classmethod
@@ -14,8 +37,14 @@ class SecurityManager:
         return cls._pwd_context.hash(password)
 
     @classmethod
-    def verify_password(cls, password: str, hashed_password: str) -> bool:
-        return cls._pwd_context.verify(password, hashed_password)
+    def verify_password(
+        cls, password: str, hashed_password: str, is_raise: bool = True
+    ) -> bool | None:
+        if not cls._pwd_context.verify(secret=password, hash=hashed_password):
+            if is_raise:
+                raise APIException.invalid_password
+            return False
+        return True
 
     @staticmethod
     async def validate_user_permission(
@@ -27,4 +56,58 @@ class SecurityManager:
     ) -> bool | None:
         if is_raise:
             raise APIException.not_allowed
+        return True
+
+    @classmethod
+    def get_role_label_by_int(cls, role_label: int) -> enums.RoleLabel:
+        if role_label == cls._superuser_label:
+            return cls._superuser_label
+        if role_label == cls._admin_label:
+            return cls._admin_label
+        if role_label == cls._user_label:
+            return cls._user_label
+        raise APIException.role_not_found
+
+    @classmethod
+    def get_event_role_label_by_int(
+        cls, event_role_label: int
+    ) -> enums.EventRoleLabel:
+        if event_role_label == cls._event_creator_label:
+            return cls._event_creator_label
+        if event_role_label == cls._event_speaker_label:
+            return cls._event_speaker_label
+        if event_role_label == cls._event_member_label:
+            return cls._event_member_label
+        raise APIException.role_not_found
+
+    @classmethod
+    def validate_role_branch(
+        cls,
+        current_role_label: enums.RoleLabel,
+        target_role_label: enums.RoleLabel,
+        is_raise: bool = True,
+    ) -> bool | None:
+        if (
+            current_role_label,
+            target_role_label,
+        ) in cls._invalid_role_transitions:
+            if is_raise:
+                raise APIException.violation_role_branch
+            return False
+        return True
+
+    @classmethod
+    def validate_event_role_branch(
+        cls,
+        current_event_role_label: enums.EventRoleLabel,
+        target_event_role_label: enums.EventRoleLabel,
+        is_raise: bool = True,
+    ) -> bool | None:
+        if (
+            current_event_role_label,
+            target_event_role_label,
+        ) in cls._invalid_event_role_transitions:
+            if is_raise:
+                raise APIException.violation_event_role_branch
+            return False
         return True
