@@ -1,11 +1,13 @@
 import bcrypt
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.exceptions import APIException
+from usecases.core import CoreUseCase
 
 
-class AuthUseCase:
-    def __init__(self, auth_repository):
-        self._auth_repository = auth_repository
+class AuthUseCase(CoreUseCase):
+    def __init__(self, pg_db: AsyncSession) -> None:
+        super().__init__(pg_db)
 
     async def authenticate(self, db_session, username: str, password: str):
         user = await self._auth_repository.get_user_by_username(
