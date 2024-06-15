@@ -1,7 +1,7 @@
 from models.events import enums, schemas
 
 
-class EventsTemplate:
+class EventTemplate:
     @staticmethod
     def get_file_types() -> list[schemas.EventFileType]:
         return [

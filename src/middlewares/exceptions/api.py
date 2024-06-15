@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import Request
 from starlette.responses import JSONResponse
 
-from common.base import LoggerManager
+from common.managers import LoggerManager
 from config.exceptions import APIExceptionBody
 
 

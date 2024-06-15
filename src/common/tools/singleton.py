@@ -1,8 +1,4 @@
 class Singleton(type):
-    """
-    MetaClass for make your class singleton
-    """
-
     _instances = {}
 
     def __call__(cls, *args, **kwargs):

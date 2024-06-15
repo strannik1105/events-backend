@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import jwt
 
-from common.base import DateTimeManager
+from common.managers import DateTimeManager
 from config.settings import settings
 
 

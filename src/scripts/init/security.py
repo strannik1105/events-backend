@@ -1,0 +1,2 @@
+class SecurityInit:
+    pass

@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import SMALLINT, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 
-from common.base import DateTimeManager
+from common.managers import DateTimeManager
 
 
 class Sid:

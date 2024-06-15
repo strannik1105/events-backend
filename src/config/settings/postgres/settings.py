@@ -15,6 +15,9 @@ class PostgresSettings(EnvCoreSettings):
     WEB_CONCURRENCY: int = Field(1)
     MAX_OVERFLOW: int = Field(0)
 
+    CONN_WAIT_SECONDS: int = 5
+    CONN_DEADLINE_SECONDS: int = 60
+
     AUTOCOMMIT: bool = False
     AUTOFLUSH: bool = False
     ECHO: bool = False

@@ -1,8 +1,8 @@
 __all__ = [
-    "EventsTemplate",
+    "EventTemplate",
     "SecurityTemplate",
 ]
 
 
-from .events import EventsTemplate
+from .events import EventTemplate
 from .security import SecurityTemplate
