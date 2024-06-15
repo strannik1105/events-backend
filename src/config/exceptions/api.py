@@ -1,11 +1,11 @@
 from fastapi import HTTPException
 from starlette import status
 
-from common.tools import Iterator
+from common.tools import IteratorMeta
 from config.exceptions import schemas
 
 
-class APIExceptionBook(metaclass=Iterator):
+class APIExceptionBook(metaclass=IteratorMeta):
     # --================ Base ================--
     internal = schemas.APIException(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi import APIRouter, Form, Path
 
 from api import deps
@@ -13,5 +15,5 @@ async def login(
     use_case: deps.UseCase,
     username: str = Path(),
     password: str = Form(),
-):
+) -> Any:
     pass

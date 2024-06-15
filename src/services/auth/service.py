@@ -1,3 +1,5 @@
+from typing import Any
+
 import bcrypt
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,7 +11,9 @@ class AuthService(CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
 
-    async def authenticate(self, db_session, username: str, password: str):
+    async def authenticate(
+        self, db_session: AsyncSession, username: str, password: str
+    ) -> Any:
         user = await self._auth_repository.get_user_by_username(
             db_session, username
         )

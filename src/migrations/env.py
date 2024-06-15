@@ -32,7 +32,7 @@ target_metadata = PostgresBaseModel.metadata
 # ... etc.
 
 
-def get_url():
+def get_url() -> str:
     user = settings.postgres.USER
     password = settings.postgres.PASS
     host = settings.postgres.HOST
@@ -76,6 +76,9 @@ def run_migrations_online() -> None:
 
     """
     configuration = config.get_section(config.config_ini_section)
+    if configuration is None:
+        configuration = {}
+
     if not config.get_main_option("sqlalchemy.url", None):
         configuration["sqlalchemy.url"] = get_url()
 

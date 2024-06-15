@@ -9,7 +9,7 @@ from config.exceptions import APIExceptionBook
 
 class APIExceptionMiddleware:
     @staticmethod
-    async def internal_error(request: Request, call_next: Any):
+    async def internal_error(request: Request, call_next: Any) -> Any:
         try:
             return await call_next(request)
         except Exception as exc:

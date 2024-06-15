@@ -15,7 +15,7 @@ class PostgresSession:
             autoflush=settings.postgres.AUTOFLUSH,
             bind=create_async_engine(
                 echo=settings.postgres.ECHO,
-                url=settings.postgres.DSN.unicode_string(),
+                url=settings.postgres.DSN,
                 pool_pre_ping=settings.postgres.POOL_PRE_PING,
                 pool_size=settings.postgres.POOL_SIZE,
                 max_overflow=settings.postgres.MAX_OVERFLOW,

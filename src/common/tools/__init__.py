@@ -1,8 +1,8 @@
 __all__ = [
     "Singleton",
-    "Iterator",
+    "IteratorMeta",
 ]
 
 
 from .singleton import Singleton
-from .iterator import Iterator
+from .iterator import IteratorMeta

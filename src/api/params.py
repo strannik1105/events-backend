@@ -1,13 +1,13 @@
 from typing import Any
 
-from fastapi import Body, File, Header, Path, Query
+from fastapi import Body, File, Header, Path, Query, params
 
 
 class APIParam:
     @staticmethod
     def query(
         default: Any, description: str | None = None, alias: str | None = None
-    ) -> Query:
+    ) -> params.Query:
         return Query(
             default=default,
             description=description,
@@ -18,7 +18,7 @@ class APIParam:
     @staticmethod
     def path(
         default: Any, description: str | None = None, alias: str | None = None
-    ) -> Path:
+    ) -> params.Path:
         return Path(
             default=default,
             description=description,
@@ -32,7 +32,7 @@ class APIParam:
         description: str | None = None,
         alias: str | None = None,
         embed: bool = False,
-    ) -> Body:
+    ) -> params.Body:
         return Body(
             default=default,
             description=description,
@@ -44,7 +44,7 @@ class APIParam:
     @staticmethod
     def file(
         default: Any, description: str | None = None, alias: str | None = None
-    ) -> File:
+    ) -> params.File:
         return File(
             default=default,
             description=description,
@@ -58,7 +58,7 @@ class APIParam:
         description: str | None = None,
         alias: str | None = None,
         convert_underscores: bool = True,
-    ) -> Header:
+    ) -> params.Header:
         return Header(
             default=default,
             description=description,

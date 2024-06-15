@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import Generic, TypeVar
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -6,7 +7,10 @@ from sqlalchemy import BinaryExpression
 from sqlalchemy.sql.base import ExecutableOption
 
 
-class IRepository[T](metaclass=ABCMeta):
+T = TypeVar("T")
+
+
+class IRepository(Generic[T], metaclass=ABCMeta):
     @abstractmethod
     def get_by_sid(
         self, sid: UUID, custom_options: list[ExecutableOption] | None = None

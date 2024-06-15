@@ -18,6 +18,6 @@ class DateTimeManager:
 
     @classmethod
     def get_utcnow_w_timezone(cls, timezone: str | None = None) -> datetime:
-        if not timezone:
+        if timezone is None:
             timezone = cls._default_tz
         return datetime.now(UTC).astimezone(pytz.timezone(timezone))

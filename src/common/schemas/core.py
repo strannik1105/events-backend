@@ -7,7 +7,7 @@ from pydantic.alias_generators import to_camel
 
 class CoreModel(BaseModel):
     @field_validator("*", mode="after")
-    def timezone_validate(cls, v: Any):
+    def timezone_validate(cls, v: Any) -> Any:
         if isinstance(v, datetime):
             if v.tzinfo is not None:
                 v = v.replace(tzinfo=None)

@@ -1,3 +1,4 @@
+from typing import Generic, TypeVar
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -9,10 +10,10 @@ from common.db.postgres import PostgresBaseModel
 from repository.interface import IRepository
 
 
-type T = PostgresBaseModel
+T = TypeVar("T", bound=PostgresBaseModel)
 
 
-class CoreRepository[T](IRepository[T]):
+class CoreRepository(Generic[T], IRepository[T]):
     def __init__(self, db: AsyncSession, model: type[T]) -> None:
         self.db = db
         self.model = model
