@@ -1,16 +1,27 @@
-from sqlalchemy import String, ForeignKey
-from sqlalchemy.orm import mapped_column
-from common.db.base_model import BaseModel
-from models.events.ext import EVENTS_SCHEMA
+from sqlalchemy import SMALLINT, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
+
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from models.mixins import DateTimeMixin, Sid
 
 
-class EventContent(BaseModel):
+EVENTS_SCHEMA = PostgresDBSchemas.EVENTS
+
+
+class EventContent(PostgresBaseModel, Sid, DateTimeMixin):
     __tablename__ = "event_content"
-    __table_args__ = {"schema": EVENTS_SCHEMA}
-    name = mapped_column(String, nullable=False)
-    description = mapped_column(String)
-    address = mapped_column(String)
-    # datetime_start = mapped_column(DateTime, nullable=False)
-    # datetime_end = mapped_column(DateTime, nullable=False)
+    __table_args__ = {
+        "schema": EVENTS_SCHEMA,
+        "comment": "Table with all events content",
+    }
 
-    event_sid = mapped_column(ForeignKey("events.event.sid"), nullable=False)
+    name: Mapped[str] = mapped_column(comment="Event name")
+    description: Mapped[str] = mapped_column(comment="Event description")
+    type_label: Mapped[int] = mapped_column(
+        SMALLINT,
+        ForeignKey(
+            f"{EVENTS_SCHEMA}.event_content_type.label", ondelete="CASCADE"
+        ),
+        index=True,
+        comment="Event content type label",
+    )

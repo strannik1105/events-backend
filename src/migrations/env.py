@@ -1,14 +1,15 @@
-import os
 from logging.config import fileConfig
 
-from dotenv import load_dotenv
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool, sql
 
-from common.db.models_meta import metadata
-from settings import get_local_host
+from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
+from config.settings import settings
+from models.events import *  # noqa: F403
+from models.metrics import *  # noqa: F403
+from models.security import *  # noqa: F403
+from models.users import *  # noqa: F403
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -23,7 +24,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = metadata
+target_metadata = PostgresBaseModel.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -31,15 +32,12 @@ target_metadata = metadata
 # ... etc.
 
 
-load_dotenv(os.path.join(os.path.abspath(os.getcwd()), ".env.local"))
-
-
-def get_url():
-    user = os.getenv("POSTGRES_USER", "postgres")
-    password = os.getenv("POSTGRES_PASSWORD", "postgres")
-    host = os.getenv("POSTGRES_HOST", get_local_host())
-    port = os.getenv("POSTGRES_PORT", "5432")
-    db = os.getenv("POSTGRES_DB", "db")
+def get_url() -> str:
+    user = settings.postgres.USER
+    password = settings.postgres.PASS
+    host = settings.postgres.HOST
+    port = settings.postgres.PORT
+    db = settings.postgres.DB
     url = f"postgresql://{user}:{password}@{host}:{port}/{db}"
     return url
 
@@ -60,8 +58,10 @@ def run_migrations_offline() -> None:
     context.configure(
         url=url,
         target_metadata=target_metadata,
-        literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
+        version_table="alembic_version",
+        version_table_schema="public",
+        compare_type=True,
+        include_schemas=True,
     )
 
     with context.begin_transaction():
@@ -76,6 +76,9 @@ def run_migrations_online() -> None:
 
     """
     configuration = config.get_section(config.config_ini_section)
+    if configuration is None:
+        configuration = {}
+
     if not config.get_main_option("sqlalchemy.url", None):
         configuration["sqlalchemy.url"] = get_url()
 
@@ -86,7 +89,19 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            version_table="alembic_version",
+            version_table_schema="public",
+            compare_type=True,
+            include_schemas=True,
+        )
+
+        for schema in PostgresDBSchemas:
+            connection.execute(
+                sql.text(f"CREATE SCHEMA IF NOT EXISTS {schema.value}")
+            )
 
         with context.begin_transaction():
             context.run_migrations()

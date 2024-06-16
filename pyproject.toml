@@ -1,0 +1,73 @@
+# --================ Ruff ================--
+[tool.ruff]
+exclude = [
+    ".git/",
+    "venv/",
+    ".venv/",
+    "__pycache__",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "C416",  # unnecessary `list` comprehension
+    "E501",  # line too long, обрабатывается black
+    "E402",  # module level import not at top of file
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+
+
+# --================ Black ================--
+[tool.black]
+line-length = 79
+multi-line-output = 3
+target-version = ["py312"]
+extend-exclude = """
+    .git/
+    | venv/
+    | .venv/
+    | __pycache__
+"""
+
+
+# --================ Isort ================--
+[tool.isort]
+include_trailing_comma = true
+line_length = 79
+lines_after_imports = 2
+multi_line_output = 3
+skip = [
+    ".git/",
+    "venv/",
+    ".venv/",
+    ".mypy_cache/",
+    ".ruff_cache/",
+    "__init__.py",
+]
+
+
+# --================ MyPy ================--
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+strict_optional = true
+explicit_package_bases = true
+plugins = ["pydantic.mypy"]
+exclude = [
+    ".git/",
+    "venv/",
+    ".venv/",
+    "__init__.py",
+]

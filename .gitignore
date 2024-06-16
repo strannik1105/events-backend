@@ -1,1 +1,5 @@
-jwt-private.pem
+.idea
+.venv
+venv
+.env
+*__pycache__
