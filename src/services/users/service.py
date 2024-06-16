@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
@@ -23,7 +25,7 @@ class UserService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> user_models.User | None:
-        user = await self.pg_repository.user.get_by_email(
+        user = await self._pg_repository.user.get_by_email(
             email=email, custom_options=custom_options
         )
         if validate:
@@ -41,7 +43,7 @@ class UserService(CoreService):
         user_in: user_schemas.UserCreate,
         with_commit: bool = True,
     ) -> user_models.User:
-        user = await self.pg_repository.user.create(
+        user = await self._pg_repository.user.create(
             obj_in=user_schemas.UserCreateWithoutPassword.model_validate(
                 user_in.model_dump()
             ),
@@ -56,8 +58,20 @@ class UserService(CoreService):
     async def update_user_password(
         self, user: user_models.User, password: str, with_commit: bool = True
     ) -> user_models.User:
-        return await self.pg_repository.user.update_user_password(
+        return await self._pg_repository.user.update_user_password(
             user=user,
             hashed_password=SecurityManager.get_password_hash(password),
+            with_commit=with_commit,
+        )
+
+    async def update_last_login_at(
+        self,
+        user: user_models.User,
+        last_login_at: datetime | None,
+        with_commit: bool = True,
+    ) -> user_models.User:
+        return await self._pg_repository.user.update_last_login_at(
+            user=user,
+            last_login_at=last_login_at,
             with_commit=with_commit,
         )

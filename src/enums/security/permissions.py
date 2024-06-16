@@ -1,8 +1,8 @@
-from enum import Enum, StrEnum, unique
+from enum import IntEnum, StrEnum, unique
 
 
 @unique
-class PermissionLabel(Enum):
+class PermissionLabel(IntEnum):
     USER = 0
     EVENT = 1
     EVENT_CONTENT = 2

@@ -147,81 +147,81 @@ class APIException:
     # --================ Base ================--
     internal = HTTPException(
         status_code=APIExceptionBook.internal.status_code,
-        detail=APIExceptionBook.internal.detail,
+        detail=APIExceptionBook.internal.detail.model_dump(),
     )
 
     # --================ Security ================--
     not_allowed = HTTPException(
         status_code=APIExceptionBook.not_allowed.status_code,
-        detail=APIExceptionBook.not_allowed.detail,
+        detail=APIExceptionBook.not_allowed.detail.model_dump(),
     )
     violation_role_branch = HTTPException(
         status_code=APIExceptionBook.violation_role_branch.status_code,
-        detail=APIExceptionBook.violation_role_branch.detail,
+        detail=APIExceptionBook.violation_role_branch.detail.model_dump(),
     )
     violation_event_role_branch = HTTPException(
         status_code=APIExceptionBook.violation_event_role_branch.status_code,
-        detail=APIExceptionBook.violation_event_role_branch.detail,
+        detail=APIExceptionBook.violation_event_role_branch.detail.model_dump(),
     )
     invalid_access_token = HTTPException(
         status_code=APIExceptionBook.invalid_access_token.status_code,
-        detail=APIExceptionBook.invalid_access_token.detail,
+        detail=APIExceptionBook.invalid_access_token.detail.model_dump(),
     )
     invalid_refresh_token = HTTPException(
         status_code=APIExceptionBook.invalid_refresh_token.status_code,
-        detail=APIExceptionBook.invalid_refresh_token.detail,
+        detail=APIExceptionBook.invalid_refresh_token.detail.model_dump(),
     )
     role_already_exists = HTTPException(
         status_code=APIExceptionBook.role_already_exists.status_code,
-        detail=APIExceptionBook.role_already_exists.detail,
+        detail=APIExceptionBook.role_already_exists.detail.model_dump(),
     )
     role_not_found = HTTPException(
         status_code=APIExceptionBook.role_not_found.status_code,
-        detail=APIExceptionBook.role_not_found.detail,
+        detail=APIExceptionBook.role_not_found.detail.model_dump(),
     )
     permission_already_exists = HTTPException(
         status_code=APIExceptionBook.permission_already_exists.status_code,
-        detail=APIExceptionBook.permission_already_exists.detail,
+        detail=APIExceptionBook.permission_already_exists.detail.model_dump(),
     )
     permission_not_found = HTTPException(
         status_code=APIExceptionBook.permission_not_found.status_code,
-        detail=APIExceptionBook.permission_not_found.detail,
+        detail=APIExceptionBook.permission_not_found.detail.model_dump(),
     )
     role_x_permission_already_exists = HTTPException(
         status_code=APIExceptionBook.role_x_permission_already_exists.status_code,
-        detail=APIExceptionBook.role_x_permission_already_exists.detail,
+        detail=APIExceptionBook.role_x_permission_already_exists.detail.model_dump(),
     )
     role_x_permission_not_found = HTTPException(
         status_code=APIExceptionBook.role_x_permission_not_found.status_code,
-        detail=APIExceptionBook.role_x_permission_not_found.detail,
+        detail=APIExceptionBook.role_x_permission_not_found.detail.model_dump(),
     )
     invalid_password = HTTPException(
         status_code=APIExceptionBook.invalid_password.status_code,
-        detail=APIExceptionBook.invalid_password.detail,
+        detail=APIExceptionBook.invalid_password.detail.model_dump(),
     )
 
     # --================ Auth ================--
     unidentified = HTTPException(
         status_code=APIExceptionBook.unidentified.status_code,
-        detail=APIExceptionBook.unidentified.detail,
+        detail=APIExceptionBook.unidentified.detail.model_dump(),
     )
 
     # --================ User ================--
     user_already_exists = HTTPException(
         status_code=APIExceptionBook.user_already_exists.status_code,
-        detail=APIExceptionBook.user_already_exists.detail,
+        detail=APIExceptionBook.user_already_exists.detail.model_dump(),
     )
     user_not_found = HTTPException(
         status_code=APIExceptionBook.user_not_found.status_code,
-        detail=APIExceptionBook.user_not_found.detail,
+        detail=APIExceptionBook.user_not_found.detail.model_dump(),
     )
 
     # --================ Event ================--
     event_file_type_already_exists = HTTPException(
         status_code=APIExceptionBook.event_file_type_already_exists.status_code,
-        detail=APIExceptionBook.event_file_type_already_exists.detail,
+        detail=APIExceptionBook.event_file_type_already_exists.detail.model_dump(),
     )
     event_file_type_not_found = HTTPException(
         status_code=APIExceptionBook.event_file_type_not_found.status_code,
-        detail=APIExceptionBook.event_file_type_not_found.detail,
+        detail=APIExceptionBook.event_file_type_not_found.detail.model_dump(),
     )

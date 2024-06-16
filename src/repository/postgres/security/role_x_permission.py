@@ -17,8 +17,8 @@ class RoleXPermissionRepository(CoreRepository[RoleXPermission]):
     ) -> RoleXPermission | None:
         return await self.get_by(
             filter_expression=(
-                (RoleXPermission.role_label == role_label)
-                & (RoleXPermission.permission_label == permission_label)
+                (self._model.role_label == role_label)
+                & (self._model.permission_label == permission_label)
             ),
             custom_options=custom_options,
         )

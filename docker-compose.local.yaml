@@ -2,6 +2,7 @@ version: "3.9"
 
 volumes:
   postgres-data:
+  redis-data:
 
 networks:
   net:
@@ -26,3 +27,18 @@ services:
       - "maintenance_work_mem=128MB"
     networks:
       - net
+  
+  redis:
+    container_name: redis-events
+    image: redis/redis-stack:6.2.6-v9
+    env_file:
+      - .env
+    volumes:
+      - redis-data:/data
+    restart: always
+    ports:
+      - "6370:6379"
+      - "8001:8001"
+    networks:
+      - net
+  

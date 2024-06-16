@@ -17,5 +17,5 @@ class APIExceptionMiddleware:
             logger.error(f"Internal server error: {exc}", exc_info=True)
             return JSONResponse(
                 status_code=APIExceptionBook.internal.status_code,
-                content=APIExceptionBook.internal.detail,
+                content=APIExceptionBook.internal.detail.model_dump(),
             )

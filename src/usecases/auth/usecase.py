@@ -1,9 +1,8 @@
-from typing import Any
-
-import bcrypt
+from redis import asyncio as aioredis
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config.exceptions import APIException
+from common.managers import DateTimeManager, SecurityManager
+from schemas import auth as auth_schemas
 from usecases.core import CoreUseCase
 
 
@@ -11,17 +10,23 @@ class AuthUseCase(CoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
 
-    async def authenticate(
-        self, db_session: AsyncSession, username: str, password: str
-    ) -> Any:
-        user = await self._auth_repository.get_user_by_username(
-            db_session, username
+    async def login(
+        self,
+        redis_client: aioredis.Redis,
+        login_in: auth_schemas.LogIn,
+    ) -> auth_schemas.AuthTokens:
+        user = await self._service.user.get_user_by_email(
+            email=login_in.email,
         )
-
-        if not user:
-            raise APIException.unauthorized
-
-        if not bcrypt.checkpw(password.encode(), user.password.encode()):
-            raise APIException.unauthorized
-
-        return user
+        SecurityManager.verify_password(
+            password=login_in.password,
+            hashed_password=user.hashed_password,
+        )
+        user = await self._service.user.update_last_login_at(
+            user=user,
+            last_login_at=DateTimeManager.get_utcnow_without_timezone(),
+        )
+        return await self._service.auth.get_jwt_tokens(
+            redis_client=redis_client,
+            user=user,
+        )

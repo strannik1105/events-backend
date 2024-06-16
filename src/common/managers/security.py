@@ -38,7 +38,7 @@ class SecurityManager:
 
     @classmethod
     def verify_password(
-        cls, password: str, hashed_password: str, is_raise: bool = True
+        cls, password: str, hashed_password: str | None, is_raise: bool = True
     ) -> bool | None:
         if not cls._pwd_context.verify(secret=password, hash=hashed_password):
             if is_raise:

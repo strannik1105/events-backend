@@ -3,4 +3,4 @@ from enum import StrEnum, unique
 
 @unique
 class APIPrefixes(StrEnum):
-    AUTH = "/users"
+    AUTH = "/auth"

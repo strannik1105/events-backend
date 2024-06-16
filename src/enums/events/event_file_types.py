@@ -1,8 +1,8 @@
-from enum import Enum, unique
+from enum import IntEnum, unique
 
 
 @unique
-class EventFileTypeLabel(Enum):
+class EventFileTypeLabel(IntEnum):
     TXT = 0
     DOC = 1
     DOCX = 2

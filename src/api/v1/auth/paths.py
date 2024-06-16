@@ -2,4 +2,7 @@ from enum import StrEnum
 
 
 class APIPath(StrEnum):
-    LOGIN = "/login/{username}"
+    SIGNUP = "/signup"
+    LOGIN = "/login"
+    REFRESH = "/refresh"
+    LOGOUT = "/logout"

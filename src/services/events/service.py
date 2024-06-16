@@ -23,7 +23,7 @@ class EventService(CoreService):
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventFileType | None:
         event_file_type = (
-            await self.pg_repository.event_file_type.get_by_label(
+            await self._pg_repository.event_file_type.get_by_label(
                 label=label, custom_options=custom_options
             )
         )
@@ -42,7 +42,7 @@ class EventService(CoreService):
         event_file_type_in: event_schemas.EventFileTypeCreate,
         with_commit: bool = True,
     ) -> event_models.EventFileType:
-        return await self.pg_repository.event_file_type.create(
+        return await self._pg_repository.event_file_type.create(
             obj_in=event_file_type_in,
             with_commit=with_commit,
         )

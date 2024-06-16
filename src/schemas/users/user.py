@@ -3,6 +3,7 @@ from datetime import datetime
 from pydantic import Field, field_validator
 
 from common.schemas import CoreModel, CreatePassword, DateTimeMixin, Email, Sid
+from enums import security as security_enums
 
 
 class UserBase(CoreModel):
@@ -26,7 +27,11 @@ class UserBase(CoreModel):
 
 
 class UserCreateWithoutPassword(UserBase, Email):
-    role_label: int = Field(..., description="Role label")
+    role_label: security_enums.RoleLabel = Field(..., description="Role label")
+
+
+class UserCreateWithoutRoleLabel(UserBase, Email, CreatePassword):
+    pass
 
 
 class UserCreate(UserCreateWithoutPassword, CreatePassword):
@@ -41,5 +46,7 @@ class User(UserBase, Sid, Email, DateTimeMixin):
     telegram_id: int | None = Field(None, description="User telegram id")
     is_active: bool = Field(True, description="User active status")
     is_verified: bool = Field(True, description="User verified status")
-    last_login_at: datetime = Field(..., description="User last login at")
-    role_label: int = Field(..., description="Role label")
+    last_login_at: datetime | None = Field(
+        None, description="User last login at"
+    )
+    role_label: security_enums.RoleLabel = Field(..., description="Role label")

@@ -6,7 +6,7 @@ from config.settings import settings
 
 
 class Password(BaseModel):
-    password: str
+    password: str = Field(..., description="Any password")
 
 
 class CreatePassword(BaseModel):
@@ -21,5 +21,5 @@ class CreatePassword(BaseModel):
             r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]",
             v,
         )
-        assert check, "Invalid Password Format"
+        assert check, "Invalid password format"
         return v

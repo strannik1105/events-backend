@@ -22,7 +22,7 @@ class SecurityService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> security_models.Role | None:
-        role = await self.pg_repository.role.get_by_label(
+        role = await self._pg_repository.role.get_by_label(
             label=label, custom_options=custom_options
         )
         if validate:
@@ -43,7 +43,7 @@ class SecurityService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> security_models.Permission | None:
-        permission = await self.pg_repository.permission.get_by_label(
+        permission = await self._pg_repository.permission.get_by_label(
             label=label, custom_options=custom_options
         )
         if validate:
@@ -66,7 +66,7 @@ class SecurityService(CoreService):
         custom_options: list[ExecutableOption] | None = None,
     ) -> security_models.RoleXPermission | None:
         role_x_permission = (
-            await self.pg_repository.role_x_permission.get_by_labels(
+            await self._pg_repository.role_x_permission.get_by_labels(
                 role_label=role_label,
                 permission_label=permission_label,
                 custom_options=custom_options,
@@ -85,7 +85,7 @@ class SecurityService(CoreService):
     async def create_role(
         self, role_in: security_schemas.RoleCreate, with_commit: bool = True
     ) -> security_models.Role:
-        return await self.pg_repository.role.create(
+        return await self._pg_repository.role.create(
             obj_in=role_in,
             with_commit=with_commit,
         )
@@ -95,7 +95,7 @@ class SecurityService(CoreService):
         permission_in: security_schemas.PermissionCreate,
         with_commit: bool = True,
     ) -> security_models.Permission:
-        return await self.pg_repository.permission.create(
+        return await self._pg_repository.permission.create(
             obj_in=permission_in,
             with_commit=with_commit,
         )
@@ -105,7 +105,7 @@ class SecurityService(CoreService):
         role_x_permission_in: security_schemas.RoleXPermissionCreate,
         with_commit: bool = True,
     ) -> security_models.RoleXPermission:
-        return await self.pg_repository.role_x_permission.create(
+        return await self._pg_repository.role_x_permission.create(
             obj_in=role_x_permission_in,
             with_commit=with_commit,
         )
