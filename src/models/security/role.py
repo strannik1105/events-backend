@@ -16,3 +16,4 @@ class Role(PostgresBaseModel, Label, DateTimeMixin):
 
     name: Mapped[str] = mapped_column(comment="Role name")
     description: Mapped[str] = mapped_column(comment="Role description")
+    is_event: Mapped[bool] = mapped_column(comment="Role event status")

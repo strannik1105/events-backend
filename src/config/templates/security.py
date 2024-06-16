@@ -20,31 +20,37 @@ class SecurityTemplate:
                 label=security_enums.RoleLabel.SUPERUSER,
                 name="Суперпользователь",
                 description="Роль с правами суперпользователя",
+                is_event=False,
             ),
             security_schemas.RoleCreate(
                 label=security_enums.RoleLabel.ADMIN,
                 name="Администратор",
                 description="Роль с правами администратора",
+                is_event=False,
             ),
             security_schemas.RoleCreate(
                 label=security_enums.RoleLabel.USER,
                 name="Обычный пользователь",
                 description="Роль с правами обычного пользователя",
+                is_event=False,
             ),
             security_schemas.RoleCreate(
                 label=security_enums.EventRoleLabel.CREATOR,
                 name="Создатель мероприятия",
                 description="Роль мероприятия с правами создателя",
+                is_event=True,
             ),
             security_schemas.RoleCreate(
                 label=security_enums.EventRoleLabel.SPEAKER,
                 name="Спикер мероприятия",
                 description="Роль мероприятия с правами спикера",
+                is_event=True,
             ),
             security_schemas.RoleCreate(
                 label=security_enums.EventRoleLabel.MEMBER,
                 name="Участник мероприятия",
                 description="Роль мероприятия с правами участника",
+                is_event=True,
             ),
         ]
 
