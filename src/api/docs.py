@@ -18,6 +18,10 @@ class APIDoc:
                 "name": "Auth",
                 "description": "Auth Methods",
             },
+            {
+                "name": "Security",
+                "description": "Security Methods",
+            },
         ]
 
     @classmethod

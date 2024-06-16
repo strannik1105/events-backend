@@ -38,6 +38,14 @@ class IRepository(Generic[T], metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
+    def get_all_by(
+        self,
+        filter_expression: BinaryExpression | None = None,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> list[T]:
+        raise NotImplementedError
+
+    @abstractmethod
     def get_few(
         self,
         limit: int,

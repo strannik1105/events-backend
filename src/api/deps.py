@@ -98,3 +98,19 @@ async def get_current_active_user(
 CurrentActiveUser = Annotated[
     user_models.User, Depends(get_current_active_user)
 ]
+
+# class PermissionAccessActionValidate:
+#     def __init__(self, permission: str, action: str):
+#         self.permission = permission
+#         self.action = action
+#
+#     def __call__(
+#         self,
+#         permissions: dict[str, str]
+#         | None = Depends(get_current_user_permissions),
+#     ):
+#         if not permissions:
+#             raise BackendException(error=ErrorCodes.not_allowed)
+#
+#         if self.action not in permissions.get(self.permission, ""):
+#             raise BackendException(error=ErrorCodes.not_allowed)

@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from config.exceptions import APIException
+from filters import security as security_filters
 from models import security as security_models
 from schemas import security as security_schemas
 from services.core import CoreService
@@ -81,6 +82,13 @@ class SecurityService(CoreService):
                 not_found_exception=APIException.role_x_permission_not_found,
             )
         return role_x_permission
+
+    async def get_roles(
+        self, filter_params: security_filters.RoleFilter
+    ) -> list[security_models.Role]:
+        return await self._pg_repository.role.get_all_by_filter(
+            filter_params=filter_params
+        )
 
     async def create_role(
         self, role_in: security_schemas.RoleCreate, with_commit: bool = True

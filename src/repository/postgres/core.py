@@ -71,6 +71,20 @@ class CoreRepository(Generic[T], IRepository[T]):
         result: Result = await self._db.execute(query)
         return list(result.scalars().all())
 
+    async def get_all_by(
+        self,
+        filter_expression: BinaryExpression | None = None,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> list[T]:
+        query = select(self._model)
+        if filter_expression is not None:
+            query = query.where(filter_expression)
+        query = self._set_custom_options(
+            query=query, custom_options=custom_options
+        )
+        result: Result = await self._db.execute(query)
+        return list(result.scalars().all())
+
     async def get_few(
         self,
         limit: int,
