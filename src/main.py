@@ -14,7 +14,7 @@ from scripts.init import EventInit, SecurityInit, UserInit
 
 
 app = FastAPI(
-    debug=settings.app.LOCAL_MODE is True,
+    debug=settings.app.LOCAL_MODE,
     openapi_url=f"{settings.api.V1}/{settings.api.OPENAPI_URL}",
     title=settings.app.NAME,
     version=settings.app.VERSION,
@@ -45,10 +45,16 @@ async def init() -> None:
     await UserInit.superuser()
 
 
-if __name__ == "__main__":
-    asyncio.run(init())
+def run() -> None:
     uvicorn.run(
-        app=app,
+        "main:app",
         host=settings.api.HOST,
         port=settings.api.PORT,
+        reload=settings.app.LOCAL_MODE,
+        workers=settings.app.WORKERS_NUM,
     )
+
+
+if __name__ == "__main__":
+    asyncio.run(init())
+    run()

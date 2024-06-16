@@ -111,17 +111,24 @@ class APIExceptionBook(metaclass=IteratorMeta):
     )
 
     # --================ User ================--
-    user_already_exists = schemas.APIException(
+    inactive_user = schemas.APIException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=schemas.APIExceptionDetail(
             code=300,
+            description="User was blocked",
+        ),
+    )
+    user_already_exists = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=301,
             description="User already exists",
         ),
     )
     user_not_found = schemas.APIException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=schemas.APIExceptionDetail(
-            code=301,
+            code=302,
             description="User not found",
         ),
     )
@@ -207,6 +214,10 @@ class APIException:
     )
 
     # --================ User ================--
+    inactive_user = HTTPException(
+        status_code=APIExceptionBook.inactive_user.status_code,
+        detail=APIExceptionBook.inactive_user.detail.model_dump(),
+    )
     user_already_exists = HTTPException(
         status_code=APIExceptionBook.user_already_exists.status_code,
         detail=APIExceptionBook.user_already_exists.detail.model_dump(),

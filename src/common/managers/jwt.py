@@ -1,4 +1,5 @@
 import json
+from calendar import timegm
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -59,8 +60,14 @@ class JWTManager:
         to_encode = json.loads(
             auth_schemas.JWTPayload(
                 **creds.model_dump(),
-                exp=datetime.now(UTC)
-                + timedelta(seconds=cls._get_expire_seconds(creds.type)),
+                exp=timegm(
+                    (
+                        datetime.now(UTC)
+                        + timedelta(
+                            seconds=cls._get_expire_seconds(creds.type)
+                        )
+                    ).utctimetuple()
+                ),
             ).model_dump_json()
         )
 
@@ -124,7 +131,25 @@ class JWTManager:
             )
 
     @classmethod
-    async def deactivate_token_by_key(
+    async def remove_all_tokens(
+        cls,
+        redis_client: aioredis.Redis,
+        creds: auth_schemas.JWTCreds,
+        is_delete: bool = True,
+    ) -> None:
+        if is_delete:
+            for key in await redis_client.keys(f"{creds.sub}:*"):
+                await redis_client.delete(key)
+        else:
+            for key in await redis_client.keys(f"{creds.sub}:*"):
+                await redis_client.setex(
+                    name=key,
+                    time=cls._deactivate_expire_seconds,
+                    value=cls._deactivate_value,
+                )
+
+    @classmethod
+    async def remove_token_by_key(
         cls, redis_client: aioredis.Redis, key: str, is_delete: bool = True
     ) -> None:
         if is_delete:

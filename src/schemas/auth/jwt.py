@@ -1,4 +1,3 @@
-from datetime import datetime
 from uuid import UUID
 
 from pydantic import Field
@@ -30,7 +29,7 @@ class JWTPayload(CoreModel):
     sub: UUID = Field(..., description="JWT subscriber")
     jti: UUID = Field(..., description="JWT ID")
     type: auth_enums.JWTTypes = Field(..., description="JWT token type")
-    exp: datetime = Field(..., description="JWT expired at")
+    exp: int = Field(..., description="JWT expired at")
 
 
 class AuthTokensCreatePayload(CoreModel):

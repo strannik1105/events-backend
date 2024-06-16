@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
@@ -16,6 +17,27 @@ class UserService(CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
         self._utils = UserServiceUtils(pg_db)
+
+    async def get_user_by_sid(
+        self,
+        sid: UUID,
+        validate: bool = True,
+        is_exists: bool = True,
+        is_rollback: bool = False,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> user_models.User | None:
+        user = await self._pg_repository.user.get_by_sid(
+            sid=sid, custom_options=custom_options
+        )
+        if validate:
+            await self._utils.exists_validate(
+                obj=user,
+                is_exists=is_exists,
+                is_rollback=is_rollback,
+                exists_exception=APIException.user_already_exists,
+                not_found_exception=APIException.user_not_found,
+            )
+        return user
 
     async def get_user_by_email(
         self,

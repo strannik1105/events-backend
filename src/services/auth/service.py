@@ -1,9 +1,11 @@
 from uuid import uuid4
 
+from jose import JWTError
 from redis import asyncio as aioredis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.managers import JWTManager
+from config.exceptions import APIException
 from enums import auth as auth_enums
 from models import users as user_models
 from schemas import auth as auth_schemas
@@ -15,7 +17,7 @@ class AuthService(CoreService):
         super().__init__(pg_db)
 
     @staticmethod
-    async def get_jwt_tokens(
+    async def get_auth_tokens(
         redis_client: aioredis.Redis, user: user_models.User
     ) -> auth_schemas.AuthTokens:
         access_token_creds = auth_schemas.JWTCreds(
@@ -55,3 +57,46 @@ class AuthService(CoreService):
             access_token=access_token,
             refresh_token=refresh_token,
         )
+
+    async def refresh_auth_tokens(
+        self,
+        redis_client: aioredis.Redis,
+        refresh_token: str,
+    ) -> auth_schemas.AuthTokens:
+        try:
+            payload = await JWTManager.get_token_payload(
+                redis_client=redis_client,
+                token=refresh_token,
+                token_type=auth_enums.JWTTypes.REFRESH,
+            )
+        except JWTError as exc:
+            raise APIException.invalid_refresh_token from exc
+
+        creds = auth_schemas.JWTCreds.model_validate(payload)
+        user = await self._pg_repository.user.get_by_sid(sid=creds.sub)
+
+        await JWTManager.remove_token(
+            redis_client=redis_client,
+            creds=creds,
+        )
+
+        return await self.get_auth_tokens(
+            redis_client=redis_client,
+            user=user,
+        )
+
+    @staticmethod
+    async def logout(
+        redis_client: aioredis.Redis,
+        access_token_payload: auth_schemas.AuthTokensPayload,
+        is_everywhere: bool,
+    ) -> None:
+        creds = auth_schemas.JWTCreds.model_validate(access_token_payload)
+        if is_everywhere:
+            await JWTManager.remove_all_tokens(
+                redis_client=redis_client, creds=creds
+            )
+        else:
+            await JWTManager.remove_token(
+                redis_client=redis_client, creds=creds
+            )
