@@ -5,3 +5,4 @@ from enum import StrEnum, unique
 class APIPrefixes(StrEnum):
     AUTH = "/auth"
     SECURITY = "/security"
+    EVENT = "/event"

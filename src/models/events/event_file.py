@@ -24,7 +24,7 @@ class EventFile(PostgresBaseModel, Sid, DateTimeMixin):
         index=True,
         comment="Event SID",
     )
-    event_content_sid: Mapped[UUID] = mapped_column(
+    event_content_sid: Mapped[UUID | None] = mapped_column(
         ForeignKey(f"{EVENTS_SCHEMA}.event_content.sid", ondelete="CASCADE"),
         index=True,
         comment="Event content SID",

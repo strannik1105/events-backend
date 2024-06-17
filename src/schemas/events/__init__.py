@@ -7,6 +7,7 @@ __all__ = [
     "EventFileType",
     "EventFileTypeCreate",
     "EventFile",
+    "EventFileCreate",
     "EventAddress",
 ]
 
@@ -17,5 +18,5 @@ from .event_content import EventContent
 from .event_content_type import EventContentType
 from .event_pull import EventPull
 from .event_file_type import EventFileType, EventFileTypeCreate
-from .event_file import EventFile
+from .event_file import EventFile, EventFileCreate
 from .event_address import EventAddress

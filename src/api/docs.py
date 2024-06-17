@@ -22,6 +22,10 @@ class APIDoc:
                 "name": "Security",
                 "description": "Security Methods",
             },
+            {
+                "name": "Event",
+                "description": "Event Methods",
+            },
         ]
 
     @classmethod
