@@ -1,4 +1,4 @@
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from botocore.client import BaseClient
 from fastapi import UploadFile
@@ -79,7 +79,6 @@ class EventUseCase(CoreUseCase):
 
         event_file = await self._service.event.create_event_file(
             event_file_in=event_schemas.EventFileCreate(
-                sid=uuid4(),
                 file_name=file.filename,
                 file_bytes=file.size,
                 event_sid=event_sid,

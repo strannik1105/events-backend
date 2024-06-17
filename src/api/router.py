@@ -14,7 +14,9 @@ class Router:
             security.router, prefix=APIPrefixes.SECURITY, tags=["Security"]
         )
         router.include_router(
-            events.router, prefix=APIPrefixes.EVENT, tags=["Event"]
+            events.event_file_router,
+            prefix=APIPrefixes.EVENT,
+            tags=["Event file"],
         )
         return router
 

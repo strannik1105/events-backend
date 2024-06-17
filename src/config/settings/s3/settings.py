@@ -13,15 +13,9 @@ class S3Settings(EnvCoreSettings):
         "Version": "2012-10-17",
         "Statement": [
             {
-                "Effect": "Allow",
+                "Effect": "Deny",
                 "Principal": {"AWS": "*"},
-                "Action": ["s3:GetBucketLocation", "s3:ListBucket"],
-                "Resource": "arn:aws:s3:::events",
-            },
-            {
-                "Effect": "Allow",
-                "Principal": {"AWS": "*"},
-                "Action": "s3:GetObject",
+                "Action": ["s3:GetObject"],
                 "Resource": "arn:aws:s3:::events/*",
             },
         ],

@@ -1,6 +1,6 @@
 __all__ = [
-    "router",
+    "event_file_router",
 ]
 
 
-from .router import router
+from .event_file_router import router as event_file_router

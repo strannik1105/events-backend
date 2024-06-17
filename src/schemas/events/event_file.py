@@ -22,7 +22,7 @@ class EventFileBase(CoreModel):
         return v.strip()
 
 
-class EventFileCreate(EventFileBase, Sid):
+class EventFileCreate(EventFileBase):
     pass
 
 

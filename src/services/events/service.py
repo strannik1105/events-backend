@@ -201,7 +201,7 @@ class EventService(CoreService):
         return S3Manager.generate_url(
             s3_client=s3_client,
             bucket=self._events_bucket,
-            obj=str(event_file.sid),
+            obj=event_file.file_name,
             folder=str(event_file.event_sid)
             if event_file.event_content_sid is None
             else f"{event_file.event_sid}/{event_file.event_content_sid}",
@@ -217,7 +217,7 @@ class EventService(CoreService):
             s3_client=s3_client,
             bucket=self._events_bucket,
             file_io=file.file,
-            obj=str(event_file.sid),
+            obj=event_file.file_name,
             folder=str(event_file.event_sid)
             if event_file.event_content_sid is None
             else f"{event_file.event_sid}/{event_file.event_content_sid}",
@@ -232,7 +232,7 @@ class EventService(CoreService):
         S3Manager.remove(
             s3_client=s3_client,
             bucket=self._events_bucket,
-            obj=str(event_file.sid),
+            obj=event_file.file_name,
             folder=str(event_file.event_sid)
             if event_file.event_content_sid is None
             else f"{event_file.event_sid}/{event_file.event_content_sid}",
