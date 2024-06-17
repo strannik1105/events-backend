@@ -4,6 +4,7 @@ from botocore.client import BaseClient
 from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from common import enums, schemas
 from models import events as event_models
 from schemas import events as event_schemas
 from usecases.core import CoreUseCase
@@ -15,6 +16,38 @@ class EventUseCase(CoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
         self._utils = EventUseCaseUtils(pg_db)
+
+    async def get_event_file_by_sid(
+        self,
+        s3_client: BaseClient,
+        event_file_sid: UUID,
+    ) -> str:
+        event_file = await self._service.event.get_event_file_by_sid(
+            sid=event_file_sid
+        )
+        return await self._service.event.load_event_file(
+            s3_client=s3_client,
+            event_file=event_file,
+        )
+
+    async def get_event_files(
+        self,
+        event_sid: UUID,
+        event_content_sid: UUID | None,
+    ) -> list[event_models.EventFile]:
+        await self._service.event.get_event_by_sid(sid=event_sid)
+        if event_content_sid is not None:
+            await self._service.event.get_event_content_by_sid(
+                sid=event_content_sid
+            )
+            await self._service.event.get_event_pull_by_event_sids(
+                event_sid=event_sid,
+                event_content_sid=event_content_sid,
+            )
+        return await self._service.event.get_event_files_by_event_sids(
+            event_sid=event_sid,
+            event_content_sid=event_content_sid,
+        )
 
     async def get_event_file_types(self) -> list[event_models.EventFileType]:
         return await self._service.event.get_event_file_types()
@@ -65,3 +98,22 @@ class EventUseCase(CoreUseCase):
         await self._pg_db.refresh(event_file)
 
         return event_file
+
+    async def remove_event_file_by_sid(
+        self,
+        s3_client: BaseClient,
+        event_file_sid: UUID,
+    ) -> schemas.Msg:
+        event_file = await self._service.event.get_event_file_by_sid(
+            sid=event_file_sid
+        )
+        await self._service.event.remove_event_file(
+            event_file=event_file,
+            with_commit=False,
+        )
+        await self._service.event.unload_event_file(
+            s3_client=s3_client,
+            event_file=event_file,
+        )
+        await self._pg_db.commit()
+        return schemas.Msg(msg=enums.ResponseMessages.SUCCESS)
