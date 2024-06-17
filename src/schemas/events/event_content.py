@@ -4,8 +4,10 @@ from common.schemas import CoreModel, DateTimeMixin, Sid
 
 
 class EventContentBase(CoreModel):
-    name: str = Field(..., description="Event name")
-    description: str = Field(..., description="Event description")
+    name: str = Field(..., description="Event content name")
+    description: str | None = Field(
+        None, description="Event content description"
+    )
     type_label: int = Field(..., description="Event content type label")
 
     @field_validator("name", mode="after")

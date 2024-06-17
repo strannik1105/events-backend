@@ -16,7 +16,9 @@ class Event(PostgresBaseModel, Sid, DateTimeMixin):
     }
 
     name: Mapped[str] = mapped_column(comment="Event name")
-    description: Mapped[str] = mapped_column(comment="Event description")
+    description: Mapped[str | None] = mapped_column(
+        comment="Event description"
+    )
     type_label: Mapped[int] = mapped_column(
         SMALLINT,
         ForeignKey(f"{EVENTS_SCHEMA}.event_type.label", ondelete="CASCADE"),

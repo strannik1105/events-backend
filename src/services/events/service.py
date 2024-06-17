@@ -1,9 +1,13 @@
 from uuid import UUID
 
+from botocore.client import BaseClient
+from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
+from common.managers import S3Manager
 from config.exceptions import APIException
+from config.settings import settings
 from models import events as event_models
 from schemas import events as event_schemas
 from services.core import CoreService
@@ -15,6 +19,7 @@ class EventService(CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
         self._utils = EventServiceUtils(pg_db)
+        self._events_bucket: str = settings.s3.EVENTS_BUCKET
 
     async def get_event_by_sid(
         self,
@@ -130,6 +135,93 @@ class EventService(CoreService):
                 not_found_exception=APIException.event_file_type_not_found,
             )
         return event_file_type
+
+    async def get_event_file_type_by_name(
+        self,
+        name: str,
+        validate: bool = True,
+        is_exists: bool = True,
+        is_rollback: bool = False,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> event_models.EventFileType | None:
+        event_file_type = (
+            await self._pg_repository.event_file_type.get_by_name(
+                name=name, custom_options=custom_options
+            )
+        )
+        if validate:
+            await self._utils.exists_validate(
+                obj=event_file_type,
+                is_exists=is_exists,
+                is_rollback=is_rollback,
+                exists_exception=APIException.event_file_type_already_exists,
+                not_found_exception=APIException.event_file_type_not_found,
+            )
+        return event_file_type
+
+    async def get_event_file_types(self) -> list[event_models.EventFileType]:
+        return await self._pg_repository.event_file_type.get_all()
+
+    async def get_event_files_by_event_sids(
+        self,
+        event_sid: UUID,
+        event_content_sid: UUID | None,
+    ) -> list[event_models.EventFileType]:
+        return await self._pg_repository.event_file_type.get_all_by_event_sids(
+            event_sid=event_sid,
+            event_content_sid=event_content_sid,
+        )
+
+    async def upload_event_file(
+        self,
+        s3_client: BaseClient,
+        event_file: event_models.EventFile,
+        file: UploadFile,
+    ) -> None:
+        S3Manager.put_obj(
+            s3_client=s3_client,
+            bucket=self._events_bucket,
+            file_io=file.file,
+            obj=str(event_file.sid),
+            folder=str(event_file.event_sid)
+            if event_file.event_content_sid is None
+            else f"{event_file.event_sid}/{event_file.event_content_sid}",
+            content_type=file.content_type,
+        )
+
+    async def unload_event_file(
+        self,
+        s3_client: BaseClient,
+        event_file: event_models.EventFile,
+    ) -> None:
+        S3Manager.remove(
+            s3_client=s3_client,
+            bucket=self._events_bucket,
+            obj=str(event_file.sid),
+            folder=str(event_file.event_sid)
+            if event_file.event_content_sid is None
+            else f"{event_file.event_sid}/{event_file.event_content_sid}",
+        )
+
+    async def create_event_file(
+        self,
+        event_file_in: event_schemas.EventFileCreate,
+        with_commit: bool = True,
+    ) -> event_models.EventFile:
+        return await self._pg_repository.event_file.create(
+            obj_in=event_file_in,
+            with_commit=with_commit,
+        )
+
+    async def remove_event_file(
+        self,
+        event_file: event_models.EventFile,
+        with_commit: bool = True,
+    ) -> None:
+        return await self._pg_repository.event_file.remove(
+            obj=event_file,
+            with_commit=with_commit,
+        )
 
     async def create_event_file_type(
         self,

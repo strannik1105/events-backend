@@ -26,3 +26,4 @@ class S3Settings(EnvCoreSettings):
             },
         ],
     }
+    MAX_EVENTS_BUCKET_FILE_MB_SIZE: int = 10

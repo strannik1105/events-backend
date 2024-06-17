@@ -190,6 +190,13 @@ class APIExceptionBook(metaclass=IteratorMeta):
             description="Event file type not found",
         ),
     )
+    invalid_event_file_size = schemas.APIException(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        detail=schemas.APIExceptionDetail(
+            code=408,
+            description="Invalid event file size",
+        ),
+    )
 
 
 class APIException:
@@ -301,4 +308,8 @@ class APIException:
     event_file_type_not_found = HTTPException(
         status_code=APIExceptionBook.event_file_type_not_found.status_code,
         detail=APIExceptionBook.event_file_type_not_found.detail.model_dump(),
+    )
+    invalid_event_file_size = HTTPException(
+        status_code=APIExceptionBook.invalid_event_file_size.status_code,
+        detail=APIExceptionBook.invalid_event_file_size.detail.model_dump(),
     )

@@ -59,14 +59,14 @@ class S3Manager:
         cls,
         s3_client: BaseClient,
         bucket: str,
-        fileobj: BinaryIO,
+        file_io: BinaryIO,
         obj: str,
         folder: str | None,
         content_type: str | None = None,
     ) -> None:
         path = cls._build_path(obj=obj, folder=folder)
         s3_client.upload_fileobj(
-            Fileobj=fileobj,
+            Fileobj=file_io,
             Bucket=bucket,
             Key=path,
             ExtraArgs={

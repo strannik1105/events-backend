@@ -96,4 +96,19 @@ class EventTemplate:
                 name=".html",
                 description="Файл формата HTML",
             ),
+            event_schemas.EventFileTypeCreate(
+                label=event_enums.EventFileTypeLabel.XLSX,
+                name=".xlsx",
+                description="Файл формата XLSX",
+            ),
+            event_schemas.EventFileTypeCreate(
+                label=event_enums.EventFileTypeLabel.CSV,
+                name=".csv",
+                description="Файл формата CSV",
+            ),
+            event_schemas.EventFileTypeCreate(
+                label=event_enums.EventFileTypeLabel.JSON,
+                name=".json",
+                description="Файл формата JSON",
+            ),
         ]
