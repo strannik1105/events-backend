@@ -10,7 +10,7 @@ from api.router import Router
 from config.settings import settings
 from middlewares.exceptions import APIExceptionMiddleware
 from scripts.connection import PostgresConnection
-from scripts.init import EventInit, SecurityInit, UserInit
+from scripts.init import EventInit, S3Init, SecurityInit, UserInit
 
 
 app = FastAPI(
@@ -38,6 +38,7 @@ add_pagination(app)
 
 async def init() -> None:
     await PostgresConnection.ping()
+    await S3Init.events_bucket()
     await SecurityInit.set_roles()
     await SecurityInit.set_permissions()
     await SecurityInit.set_role_x_permissions()

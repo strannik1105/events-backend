@@ -1,5 +1,6 @@
 from typing import Annotated, AsyncIterator
 
+from botocore.client import BaseClient
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
@@ -8,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import services
 import usecases
-from common.db import postgres, redis
+from common.db import postgres, redis, s3
 from common.managers import JWTManager
 from config.exceptions import APIException
 from enums import auth as auth_enums
@@ -23,6 +24,10 @@ async def get_pg_session() -> AsyncIterator[AsyncSession]:
     finally:
         await db.rollback()
         await db.close()
+
+
+async def get_s3_client() -> BaseClient:
+    return s3.S3Client.get()
 
 
 async def get_redis_token_client() -> aioredis.Redis:
@@ -42,6 +47,7 @@ def get_service(
 
 
 PgSession = Annotated[AsyncSession, Depends(get_pg_session)]
+S3Client = Annotated[BaseClient, Depends(get_s3_client)]
 RedisTokenClient = Annotated[aioredis.Redis, Depends(get_redis_token_client)]
 UseCase = Annotated[usecases.UseCase, Depends(get_use_case)]
 Service = Annotated[services.Service, Depends(get_service)]

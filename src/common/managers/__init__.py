@@ -1,4 +1,5 @@
 __all__ = [
+    "S3Manager",
     "DateTimeManager",
     "JWTManager",
     "LoggerManager",
@@ -6,6 +7,7 @@ __all__ = [
 ]
 
 
+from .s3 import S3Manager
 from .datetime import DateTimeManager
 from .jwt import JWTManager
 from .logger import LoggerManager
