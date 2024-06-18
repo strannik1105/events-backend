@@ -5,6 +5,7 @@ from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
+from common import schemas
 from common.managers import S3Manager
 from config.exceptions import APIException
 from config.settings import settings
@@ -86,16 +87,14 @@ class EventService(CoreService):
 
     async def get_event_pull_by_event_sids(
         self,
-        event_sid: UUID,
-        event_content_sid: UUID | None,
+        event_sids: schemas.EventSids,
         validate: bool = True,
         is_exists: bool = True,
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventContent | None:
         event_pull = await self._pg_repository.event_pull.get_by_event_sids(
-            event_sid=event_sid,
-            event_content_sid=event_content_sid,
+            event_sids=event_sids,
             custom_options=custom_options,
         )
         if validate:
@@ -110,8 +109,7 @@ class EventService(CoreService):
 
     async def get_event_pull_by_sids(
         self,
-        event_sid: UUID,
-        event_content_sid: UUID | None,
+        event_pull_sids: schemas.EventSids,
         user_sid: UUID,
         validate: bool = True,
         is_exists: bool = True,
@@ -119,8 +117,7 @@ class EventService(CoreService):
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventContent | None:
         event_pull = await self._pg_repository.event_pull.get_by_sids(
-            event_sid=event_sid,
-            event_content_sid=event_content_sid,
+            event_pull_sids=event_pull_sids,
             user_sid=user_sid,
             custom_options=custom_options,
         )
@@ -185,12 +182,10 @@ class EventService(CoreService):
 
     async def get_event_files_by_event_sids(
         self,
-        event_sid: UUID,
-        event_content_sid: UUID | None,
+        event_sids: schemas.EventSids,
     ) -> list[event_models.EventFileType]:
         return await self._pg_repository.event_file.get_all_by_event_sids(
-            event_sid=event_sid,
-            event_content_sid=event_content_sid,
+            event_sids=event_sids,
         )
 
     async def load_event_file(

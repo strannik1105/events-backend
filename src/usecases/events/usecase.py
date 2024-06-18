@@ -32,21 +32,18 @@ class EventUseCase(CoreUseCase):
 
     async def get_event_files(
         self,
-        event_sid: UUID,
-        event_content_sid: UUID | None,
+        event_sids: schemas.EventSids,
     ) -> list[event_models.EventFile]:
-        await self._service.event.get_event_by_sid(sid=event_sid)
-        if event_content_sid is not None:
+        await self._service.event.get_event_by_sid(sid=event_sids.event_sid)
+        if event_sids.event_content_sid is not None:
             await self._service.event.get_event_content_by_sid(
-                sid=event_content_sid
+                sid=event_sids.event_content_sid
             )
             await self._service.event.get_event_pull_by_event_sids(
-                event_sid=event_sid,
-                event_content_sid=event_content_sid,
+                event_sids=event_sids,
             )
         return await self._service.event.get_event_files_by_event_sids(
-            event_sid=event_sid,
-            event_content_sid=event_content_sid,
+            event_sids=event_sids,
         )
 
     async def get_event_file_types(self) -> list[event_models.EventFileType]:
@@ -55,8 +52,7 @@ class EventUseCase(CoreUseCase):
     async def create_event_file(
         self,
         s3_client: BaseClient,
-        event_sid: UUID,
-        event_content_sid: UUID | None,
+        event_sids: schemas.EventSids,
         file: UploadFile,
     ) -> event_models.EventFile:
         self._utils.validate_file_size(file=file)
@@ -67,22 +63,21 @@ class EventUseCase(CoreUseCase):
             )
         )
 
-        await self._service.event.get_event_by_sid(sid=event_sid)
-        if event_content_sid is not None:
+        await self._service.event.get_event_by_sid(sid=event_sids.event_sid)
+        if event_sids.event_content_sid is not None:
             await self._service.event.get_event_content_by_sid(
-                sid=event_content_sid
+                sid=event_sids.event_content_sid
             )
             await self._service.event.get_event_pull_by_event_sids(
-                event_sid=event_sid,
-                event_content_sid=event_content_sid,
+                event_sids=event_sids,
             )
 
         event_file = await self._service.event.create_event_file(
             event_file_in=event_schemas.EventFileCreate(
                 file_name=file.filename,
                 file_bytes=file.size,
-                event_sid=event_sid,
-                event_content_sid=event_content_sid,
+                event_sid=event_sids.event_sid,
+                event_content_sid=event_sids.event_content_sid,
                 type_label=event_file_type.label,
             ),
             with_commit=False,

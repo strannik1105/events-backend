@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, Depends, UploadFile
 
 from api import deps
 from api.params import APIParam
@@ -38,13 +38,10 @@ async def get_event_file_by_sid(
 async def get_event_files(
     _: deps.CurrentActiveUser,
     use_case: deps.UseCase,
-    event_sid: Annotated[UUID, APIParam.query(..., alias="eventSid")],
-    event_content_sid: UUID
-    | None = APIParam.query(None, alias="eventContentSid"),
+    event_sids: Annotated[schemas.EventSids, Depends()],
 ) -> list[event_models.EventFile]:
     return await use_case.event.get_event_files(
-        event_sid=event_sid,
-        event_content_sid=event_content_sid,
+        event_sids=event_sids,
     )
 
 
@@ -66,15 +63,12 @@ async def create_event_file(
     _: deps.CurrentActiveUser,
     s3_client: deps.S3Client,
     use_case: deps.UseCase,
-    event_sid: Annotated[UUID, APIParam.query(..., alias="eventSid")],
+    event_sids: Annotated[schemas.EventSids, Depends()],
     file: Annotated[UploadFile, APIParam.file(...)],
-    event_content_sid: UUID
-    | None = APIParam.query(None, alias="eventContentSid"),
 ) -> event_models.EventFile:
     return await use_case.event.create_event_file(
         s3_client=s3_client,
-        event_sid=event_sid,
-        event_content_sid=event_content_sid,
+        event_sids=event_sids,
         file=file,
     )
 
