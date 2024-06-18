@@ -1,8 +1,14 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import SMALLINT, VARCHAR, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
 from models.mixins import DateTimeMixin, Sid
+
+
+if TYPE_CHECKING:
+    from models.security import Role  # noqa: F401
 
 
 SECURITY_SCHEMA = PostgresDBSchemas.SECURITY
@@ -30,3 +36,5 @@ class RoleXPermission(PostgresBaseModel, Sid, DateTimeMixin):
     access_actions: Mapped[str] = mapped_column(
         VARCHAR(5), comment="Access actions of role permission"
     )
+
+    role: Mapped[list["Role"]] = relationship(back_populates="permissions")

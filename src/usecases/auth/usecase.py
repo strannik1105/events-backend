@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from common import enums, schemas
 from common.managers import DateTimeManager, SecurityManager
+from common.sql.options import SQLUserOptions
 from schemas import auth as auth_schemas
 from usecases.core import CoreUseCase
 
@@ -17,13 +18,13 @@ class AuthUseCase(CoreUseCase):
         login_in: auth_schemas.LogIn,
     ) -> auth_schemas.AuthTokens:
         user = await self._service.user.get_user_by_email(
-            email=login_in.email,
+            email=login_in.email, custom_options=SQLUserOptions.permissions()
         )
         SecurityManager.verify_password(
             password=login_in.password,
             hashed_password=user.hashed_password,
         )
-        user = await self._service.user.update_last_login_at(
+        await self._service.user.update_last_login_at(
             user=user,
             last_login_at=DateTimeManager.get_utcnow_without_timezone(),
         )
