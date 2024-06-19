@@ -39,35 +39,50 @@ class SecurityRole:
         action: security_enums.PermissionAccessAction,
         current_user: user_schemas.CurrentUser,
         event_sids: common_schemas.EventSids,
-        is_raise: bool = True,
-    ) -> bool | None:
-        is_valid_role = False
-
+    ) -> None:
         if action in current_user.role_permissions.get(permission, ""):
-            is_valid_role = True
+            return
 
-        if not is_valid_role:
-            repository = PostgresRepository(pg_db)
-            event_pull = await repository.event_pull.get_by_event_user_sids(
-                event_user_sids=common_schemas.EventUserSids(
-                    event_sid=event_sids.event_sid,
-                    user_sid=current_user.sid,
-                ),
-                custom_options=event_options.SQLEventPullOptions.permissions(),
-            )
-            if event_pull:
-                for role_permission in event_pull.role.permissions:
-                    if (
-                        role_permission.permission_label == permission
-                        and action in role_permission.access_actions
-                    ):
-                        is_valid_role = True
-                        break
+        repository = PostgresRepository(pg_db)
 
-        if not is_valid_role and is_raise:
+        event_pull = await repository.event_pull.get_by_event_user_sids(
+            event_user_sids=common_schemas.EventUserSids(
+                event_sid=event_sids.event_sid,
+                user_sid=current_user.sid,
+            ),
+            custom_options=event_options.SQLEventPullOptions.permissions(),
+        )
+        if not event_pull:
             raise APIException.not_allowed
 
-        return is_valid_role
+        for role_permission in event_pull.role.permissions:
+            if (
+                role_permission.permission_label == permission
+                and action in role_permission.access_actions
+            ):
+                if (
+                    event_pull.event_role_label
+                    == security_enums.EventRoleLabel.SPEAKER
+                    and event_sids.event_content_sid is not None
+                    and action
+                    in (
+                        security_enums.PermissionAccessAction.CREATE,
+                        security_enums.PermissionAccessAction.UPDATE,
+                        security_enums.PermissionAccessAction.DELETE,
+                    )
+                ):
+                    event_pull = await repository.event_pull.get_by_sids(
+                        event_pull_sids=common_schemas.EventPullSids(
+                            **event_sids.model_dump(),
+                            user_sid=current_user.sid,
+                        ),
+                        custom_options=event_options.SQLEventPullOptions.permissions(),
+                    )
+                    if not event_pull:
+                        raise APIException.not_allowed
+                return
+
+        raise APIException.not_allowed
 
     @classmethod
     def get_role_label_by_int(
