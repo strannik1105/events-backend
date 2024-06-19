@@ -5,7 +5,7 @@ from common.schemas import CoreModel, DateTimeMixin, Sid
 
 class EventBase(CoreModel):
     name: str = Field(..., description="Event name")
-    description: str = Field(..., description="Event description")
+    description: str | None = Field(None, description="Event description")
     type_label: int = Field(..., description="Event type label")
 
     @field_validator("name", mode="after")

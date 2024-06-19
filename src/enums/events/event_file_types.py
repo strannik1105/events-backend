@@ -21,3 +21,6 @@ class EventFileTypeLabel(IntEnum):
     ODP = 15
     PDF = 16
     HTML = 17
+    XLSX = 20
+    CSV = 21
+    JSON = 22

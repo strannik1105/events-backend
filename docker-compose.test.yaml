@@ -3,6 +3,8 @@ version: "3.9"
 volumes:
   postgres-data:
   redis-data:
+  minio-data:
+  minio-storage:
 
 networks:
   net:
@@ -25,6 +27,11 @@ services:
       - "work_mem=12MB"
       - "-c"
       - "maintenance_work_mem=128MB"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
     networks:
       - net
   
@@ -39,6 +46,31 @@ services:
     ports:
       - "6379:6379"
       - "8001:8001"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - net
+  
+  minio:
+    container_name: minio-events-test
+    image: minio/minio:RELEASE.2024-01-18T22-51-28Z
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/var/lib/minio
+      - minio-storage:/data
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://minio:9000/minio/health/live" ]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
     networks:
       - net
   

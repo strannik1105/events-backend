@@ -15,8 +15,10 @@ class EventContent(PostgresBaseModel, Sid, DateTimeMixin):
         "comment": "Table with all events content",
     }
 
-    name: Mapped[str] = mapped_column(comment="Event name")
-    description: Mapped[str] = mapped_column(comment="Event description")
+    name: Mapped[str] = mapped_column(comment="Event content name")
+    description: Mapped[str | None] = mapped_column(
+        comment="Event content description"
+    )
     type_label: Mapped[int] = mapped_column(
         SMALLINT,
         ForeignKey(

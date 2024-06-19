@@ -16,11 +16,15 @@ class APIDoc:
         return [
             {
                 "name": "Auth",
-                "description": "Auth Methods",
+                "description": "Auth methods",
             },
             {
                 "name": "Security",
-                "description": "Security Methods",
+                "description": "Security methods",
+            },
+            {
+                "name": "Event file",
+                "description": "Event file methods",
             },
         ]
 

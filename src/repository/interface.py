@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import Generic, TypeVar
 from uuid import UUID
 
+from fastapi_pagination import LimitOffsetPage
 from pydantic import BaseModel
 from sqlalchemy import BinaryExpression
 from sqlalchemy.sql.base import ExecutableOption
@@ -52,6 +53,21 @@ class IRepository(Generic[T], metaclass=ABCMeta):
         offset: int,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[T]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_pagination(
+        self,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> LimitOffsetPage[T]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_pagination_by(
+        self,
+        filter_expression: BinaryExpression | None = None,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> LimitOffsetPage[T]:
         raise NotImplementedError
 
     @abstractmethod

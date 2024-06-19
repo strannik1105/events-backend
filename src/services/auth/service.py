@@ -5,20 +5,23 @@ from redis import asyncio as aioredis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.managers import JWTManager
+from common.sql.options import users as user_options
 from config.exceptions import APIException
 from enums import auth as auth_enums
 from models import users as user_models
 from schemas import auth as auth_schemas
 from services.core import CoreService
 
+from .utils import AuthServiceUtils
+
 
 class AuthService(CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
+        self._utils = AuthServiceUtils(pg_db)
 
-    @staticmethod
     async def get_auth_tokens(
-        redis_client: aioredis.Redis, user: user_models.User
+        self, redis_client: aioredis.Redis, user: user_models.User
     ) -> auth_schemas.AuthTokens:
         access_token_creds = auth_schemas.JWTCreds(
             sub=user.sid,
@@ -35,12 +38,18 @@ class AuthService(CoreService):
             creds=access_token_creds,
             payload=auth_schemas.AuthTokensCreatePayload(
                 role_label=user.role_label,
+                role_permissions=self._utils.get_role_permissions(
+                    role=user.role,
+                ),
             ),
         )
         refresh_token = JWTManager.get_token(
             creds=refresh_token_creds,
             payload=auth_schemas.AuthTokensCreatePayload(
                 role_label=user.role_label,
+                role_permissions=self._utils.get_role_permissions(
+                    role=user.role,
+                ),
             ),
         )
 
@@ -73,7 +82,10 @@ class AuthService(CoreService):
             raise APIException.invalid_refresh_token from exc
 
         creds = auth_schemas.JWTCreds.model_validate(payload)
-        user = await self._pg_repository.user.get_by_sid(sid=creds.sub)
+        user = await self._pg_repository.user.get_by_sid(
+            sid=creds.sub,
+            custom_options=user_options.SQLUserOptions.permissions(),
+        )
 
         await JWTManager.remove_token(
             redis_client=redis_client,

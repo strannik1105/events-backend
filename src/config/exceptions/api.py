@@ -134,18 +134,81 @@ class APIExceptionBook(metaclass=IteratorMeta):
     )
 
     # --================ Event ================--
-    event_file_type_already_exists = schemas.APIException(
+    event_already_exists = schemas.APIException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=schemas.APIExceptionDetail(
             code=400,
+            description="Event already exists",
+        ),
+    )
+    event_not_found = schemas.APIException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=schemas.APIExceptionDetail(
+            code=401,
+            description="Event not found",
+        ),
+    )
+    event_content_already_exists = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=402,
+            description="Event content already exists",
+        ),
+    )
+    event_content_not_found = schemas.APIException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=schemas.APIExceptionDetail(
+            code=403,
+            description="Event content not found",
+        ),
+    )
+    event_pull_already_exists = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=404,
+            description="Event pull already exists",
+        ),
+    )
+    event_pull_not_found = schemas.APIException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=schemas.APIExceptionDetail(
+            code=405,
+            description="Event pull not found",
+        ),
+    )
+    event_file_already_exists = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=406,
+            description="Event file already exists",
+        ),
+    )
+    event_file_not_found = schemas.APIException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=schemas.APIExceptionDetail(
+            code=407,
+            description="Event file not found",
+        ),
+    )
+    event_file_type_already_exists = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=408,
             description="Event file type already exists",
         ),
     )
     event_file_type_not_found = schemas.APIException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=schemas.APIExceptionDetail(
-            code=401,
+            code=409,
             description="Event file type not found",
+        ),
+    )
+    invalid_event_file_size = schemas.APIException(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        detail=schemas.APIExceptionDetail(
+            code=410,
+            description="Invalid event file size",
         ),
     )
 
@@ -228,6 +291,38 @@ class APIException:
     )
 
     # --================ Event ================--
+    event_already_exists = HTTPException(
+        status_code=APIExceptionBook.event_already_exists.status_code,
+        detail=APIExceptionBook.event_already_exists.detail.model_dump(),
+    )
+    event_not_found = HTTPException(
+        status_code=APIExceptionBook.event_not_found.status_code,
+        detail=APIExceptionBook.event_not_found.detail.model_dump(),
+    )
+    event_content_already_exists = HTTPException(
+        status_code=APIExceptionBook.event_content_already_exists.status_code,
+        detail=APIExceptionBook.event_content_already_exists.detail.model_dump(),
+    )
+    event_content_not_found = HTTPException(
+        status_code=APIExceptionBook.event_content_not_found.status_code,
+        detail=APIExceptionBook.event_content_not_found.detail.model_dump(),
+    )
+    event_pull_already_exists = HTTPException(
+        status_code=APIExceptionBook.event_pull_already_exists.status_code,
+        detail=APIExceptionBook.event_pull_already_exists.detail.model_dump(),
+    )
+    event_pull_not_found = HTTPException(
+        status_code=APIExceptionBook.event_pull_not_found.status_code,
+        detail=APIExceptionBook.event_pull_not_found.detail.model_dump(),
+    )
+    event_file_already_exists = HTTPException(
+        status_code=APIExceptionBook.event_file_already_exists.status_code,
+        detail=APIExceptionBook.event_file_already_exists.detail.model_dump(),
+    )
+    event_file_not_found = HTTPException(
+        status_code=APIExceptionBook.event_file_not_found.status_code,
+        detail=APIExceptionBook.event_file_not_found.detail.model_dump(),
+    )
     event_file_type_already_exists = HTTPException(
         status_code=APIExceptionBook.event_file_type_already_exists.status_code,
         detail=APIExceptionBook.event_file_type_already_exists.detail.model_dump(),
@@ -235,4 +330,8 @@ class APIException:
     event_file_type_not_found = HTTPException(
         status_code=APIExceptionBook.event_file_type_not_found.status_code,
         detail=APIExceptionBook.event_file_type_not_found.detail.model_dump(),
+    )
+    invalid_event_file_size = HTTPException(
+        status_code=APIExceptionBook.invalid_event_file_size.status_code,
+        detail=APIExceptionBook.invalid_event_file_size.detail.model_dump(),
     )

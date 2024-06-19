@@ -1,5 +1,6 @@
-from typing import Annotated, AsyncIterator
+from typing import Annotated, Any, AsyncIterator
 
+from botocore.client import BaseClient
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
@@ -8,12 +9,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import services
 import usecases
-from common.db import postgres, redis
+from common.db import postgres, redis, s3
 from common.managers import JWTManager
 from config.exceptions import APIException
 from enums import auth as auth_enums
-from models import users as user_models
+from enums import security as security_enums
 from schemas import auth as auth_schemas
+from schemas import users as user_schemas
 
 
 async def get_pg_session() -> AsyncIterator[AsyncSession]:
@@ -23,6 +25,10 @@ async def get_pg_session() -> AsyncIterator[AsyncSession]:
     finally:
         await db.rollback()
         await db.close()
+
+
+async def get_s3_client() -> BaseClient:
+    return s3.S3Client.get()
 
 
 async def get_redis_token_client() -> aioredis.Redis:
@@ -42,6 +48,7 @@ def get_service(
 
 
 PgSession = Annotated[AsyncSession, Depends(get_pg_session)]
+S3Client = Annotated[BaseClient, Depends(get_s3_client)]
 RedisTokenClient = Annotated[aioredis.Redis, Depends(get_redis_token_client)]
 UseCase = Annotated[usecases.UseCase, Depends(get_use_case)]
 Service = Annotated[services.Service, Depends(get_service)]
@@ -78,39 +85,48 @@ AccessTokenPayload = Annotated[
 async def get_current_user(
     service: Service,
     payload: AccessTokenPayload,
-) -> user_models.User:
-    return await service.user.get_user_by_sid(
+) -> user_schemas.CurrentUser:
+    user = await service.user.get_user_by_sid(
         sid=payload.sub,
+    )
+    return user_schemas.CurrentUser(
+        **user.__dict__,
+        role_permissions=payload.role_permissions,
     )
 
 
-CurrentUser = Annotated[user_models.User, Depends(get_current_user)]
+CurrentUser = Annotated[user_schemas.CurrentUser, Depends(get_current_user)]
 
 
 async def get_current_active_user(
     current_user: CurrentUser,
-) -> user_models.User:
+) -> user_schemas.CurrentUser:
     if not current_user.is_active:
         raise APIException.inactive_user
     return current_user
 
 
 CurrentActiveUser = Annotated[
-    user_models.User, Depends(get_current_active_user)
+    user_schemas.CurrentUser, Depends(get_current_active_user)
 ]
 
-# class PermissionAccessActionValidate:
-#     def __init__(self, permission: str, action: str):
-#         self.permission = permission
-#         self.action = action
-#
-#     def __call__(
-#         self,
-#         permissions: dict[str, str]
-#         | None = Depends(get_current_user_permissions),
-#     ):
-#         if not permissions:
-#             raise BackendException(error=ErrorCodes.not_allowed)
-#
-#         if self.action not in permissions.get(self.permission, ""):
-#             raise BackendException(error=ErrorCodes.not_allowed)
+
+class RolePermissionValidate:
+    def __init__(
+        self,
+        permission: security_enums.PermissionLabel,
+        action: security_enums.PermissionAccessAction,
+    ):
+        self.permission = permission
+        self.action = action
+
+    def __call__(
+        self,
+        payload: Annotated[
+            auth_schemas.AuthTokensPayload, Depends(validate_access_token)
+        ],
+    ) -> Any:
+        if self.action not in payload.role_permissions.get(
+            self.permission, ""
+        ):
+            raise APIException.not_allowed

@@ -50,3 +50,9 @@ class User(UserBase, Sid, Email, DateTimeMixin):
         None, description="User last login at"
     )
     role_label: security_enums.RoleLabel = Field(..., description="Role label")
+
+
+class CurrentUser(User):
+    role_permissions: dict[security_enums.PermissionLabel, str] = Field(
+        ..., description="Role permissions"
+    )

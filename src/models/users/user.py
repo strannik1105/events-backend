@@ -1,10 +1,15 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import BIGINT, SMALLINT, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
 from models.mixins import DateTimeMixin, Sid
+
+
+if TYPE_CHECKING:
+    from models.security import Role  # noqa: F401
 
 
 USERS_SCHEMA = PostgresDBSchemas.USERS
@@ -43,3 +48,5 @@ class User(PostgresBaseModel, Sid, DateTimeMixin):
         index=True,
         comment="Role label",
     )
+
+    role: Mapped["Role"] = relationship(back_populates="users")

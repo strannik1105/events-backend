@@ -1,6 +1,8 @@
 from typing import Generic, TypeVar
 from uuid import UUID
 
+from fastapi_pagination import LimitOffsetPage
+from fastapi_pagination.ext.sqlalchemy import paginate
 from pydantic import BaseModel
 from sqlalchemy import BinaryExpression, Result, Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -97,6 +99,29 @@ class CoreRepository(Generic[T], IRepository[T]):
         )
         result: Result = await self._db.execute(query)
         return list(result.scalars().all())
+
+    async def get_pagination(
+        self,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> LimitOffsetPage[T]:
+        query = select(self._model)
+        query = self._set_custom_options(
+            query=query, custom_options=custom_options
+        )
+        return await paginate(self._db, query)
+
+    async def get_pagination_by(
+        self,
+        filter_expression: BinaryExpression | None = None,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> LimitOffsetPage[T]:
+        query = select(self._model)
+        if filter_expression is not None:
+            query = query.where(filter_expression)
+        query = self._set_custom_options(
+            query=query, custom_options=custom_options
+        )
+        return await paginate(self._db, query)
 
     async def create(
         self, obj_in: T | BaseModel, with_commit: bool = True

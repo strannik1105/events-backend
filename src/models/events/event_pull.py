@@ -1,10 +1,15 @@
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import SMALLINT, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from common.db.postgres import PostgresBaseModel, PostgresDBSchemas
 from models.mixins import DateTimeMixin, Sid
+
+
+if TYPE_CHECKING:
+    from models.security import Role  # noqa: F401
 
 
 EVENTS_SCHEMA = PostgresDBSchemas.EVENTS
@@ -29,7 +34,7 @@ class EventPull(PostgresBaseModel, Sid, DateTimeMixin):
         index=True,
         comment="Event SID",
     )
-    event_content_sid: Mapped[UUID] = mapped_column(
+    event_content_sid: Mapped[UUID | None] = mapped_column(
         ForeignKey(f"{EVENTS_SCHEMA}.event_content.sid", ondelete="CASCADE"),
         index=True,
         comment="Event content SID",
@@ -40,3 +45,5 @@ class EventPull(PostgresBaseModel, Sid, DateTimeMixin):
         index=True,
         comment="Event role label",
     )
+
+    role: Mapped["Role"] = relationship(back_populates="event_pulls")
