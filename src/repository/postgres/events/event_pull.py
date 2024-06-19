@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
-from common import schemas
+from common import schemas as common_schemas
 from models.events import EventPull
 from repository.postgres.core import CoreRepository
 
@@ -12,7 +12,7 @@ class EventPullRepository(CoreRepository[EventPull]):
 
     async def get_by_event_sids(
         self,
-        event_sids: schemas.EventSids,
+        event_sids: common_schemas.EventSids,
         custom_options: list[ExecutableOption] | None = None,
     ) -> EventPull | None:
         return await self.get_by(
@@ -28,7 +28,7 @@ class EventPullRepository(CoreRepository[EventPull]):
 
     async def get_by_sids(
         self,
-        event_pull_sids: schemas.EventPullSids,
+        event_pull_sids: common_schemas.EventPullSids,
         custom_options: list[ExecutableOption] | None = None,
     ) -> EventPull | None:
         return await self.get_by(

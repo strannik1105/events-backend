@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, UploadFile
 
 from api import deps
 from api.params import APIParam
-from common import schemas
+from common import schemas as common_schemas
 from models import events as event_models
 from schemas import events as event_schemas
 
@@ -38,7 +38,7 @@ async def get_event_file_by_sid(
 async def get_event_files(
     _: deps.CurrentActiveUser,
     use_case: deps.UseCase,
-    event_sids: Annotated[schemas.EventSids, Depends()],
+    event_sids: Annotated[common_schemas.EventSids, Depends()],
 ) -> list[event_models.EventFile]:
     return await use_case.event.get_event_files(
         event_sids=event_sids,
@@ -63,7 +63,7 @@ async def create_event_file(
     _: deps.CurrentActiveUser,
     s3_client: deps.S3Client,
     use_case: deps.UseCase,
-    event_sids: Annotated[schemas.EventSids, Depends()],
+    event_sids: Annotated[common_schemas.EventSids, Depends()],
     file: Annotated[UploadFile, APIParam.file(...)],
 ) -> event_models.EventFile:
     return await use_case.event.create_event_file(
@@ -75,14 +75,14 @@ async def create_event_file(
 
 @router.delete(
     path=APIPath.REMOVE_EVENT_FILE_BY_SID,
-    response_model=schemas.Msg,
+    response_model=common_schemas.Msg,
 )
 async def remove_event_file_by_sid(
     _: deps.CurrentActiveUser,
     s3_client: deps.S3Client,
     use_case: deps.UseCase,
     event_file_sid: Annotated[UUID, APIParam.query(..., alias="eventFileSid")],
-) -> schemas.Msg:
+) -> common_schemas.Msg:
     return await use_case.event.remove_event_file_by_sid(
         s3_client=s3_client,
         event_file_sid=event_file_sid,

@@ -2,8 +2,9 @@ from redis import asyncio as aioredis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common import enums, schemas
-from common.managers import DateTimeManager, SecurityManager
-from common.sql.options import SQLUserOptions
+from common.managers import DateTimeManager
+from common.security import SecurityCrypto
+from common.sql.options import users as user_options
 from schemas import auth as auth_schemas
 from usecases.core import CoreUseCase
 
@@ -18,9 +19,10 @@ class AuthUseCase(CoreUseCase):
         login_in: auth_schemas.LogIn,
     ) -> auth_schemas.AuthTokens:
         user = await self._service.user.get_user_by_email(
-            email=login_in.email, custom_options=SQLUserOptions.permissions()
+            email=login_in.email,
+            custom_options=user_options.SQLUserOptions.permissions(),
         )
-        SecurityManager.verify_password(
+        SecurityCrypto.verify_password(
             password=login_in.password,
             hashed_password=user.hashed_password,
         )

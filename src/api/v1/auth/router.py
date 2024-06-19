@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from api import deps
 from api.params import APIParam
-from common import schemas
+from common import schemas as common_schemas
 from enums import security as security_enums
 from models import users as user_models
 from schemas import auth as auth_schemas
@@ -57,13 +57,13 @@ async def refresh(
     )
 
 
-@router.post(path=APIPath.LOGOUT, response_model=schemas.Msg)
+@router.post(path=APIPath.LOGOUT, response_model=common_schemas.Msg)
 async def logout(
     access_token_payload: deps.AccessTokenPayload,
     use_case: deps.UseCase,
     redis_client: deps.RedisTokenClient,
     is_everywhere: Annotated[bool, APIParam.query(..., alias="isEverywhere")],
-) -> schemas.Msg:
+) -> common_schemas.Msg:
     return await use_case.auth.logout(
         redis_client=redis_client,
         access_token_payload=access_token_payload,

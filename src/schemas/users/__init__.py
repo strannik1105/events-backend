@@ -1,5 +1,6 @@
 __all__ = [
     "User",
+    "CurrentUser",
     "UserCreate",
     "UserCreateWithoutPassword",
     "UserCreateWithoutRoleLabel",
@@ -9,6 +10,7 @@ __all__ = [
 
 from .user import (
     User,
+    CurrentUser,
     UserCreate,
     UserCreateWithoutPassword,
     UserCreateWithoutRoleLabel,

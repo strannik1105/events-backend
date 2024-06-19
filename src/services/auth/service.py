@@ -5,7 +5,7 @@ from redis import asyncio as aioredis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.managers import JWTManager
-from common.sql.options import SQLUserOptions
+from common.sql.options import users as user_options
 from config.exceptions import APIException
 from enums import auth as auth_enums
 from models import users as user_models
@@ -83,7 +83,8 @@ class AuthService(CoreService):
 
         creds = auth_schemas.JWTCreds.model_validate(payload)
         user = await self._pg_repository.user.get_by_sid(
-            sid=creds.sub, custom_options=SQLUserOptions.permissions()
+            sid=creds.sub,
+            custom_options=user_options.SQLUserOptions.permissions(),
         )
 
         await JWTManager.remove_token(

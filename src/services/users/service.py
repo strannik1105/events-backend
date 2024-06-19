@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
-from common.managers import SecurityManager
+from common.security import SecurityCrypto
 from config.exceptions import APIException
 from models import users as user_models
 from schemas import users as user_schemas
@@ -82,7 +82,7 @@ class UserService(CoreService):
     ) -> user_models.User:
         return await self._pg_repository.user.update_user_password(
             user=user,
-            hashed_password=SecurityManager.get_password_hash(password),
+            hashed_password=SecurityCrypto.get_password_hash(password),
             with_commit=with_commit,
         )
 

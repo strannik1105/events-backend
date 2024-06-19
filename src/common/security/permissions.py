@@ -1,12 +1,12 @@
-from uuid import UUID
-
-from passlib.context import CryptContext
-
+from common import schemas as common_schemas
+from common.sql.options import events as event_options
 from config.exceptions import APIException
 from enums import security as security_enums
+from schemas import users as user_schemas
+from services import Service
 
 
-class SecurityManager:
+class SecurityPermissions:
     _superuser_label = security_enums.RoleLabel.SUPERUSER
     _admin_label = security_enums.RoleLabel.ADMIN
     _user_label = security_enums.RoleLabel.USER
@@ -30,33 +30,43 @@ class SecurityManager:
         (_event_member_label, _event_creator_label),
     }
 
-    _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-    @classmethod
-    def get_password_hash(cls, password: str) -> str:
-        return cls._pwd_context.hash(password)
-
-    @classmethod
-    def verify_password(
-        cls, password: str, hashed_password: str | None, is_raise: bool = True
-    ) -> bool | None:
-        if not cls._pwd_context.verify(secret=password, hash=hashed_password):
-            if is_raise:
-                raise APIException.invalid_password
-            return False
-        return True
-
     @staticmethod
-    async def validate_user_permission(
+    async def validate_user_event_permission(
+        service: Service,
         permission: security_enums.PermissionLabel,
         action: security_enums.PermissionAccessAction,
-        user_sid: UUID,
-        event_sid: UUID | None = None,
+        current_user: user_schemas.CurrentUser,
+        event_sids: common_schemas.EventSids,
         is_raise: bool = True,
     ) -> bool | None:
+        is_valid_role = False
+
+        if action in current_user.role_permissions.get(permission, ""):
+            is_valid_role = True
+
+        if not is_valid_role:
+            event_pull = await service.event.get_event_pull_by_sids(
+                event_pull_sids=common_schemas.EventPullSids(
+                    **event_sids.model_dump(),
+                    user_sid=current_user.sid,
+                ),
+                validate=False,
+                custom_options=event_options.SQLEventPullOptions.permissions(),
+            )
+            if event_pull:
+                for role_permission in event_pull.role.permissions:
+                    if (
+                        role_permission.permission_label == permission
+                        and action in role_permission.access_actions
+                    ):
+                        is_valid_role = True
+                        break
+
         if is_raise:
-            raise APIException.not_allowed
-        return True
+            if not is_valid_role:
+                raise APIException.not_allowed
+
+        return is_valid_role
 
     @classmethod
     def get_role_label_by_int(
