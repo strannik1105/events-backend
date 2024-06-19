@@ -1,8 +1,8 @@
 __all__ = [
     "SecurityCrypto",
-    "SecurityPermissions",
+    "SecurityRole",
 ]
 
 
 from .crypto import SecurityCrypto
-from .permissions import SecurityPermissions
+from .role import SecurityRole

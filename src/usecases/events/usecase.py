@@ -4,9 +4,14 @@ from botocore.client import BaseClient
 from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common import enums, schemas
+from common import enums
+from common import schemas
+from common import schemas as common_schemas
+from common.security import SecurityRole
+from enums import security as security_enums
 from models import events as event_models
 from schemas import events as event_schemas
+from schemas import users as user_schemas
 from usecases.core import CoreUseCase
 
 from .utils import EventUseCaseUtils
@@ -17,23 +22,53 @@ class EventUseCase(CoreUseCase):
         super().__init__(pg_db)
         self._utils = EventUseCaseUtils(pg_db)
 
-    async def get_event_file_by_sid(
+    async def export_event_file_by_sid(
         self,
+        current_user: user_schemas.CurrentUser,
         s3_client: BaseClient,
         event_file_sid: UUID,
     ) -> str:
         event_file = await self._service.event.get_event_file_by_sid(
             sid=event_file_sid
         )
-        return await self._service.event.load_event_file(
+
+        permission = security_enums.PermissionLabel.EVENT_FILE
+        if event_file.event_content_sid is not None:
+            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+
+        await SecurityRole.validate_role_event_permission(
+            pg_db=self._pg_db,
+            permission=permission,
+            action=security_enums.PermissionAccessAction.EXPORT,
+            current_user=current_user,
+            event_sids=common_schemas.EventSids(
+                event_sid=event_file.event_sid,
+                event_content_sid=event_file.event_content_sid,
+            ),
+        )
+
+        return await self._service.event.export_event_file(
             s3_client=s3_client,
             event_file=event_file,
         )
 
     async def get_event_files(
         self,
+        current_user: user_schemas.CurrentUser,
         event_sids: schemas.EventSids,
     ) -> list[event_models.EventFile]:
+        permission = security_enums.PermissionLabel.EVENT_FILE
+        if event_sids.event_content_sid is not None:
+            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+
+        await SecurityRole.validate_role_event_permission(
+            pg_db=self._pg_db,
+            permission=permission,
+            action=security_enums.PermissionAccessAction.READ,
+            current_user=current_user,
+            event_sids=event_sids,
+        )
+
         await self._service.event.get_event_by_sid(sid=event_sids.event_sid)
         if event_sids.event_content_sid is not None:
             await self._service.event.get_event_content_by_sid(
@@ -42,6 +77,7 @@ class EventUseCase(CoreUseCase):
             await self._service.event.get_event_pull_by_event_sids(
                 event_sids=event_sids,
             )
+
         return await self._service.event.get_event_files_by_event_sids(
             event_sids=event_sids,
         )
@@ -51,10 +87,23 @@ class EventUseCase(CoreUseCase):
 
     async def create_event_file(
         self,
+        current_user: user_schemas.CurrentUser,
         s3_client: BaseClient,
         event_sids: schemas.EventSids,
         file: UploadFile,
     ) -> event_models.EventFile:
+        permission = security_enums.PermissionLabel.EVENT_FILE
+        if event_sids.event_content_sid is not None:
+            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+
+        await SecurityRole.validate_role_event_permission(
+            pg_db=self._pg_db,
+            permission=permission,
+            action=security_enums.PermissionAccessAction.CREATE,
+            current_user=current_user,
+            event_sids=event_sids,
+        )
+
         self._utils.validate_file_size(file=file)
         file_extension = self._utils.get_file_extension(file=file)
         event_file_type = (
@@ -95,12 +144,29 @@ class EventUseCase(CoreUseCase):
 
     async def remove_event_file_by_sid(
         self,
+        current_user: user_schemas.CurrentUser,
         s3_client: BaseClient,
         event_file_sid: UUID,
     ) -> schemas.Msg:
         event_file = await self._service.event.get_event_file_by_sid(
             sid=event_file_sid
         )
+
+        permission = security_enums.PermissionLabel.EVENT_FILE
+        if event_file.event_content_sid is not None:
+            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+
+        await SecurityRole.validate_role_event_permission(
+            pg_db=self._pg_db,
+            permission=permission,
+            action=security_enums.PermissionAccessAction.DELETE,
+            current_user=current_user,
+            event_sids=common_schemas.EventSids(
+                event_sid=event_file.event_sid,
+                event_content_sid=event_file.event_content_sid,
+            ),
+        )
+
         await self._service.event.remove_event_file(
             event_file=event_file,
             with_commit=False,
@@ -109,5 +175,7 @@ class EventUseCase(CoreUseCase):
             s3_client=s3_client,
             event_file=event_file,
         )
+
         await self._pg_db.commit()
+
         return schemas.Msg(msg=enums.ResponseMessages.SUCCESS)

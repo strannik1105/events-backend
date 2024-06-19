@@ -1,12 +1,14 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from common import schemas as common_schemas
 from common.sql.options import events as event_options
 from config.exceptions import APIException
 from enums import security as security_enums
+from repository.postgres import PostgresRepository
 from schemas import users as user_schemas
-from services import Service
 
 
-class SecurityPermissions:
+class SecurityRole:
     _superuser_label = security_enums.RoleLabel.SUPERUSER
     _admin_label = security_enums.RoleLabel.ADMIN
     _user_label = security_enums.RoleLabel.USER
@@ -31,8 +33,8 @@ class SecurityPermissions:
     }
 
     @staticmethod
-    async def validate_user_event_permission(
-        service: Service,
+    async def validate_role_event_permission(
+        pg_db: AsyncSession,
         permission: security_enums.PermissionLabel,
         action: security_enums.PermissionAccessAction,
         current_user: user_schemas.CurrentUser,
@@ -45,12 +47,12 @@ class SecurityPermissions:
             is_valid_role = True
 
         if not is_valid_role:
-            event_pull = await service.event.get_event_pull_by_sids(
+            repository = PostgresRepository(pg_db)
+            event_pull = await repository.event_pull.get_by_sids(
                 event_pull_sids=common_schemas.EventPullSids(
                     **event_sids.model_dump(),
                     user_sid=current_user.sid,
                 ),
-                validate=False,
                 custom_options=event_options.SQLEventPullOptions.permissions(),
             )
             if event_pull:
@@ -62,9 +64,8 @@ class SecurityPermissions:
                         is_valid_role = True
                         break
 
-        if is_raise:
-            if not is_valid_role:
-                raise APIException.not_allowed
+        if not is_valid_role and is_raise:
+            raise APIException.not_allowed
 
         return is_valid_role
 

@@ -186,7 +186,7 @@ class EventService(CoreService):
             event_sids=event_sids,
         )
 
-    async def load_event_file(
+    async def export_event_file(
         self,
         s3_client: BaseClient,
         event_file: event_models.EventFile,
