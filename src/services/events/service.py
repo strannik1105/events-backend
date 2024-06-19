@@ -107,6 +107,30 @@ class EventService(CoreService):
             )
         return event_pull
 
+    async def get_event_pull_by_event_user_sids(
+        self,
+        event_user_sids: common_schemas.EventUserSids,
+        validate: bool = True,
+        is_exists: bool = True,
+        is_rollback: bool = False,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> event_models.EventPull | None:
+        event_pull = (
+            await self._pg_repository.event_pull.get_by_event_user_sids(
+                event_user_sids=event_user_sids,
+                custom_options=custom_options,
+            )
+        )
+        if validate:
+            await self._utils.exists_validate(
+                obj=event_pull,
+                is_exists=is_exists,
+                is_rollback=is_rollback,
+                exists_exception=APIException.event_pull_already_exists,
+                not_found_exception=APIException.event_pull_not_found,
+            )
+        return event_pull
+
     async def get_event_pull_by_sids(
         self,
         event_pull_sids: common_schemas.EventPullSids,
