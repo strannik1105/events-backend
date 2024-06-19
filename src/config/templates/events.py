@@ -19,7 +19,7 @@ class EventTemplate:
             event_schemas.EventFileTypeCreate(
                 label=event_enums.EventFileTypeLabel.DOCX,
                 name=".docx",
-                description="Файл формата DOC",
+                description="Файл формата DOCX",
             ),
             event_schemas.EventFileTypeCreate(
                 label=event_enums.EventFileTypeLabel.ODT,

@@ -12,6 +12,11 @@ class EventSids(CoreModel):
     )
 
 
+class EventUserSids(CoreModel):
+    event_sid: UUID = Field(..., description="Event SID")
+    user_sid: UUID = Field(..., description="User SID")
+
+
 class EventPullSids(CoreModel):
     user_sid: UUID = Field(..., description="User SID")
     event_sid: UUID = Field(..., description="Event SID")

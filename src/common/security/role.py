@@ -48,9 +48,9 @@ class SecurityRole:
 
         if not is_valid_role:
             repository = PostgresRepository(pg_db)
-            event_pull = await repository.event_pull.get_by_sids(
-                event_pull_sids=common_schemas.EventPullSids(
-                    **event_sids.model_dump(),
+            event_pull = await repository.event_pull.get_by_event_user_sids(
+                event_user_sids=common_schemas.EventUserSids(
+                    event_sid=event_sids.event_sid,
                     user_sid=current_user.sid,
                 ),
                 custom_options=event_options.SQLEventPullOptions.permissions(),

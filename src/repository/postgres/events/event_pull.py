@@ -26,6 +26,19 @@ class EventPullRepository(CoreRepository[EventPull]):
             custom_options=custom_options,
         )
 
+    async def get_by_event_user_sids(
+        self,
+        event_user_sids: common_schemas.EventUserSids,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> EventPull | None:
+        return await self.get_by(
+            filter_expression=(
+                (self._model.event_sid == event_user_sids.event_sid)
+                & (self._model.user_sid == event_user_sids.user_sid)
+            ),
+            custom_options=custom_options,
+        )
+
     async def get_by_sids(
         self,
         event_pull_sids: common_schemas.EventPullSids,
