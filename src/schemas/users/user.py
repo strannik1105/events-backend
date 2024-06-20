@@ -45,7 +45,7 @@ class UserUpdate(UserBase):
 class User(UserBase, Sid, Email, DateTimeMixin):
     telegram_id: int | None = Field(None, description="User telegram id")
     is_active: bool = Field(True, description="User active status")
-    is_verified: bool = Field(True, description="User verified status")
+    is_verify: bool = Field(True, description="User verified status")
     last_login_at: datetime | None = Field(
         None, description="User last login at"
     )

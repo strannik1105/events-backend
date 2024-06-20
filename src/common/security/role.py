@@ -33,7 +33,7 @@ class SecurityRole:
     }
 
     @staticmethod
-    async def validate_role_event_permission(
+    async def validate_event_role_permission(
         pg_db: AsyncSession,
         permission: security_enums.PermissionLabel,
         action: security_enums.PermissionAccessAction,

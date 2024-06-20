@@ -18,7 +18,7 @@ class UserInit:
                 email=superuser_in.email, validate=False
             )
             if not superuser:
-                await service.user.create_user(user_in=superuser_in)
+                await service.user.create_verify_user(user_in=superuser_in)
             cls._logger.info("Finish superuser init")
         except Exception as exc:
             cls._logger.error(f"Event superuser error: {exc}")

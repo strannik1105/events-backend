@@ -14,5 +14,13 @@ class EventPullBase(CoreModel):
     event_role_label: int = Field(..., description="Event role label")
 
 
+class EventPullCreate(EventPullBase):
+    pass
+
+
+class EventPullUpdate(EventPullBase):
+    pass
+
+
 class EventPull(EventPullBase, Sid, DateTimeMixin):
     pass

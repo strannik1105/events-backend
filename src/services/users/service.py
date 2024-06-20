@@ -1,6 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
+from fastapi_pagination import LimitOffsetPage
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
@@ -60,6 +61,14 @@ class UserService(CoreService):
             )
         return user
 
+    async def get_users(
+        self,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> LimitOffsetPage[user_models.User]:
+        return await self._pg_repository.user.get_pagination(
+            custom_options=custom_options,
+        )
+
     async def create_user(
         self,
         user_in: user_schemas.UserCreate,
@@ -77,12 +86,64 @@ class UserService(CoreService):
             with_commit=with_commit,
         )
 
+    async def create_verify_user(
+        self,
+        user_in: user_schemas.UserCreate,
+        with_commit: bool = True,
+    ) -> user_models.User:
+        user = await self._pg_repository.user.create(
+            obj_in=user_schemas.UserCreateWithoutPassword.model_validate(
+                user_in.model_dump()
+            ),
+            with_commit=with_commit,
+        )
+        user = await self.update_user_verify(
+            user=user,
+            is_verify=True,
+            with_commit=with_commit,
+        )
+        return await self.update_user_password(
+            user=user,
+            password=user_in.password,
+            with_commit=with_commit,
+        )
+
+    async def update_user(
+        self,
+        user: user_models.User,
+        user_in: user_schemas.UserUpdate,
+        with_commit: bool = True,
+    ) -> user_models.User:
+        return await self._pg_repository.user.update(
+            obj=user,
+            obj_in=user_in,
+            with_commit=with_commit,
+        )
+
     async def update_user_password(
         self, user: user_models.User, password: str, with_commit: bool = True
     ) -> user_models.User:
         return await self._pg_repository.user.update_user_password(
             user=user,
             hashed_password=SecurityCrypto.get_password_hash(password),
+            with_commit=with_commit,
+        )
+
+    async def update_user_verify(
+        self, user: user_models.User, is_verify: bool, with_commit: bool = True
+    ) -> user_models.User:
+        return await self._pg_repository.user.update_user_verify(
+            user=user,
+            is_verify=is_verify,
+            with_commit=with_commit,
+        )
+
+    async def update_user_active(
+        self, user: user_models.User, is_active: bool, with_commit: bool = True
+    ) -> user_models.User:
+        return await self._pg_repository.user.update_user_active(
+            user=user,
+            is_active=is_active,
             with_commit=with_commit,
         )
 
@@ -95,5 +156,15 @@ class UserService(CoreService):
         return await self._pg_repository.user.update_last_login_at(
             user=user,
             last_login_at=last_login_at,
+            with_commit=with_commit,
+        )
+
+    async def remove_user(
+        self,
+        user: user_models.User,
+        with_commit: bool = True,
+    ) -> None:
+        return await self._pg_repository.user.remove(
+            obj=user,
             with_commit=with_commit,
         )

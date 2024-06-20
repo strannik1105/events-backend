@@ -4,6 +4,28 @@ from schemas import events as event_schemas
 
 class EventTemplate:
     @staticmethod
+    def get_event_types() -> list[event_schemas.EventTypeCreate]:
+        return [
+            event_schemas.EventTypeCreate(
+                label=event_enums.EventTypeLabel.CONFERENCE,
+                name="Конференция",
+                description="Мероприятие типа 'Конференция'",
+            ),
+        ]
+
+    @staticmethod
+    def get_event_content_types() -> (
+        list[event_schemas.EventContentTypeCreate]
+    ):
+        return [
+            event_schemas.EventContentTypeCreate(
+                label=event_enums.EventContentTypeLabel.REPORT,
+                name="Доклад",
+                description="Событие типа 'Доклад'",
+            ),
+        ]
+
+    @staticmethod
     def get_event_file_types() -> list[event_schemas.EventFileTypeCreate]:
         return [
             event_schemas.EventFileTypeCreate(

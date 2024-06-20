@@ -20,5 +20,13 @@ class EventAddressBase(CoreModel):
         return v.strip()
 
 
+class EventAddressCreate(EventAddressBase):
+    pass
+
+
+class EventAddressUpdate(EventAddressBase):
+    pass
+
+
 class EventAddress(EventAddressBase, Sid, DateTimeMixin):
     pass

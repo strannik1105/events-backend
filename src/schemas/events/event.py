@@ -17,5 +17,13 @@ class EventBase(CoreModel):
         return v.strip()
 
 
+class EventCreate(EventBase):
+    pass
+
+
+class EventUpdate(EventBase):
+    pass
+
+
 class Event(EventBase, Sid, DateTimeMixin):
     pass

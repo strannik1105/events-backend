@@ -2,6 +2,7 @@ from uuid import UUID
 
 from botocore.client import BaseClient
 from fastapi import UploadFile
+from fastapi_pagination import LimitOffsetPage
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
@@ -43,6 +44,27 @@ class EventService(CoreService):
             )
         return event
 
+    async def get_event_type_by_label(
+        self,
+        label: int,
+        validate: bool = True,
+        is_exists: bool = True,
+        is_rollback: bool = False,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> event_models.EventType | None:
+        event_type = await self._pg_repository.event_type.get_by_label(
+            label=label, custom_options=custom_options
+        )
+        if validate:
+            await self._utils.exists_validate(
+                obj=event_type,
+                is_exists=is_exists,
+                is_rollback=is_rollback,
+                exists_exception=APIException.event_type_already_exists,
+                not_found_exception=APIException.event_type_not_found,
+            )
+        return event_type
+
     async def get_event_content_by_sid(
         self,
         sid: UUID,
@@ -63,6 +85,29 @@ class EventService(CoreService):
                 not_found_exception=APIException.event_content_not_found,
             )
         return event_content
+
+    async def get_event_content_type_by_label(
+        self,
+        label: int,
+        validate: bool = True,
+        is_exists: bool = True,
+        is_rollback: bool = False,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> event_models.EventContentType | None:
+        event_content_type = (
+            await self._pg_repository.event_content_type.get_by_label(
+                label=label, custom_options=custom_options
+            )
+        )
+        if validate:
+            await self._utils.exists_validate(
+                obj=event_content_type,
+                is_exists=is_exists,
+                is_rollback=is_rollback,
+                exists_exception=APIException.event_content_type_already_exists,
+                not_found_exception=APIException.event_content_type_not_found,
+            )
+        return event_content_type
 
     async def get_event_file_by_sid(
         self,
@@ -199,6 +244,40 @@ class EventService(CoreService):
             )
         return event_file_type
 
+    async def get_events(
+        self,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> LimitOffsetPage[event_models.Event]:
+        return await self._pg_repository.event.get_pagination(
+            custom_options=custom_options,
+        )
+
+    async def get_event_types(
+        self,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> list[event_models.EventType]:
+        return await self._pg_repository.event_type.get_all(
+            custom_options=custom_options,
+        )
+
+    async def get_event_contents_by_event_sid(
+        self,
+        event_sid: UUID,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> list[event_models.EventContent]:
+        return await self._pg_repository.event_content.get_all_by_event_sid(
+            event_sid=event_sid,
+            custom_options=custom_options,
+        )
+
+    async def get_event_content_types(
+        self,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> list[event_models.EventContentType]:
+        return await self._pg_repository.event_content_type.get_all(
+            custom_options=custom_options,
+        )
+
     async def get_event_file_types(self) -> list[event_models.EventFileType]:
         return await self._pg_repository.event_file_type.get_all()
 
@@ -253,6 +332,56 @@ class EventService(CoreService):
             folder=str(event_file.event_sid)
             if event_file.event_content_sid is None
             else f"{event_file.event_sid}/{event_file.event_content_sid}",
+        )
+
+    async def create_event(
+        self,
+        event_in: event_schemas.EventCreate,
+        with_commit: bool = True,
+    ) -> event_models.Event:
+        return await self._pg_repository.event.create(
+            obj_in=event_in,
+            with_commit=with_commit,
+        )
+
+    async def create_event_type(
+        self,
+        event_type_in: event_schemas.EventTypeCreate,
+        with_commit: bool = True,
+    ) -> event_models.EventType:
+        return await self._pg_repository.event_type.create(
+            obj_in=event_type_in,
+            with_commit=with_commit,
+        )
+
+    async def create_event_content(
+        self,
+        event_content_in: event_schemas.EventContentCreate,
+        with_commit: bool = True,
+    ) -> event_models.EventContent:
+        return await self._pg_repository.event_content.create(
+            obj_in=event_content_in,
+            with_commit=with_commit,
+        )
+
+    async def create_event_content_type(
+        self,
+        event_content_type_in: event_schemas.EventContentTypeCreate,
+        with_commit: bool = True,
+    ) -> event_models.EventContentType:
+        return await self._pg_repository.event_content_type.create(
+            obj_in=event_content_type_in,
+            with_commit=with_commit,
+        )
+
+    async def create_event_pull(
+        self,
+        event_pull_in: event_schemas.EventPullCreate,
+        with_commit: bool = True,
+    ) -> event_models.EventPull:
+        return await self._pg_repository.event_pull.create(
+            obj_in=event_pull_in,
+            with_commit=with_commit,
         )
 
     async def create_event_file(

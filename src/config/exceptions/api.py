@@ -118,17 +118,24 @@ class APIExceptionBook(metaclass=IteratorMeta):
             description="User was blocked",
         ),
     )
-    user_already_exists = schemas.APIException(
+    unverified_user = schemas.APIException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=schemas.APIExceptionDetail(
             code=301,
+            description="User not verified",
+        ),
+    )
+    user_already_exists = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=302,
             description="User already exists",
         ),
     )
     user_not_found = schemas.APIException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=schemas.APIExceptionDetail(
-            code=302,
+            code=303,
             description="User not found",
         ),
     )
@@ -211,6 +218,34 @@ class APIExceptionBook(metaclass=IteratorMeta):
             description="Invalid event file size",
         ),
     )
+    event_type_already_exists = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=411,
+            description="Event type already exists",
+        ),
+    )
+    event_type_not_found = schemas.APIException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=schemas.APIExceptionDetail(
+            code=412,
+            description="Event type not found",
+        ),
+    )
+    event_content_type_already_exists = schemas.APIException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=schemas.APIExceptionDetail(
+            code=413,
+            description="Event content type already exists",
+        ),
+    )
+    event_content_type_not_found = schemas.APIException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=schemas.APIExceptionDetail(
+            code=414,
+            description="Event content type not found",
+        ),
+    )
 
 
 class APIException:
@@ -281,6 +316,10 @@ class APIException:
         status_code=APIExceptionBook.inactive_user.status_code,
         detail=APIExceptionBook.inactive_user.detail.model_dump(),
     )
+    unverified_user = HTTPException(
+        status_code=APIExceptionBook.unverified_user.status_code,
+        detail=APIExceptionBook.unverified_user.detail.model_dump(),
+    )
     user_already_exists = HTTPException(
         status_code=APIExceptionBook.user_already_exists.status_code,
         detail=APIExceptionBook.user_already_exists.detail.model_dump(),
@@ -334,4 +373,20 @@ class APIException:
     invalid_event_file_size = HTTPException(
         status_code=APIExceptionBook.invalid_event_file_size.status_code,
         detail=APIExceptionBook.invalid_event_file_size.detail.model_dump(),
+    )
+    event_type_already_exists = HTTPException(
+        status_code=APIExceptionBook.event_type_already_exists.status_code,
+        detail=APIExceptionBook.event_type_already_exists.detail.model_dump(),
+    )
+    event_type_not_found = HTTPException(
+        status_code=APIExceptionBook.event_type_not_found.status_code,
+        detail=APIExceptionBook.event_type_not_found.detail.model_dump(),
+    )
+    event_content_type_already_exists = HTTPException(
+        status_code=APIExceptionBook.event_content_type_already_exists.status_code,
+        detail=APIExceptionBook.event_content_type_already_exists.detail.model_dump(),
+    )
+    event_content_type_not_found = HTTPException(
+        status_code=APIExceptionBook.event_content_type_not_found.status_code,
+        detail=APIExceptionBook.event_content_type_not_found.detail.model_dump(),
     )

@@ -16,5 +16,9 @@ class EventContentTypeBase(CoreModel, Label):
         return v.strip()
 
 
+class EventContentTypeCreate(EventContentTypeBase):
+    pass
+
+
 class EventContentType(EventContentTypeBase, DateTimeMixin):
     pass
