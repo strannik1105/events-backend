@@ -32,36 +32,36 @@ class EventUseCase(CoreUseCase):
             resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
-            pg_db=self._pg_db,
+            repository=self.service.repository,
             resource_label=resource_label,
             permission_label=security_enums.PermissionLabel.READ,
             current_user=current_user,
             event_sids=event_sids,
         )
 
-        await self._service.event.get_event_by_sid(sid=event_sids.event_sid)
+        await self.service.event.get_event_by_sid(sid=event_sids.event_sid)
         if event_sids.event_content_sid is not None:
-            await self._service.event.get_event_content_by_sid(
+            await self.service.event.get_event_content_by_sid(
                 sid=event_sids.event_content_sid
             )
-            await self._service.event.get_event_pull_by_event_sids(
+            await self.service.event.get_event_pull_by_event_sids(
                 event_sids=event_sids,
             )
 
-        return await self._service.event.get_event_files_by_event_sids(
+        return await self.service.event.get_event_files_by_event_sids(
             event_sids=event_sids,
         )
 
     async def get_event_types(self) -> list[event_models.EventType]:
-        return await self._service.event.get_event_types()
+        return await self.service.event.get_event_types()
 
     async def get_event_content_types(
         self,
     ) -> list[event_models.EventContentType]:
-        return await self._service.event.get_event_content_types()
+        return await self.service.event.get_event_content_types()
 
     async def get_event_file_types(self) -> list[event_models.EventFileType]:
-        return await self._service.event.get_event_file_types()
+        return await self.service.event.get_event_file_types()
 
     async def export_event_file_by_sid(
         self,
@@ -69,7 +69,7 @@ class EventUseCase(CoreUseCase):
         s3_client: BaseClient,
         event_file_sid: UUID,
     ) -> str:
-        event_file = await self._service.event.get_event_file_by_sid(
+        event_file = await self.service.event.get_event_file_by_sid(
             sid=event_file_sid
         )
 
@@ -78,7 +78,7 @@ class EventUseCase(CoreUseCase):
             resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
-            pg_db=self._pg_db,
+            repository=self.service.repository,
             resource_label=resource_label,
             permission_label=security_enums.PermissionLabel.EXPORT,
             current_user=current_user,
@@ -88,7 +88,7 @@ class EventUseCase(CoreUseCase):
             ),
         )
 
-        return await self._service.event.export_event_file(
+        return await self.service.event.export_event_file(
             s3_client=s3_client,
             event_file=event_file,
         )
@@ -105,7 +105,7 @@ class EventUseCase(CoreUseCase):
             resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
-            pg_db=self._pg_db,
+            repository=self.service.repository,
             resource_label=resource_label,
             permission_label=security_enums.PermissionLabel.CREATE,
             current_user=current_user,
@@ -114,22 +114,20 @@ class EventUseCase(CoreUseCase):
 
         self._utils.validate_file_size(file=file)
         file_extension = self._utils.get_file_extension(file=file)
-        event_file_type = (
-            await self._service.event.get_event_file_type_by_name(
-                name=file_extension,
-            )
+        event_file_type = await self.service.event.get_event_file_type_by_name(
+            name=file_extension,
         )
 
-        await self._service.event.get_event_by_sid(sid=event_sids.event_sid)
+        await self.service.event.get_event_by_sid(sid=event_sids.event_sid)
         if event_sids.event_content_sid is not None:
-            await self._service.event.get_event_content_by_sid(
+            await self.service.event.get_event_content_by_sid(
                 sid=event_sids.event_content_sid
             )
-            await self._service.event.get_event_pull_by_event_sids(
+            await self.service.event.get_event_pull_by_event_sids(
                 event_sids=event_sids,
             )
 
-        event_file = await self._service.event.create_event_file(
+        event_file = await self.service.event.create_event_file(
             event_file_in=event_schemas.EventFileCreate(
                 file_name=file.filename,
                 file_bytes=file.size,
@@ -139,14 +137,14 @@ class EventUseCase(CoreUseCase):
             ),
             with_commit=False,
         )
-        await self._service.event.upload_event_file(
+        await self.service.event.upload_event_file(
             s3_client=s3_client,
             event_file=event_file,
             file=file,
         )
 
-        await self._pg_db.commit()
-        await self._pg_db.refresh(event_file)
+        await self.pg_db.commit()
+        await self.pg_db.refresh(event_file)
 
         return event_file
 
@@ -156,7 +154,7 @@ class EventUseCase(CoreUseCase):
         s3_client: BaseClient,
         event_file_sid: UUID,
     ) -> schemas.Msg:
-        event_file = await self._service.event.get_event_file_by_sid(
+        event_file = await self.service.event.get_event_file_by_sid(
             sid=event_file_sid
         )
 
@@ -165,7 +163,7 @@ class EventUseCase(CoreUseCase):
             resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
-            pg_db=self._pg_db,
+            repository=self.service.repository,
             resource_label=resource_label,
             permission_label=security_enums.PermissionLabel.DELETE,
             current_user=current_user,
@@ -175,15 +173,15 @@ class EventUseCase(CoreUseCase):
             ),
         )
 
-        await self._service.event.remove_event_file(
+        await self.service.event.remove_event_file(
             event_file=event_file,
             with_commit=False,
         )
-        await self._service.event.unload_event_file(
+        await self.service.event.unload_event_file(
             s3_client=s3_client,
             event_file=event_file,
         )
 
-        await self._pg_db.commit()
+        await self.pg_db.commit()
 
         return schemas.Msg(msg=enums.ResponseMessages.SUCCESS)

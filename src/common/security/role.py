@@ -1,10 +1,8 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from common import schemas as common_schemas
 from common.sql.options import events as event_options
 from config.exceptions import APIException
 from enums import security as security_enums
-from repository.postgres import PostgresRepository
+from repository.interfaces import IRepository
 from schemas import users as user_schemas
 
 
@@ -39,7 +37,7 @@ class SecurityRole:
     @classmethod
     async def validate_event_role_permission(
         cls,
-        pg_db: AsyncSession,
+        repository: IRepository,
         resource_label: security_enums.ResourceLabel,
         permission_label: security_enums.PermissionLabel,
         current_user: user_schemas.CurrentUser,
@@ -49,8 +47,6 @@ class SecurityRole:
             resource_label, ""
         ):
             return
-
-        repository = PostgresRepository(pg_db)
 
         event_pull = await repository.event_pull.get_by_event_user_sids(
             event_user_sids=common_schemas.EventUserSids(

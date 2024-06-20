@@ -3,10 +3,13 @@ from sqlalchemy.sql.base import ExecutableOption
 
 from common import schemas as common_schemas
 from models.events import EventFile
+from repository.interfaces.events import IEventFileRepository
 from repository.postgres.core import CoreRepository
 
 
-class EventFileRepository(CoreRepository[EventFile]):
+class EventFileRepository(
+    IEventFileRepository[EventFile], CoreRepository[EventFile]
+):
     def __init__(self, db: AsyncSession, model: type[EventFile]) -> None:
         super().__init__(db, model)
 

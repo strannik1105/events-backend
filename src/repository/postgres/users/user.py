@@ -4,10 +4,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from models.users import User
+from repository.interfaces.users import IUserRepository
 from repository.postgres.core import CoreRepository
 
 
-class UserRepository(CoreRepository[User]):
+class UserRepository(IUserRepository[User], CoreRepository[User]):
     def __init__(self, db: AsyncSession, model: type[User]) -> None:
         super().__init__(db, model)
 

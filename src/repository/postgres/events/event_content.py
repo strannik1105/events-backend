@@ -4,10 +4,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from models.events import EventContent
+from repository.interfaces.events import IEventContentRepository
 from repository.postgres.core import CoreRepository
 
 
-class EventContentRepository(CoreRepository[EventContent]):
+class EventContentRepository(
+    IEventContentRepository[EventContent], CoreRepository[EventContent]
+):
     def __init__(self, db: AsyncSession, model: type[EventContent]) -> None:
         super().__init__(db, model)
 
