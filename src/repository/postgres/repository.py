@@ -13,6 +13,28 @@ from models.events import (
 from models.metrics import EventLike, EventView, Subscribe
 from models.security import Resource, Role, RoleXResource
 from models.users import User
+from repository.interfaces import IRepository
+from repository.interfaces.events import (
+    IEventAddressRepository,
+    IEventContentRepository,
+    IEventContentTypeRepository,
+    IEventFileRepository,
+    IEventFileTypeRepository,
+    IEventPullRepository,
+    IEventRepository,
+    IEventTypeRepository,
+)
+from repository.interfaces.metrics import (
+    IEventLikeRepository,
+    IEventViewRepository,
+    ISubscribeRepository,
+)
+from repository.interfaces.security import (
+    IResourceRepository,
+    IRoleRepository,
+    IRoleXResourceRepository,
+)
+from repository.interfaces.users import IUserRepository
 
 from .events import (
     EventAddressRepository,
@@ -37,7 +59,7 @@ from .security import (
 from .users import UserRepository
 
 
-class PostgresRepository:
+class PostgresRepository(IRepository):
     def __init__(self, db: AsyncSession) -> None:
         self._event = EventRepository(db=db, model=Event)
         self._event_address = EventAddressRepository(db=db, model=EventAddress)
@@ -65,61 +87,61 @@ class PostgresRepository:
         self._user = UserRepository(db=db, model=User)
 
     @property
-    def event(self) -> EventRepository:
+    def event(self) -> IEventRepository:
         return self._event
 
     @property
-    def event_address(self) -> EventAddressRepository:
+    def event_address(self) -> IEventAddressRepository:
         return self._event_address
 
     @property
-    def event_content(self) -> EventContentRepository:
+    def event_content(self) -> IEventContentRepository:
         return self._event_content
 
     @property
-    def event_content_type(self) -> EventContentTypeRepository:
+    def event_content_type(self) -> IEventContentTypeRepository:
         return self._event_content_type
 
     @property
-    def event_file(self) -> EventFileRepository:
+    def event_file(self) -> IEventFileRepository:
         return self._event_file
 
     @property
-    def event_file_type(self) -> EventFileTypeRepository:
+    def event_file_type(self) -> IEventFileTypeRepository:
         return self._event_file_type
 
     @property
-    def event_pull(self) -> EventPullRepository:
+    def event_pull(self) -> IEventPullRepository:
         return self._event_pull
 
     @property
-    def event_type(self) -> EventTypeRepository:
+    def event_type(self) -> IEventTypeRepository:
         return self._event_type
 
     @property
-    def event_like(self) -> EventLikeRepository:
+    def event_like(self) -> IEventLikeRepository:
         return self._event_like
 
     @property
-    def event_view(self) -> EventViewRepository:
+    def event_view(self) -> IEventViewRepository:
         return self._event_view
 
     @property
-    def subscribe(self) -> SubscribeRepository:
+    def subscribe(self) -> ISubscribeRepository:
         return self._subscribe
 
     @property
-    def role(self) -> RoleRepository:
+    def role(self) -> IRoleRepository:
         return self._role
 
     @property
-    def resource(self) -> ResourceRepository:
+    def resource(self) -> IResourceRepository:
         return self._resource
 
     @property
-    def role_x_resource(self) -> RoleXResourceRepository:
+    def role_x_resource(self) -> IRoleXResourceRepository:
         return self._role_x_resource
 
     @property
-    def user(self) -> UserRepository:
+    def user(self) -> IUserRepository:
         return self._user

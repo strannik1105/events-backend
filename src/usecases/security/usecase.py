@@ -10,11 +10,11 @@ class SecurityUseCase(CoreUseCase):
         super().__init__(pg_db)
 
     async def get_role_by_label(self, role_label: int) -> security_models.Role:
-        return await self._service.security.get_role_by_label(label=role_label)
+        return await self.service.security.get_role_by_label(label=role_label)
 
     async def get_roles(
         self, filter_params: security_filters.RoleFilter
     ) -> list[security_models.Role]:
-        return await self._service.security.get_roles(
+        return await self.service.security.get_roles(
             filter_params=filter_params
         )

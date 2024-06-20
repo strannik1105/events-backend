@@ -27,7 +27,7 @@ class UserService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> user_models.User | None:
-        user = await self._pg_repository.user.get_by_sid(
+        user = await self.repository.user.get_by_sid(
             sid=sid, custom_options=custom_options
         )
         if validate:
@@ -48,7 +48,7 @@ class UserService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> user_models.User | None:
-        user = await self._pg_repository.user.get_by_email(
+        user = await self.repository.user.get_by_email(
             email=email, custom_options=custom_options
         )
         if validate:
@@ -65,7 +65,7 @@ class UserService(CoreService):
         self,
         custom_options: list[ExecutableOption] | None = None,
     ) -> LimitOffsetPage[user_models.User]:
-        return await self._pg_repository.user.get_pagination(
+        return await self.repository.user.get_pagination(
             custom_options=custom_options,
         )
 
@@ -74,7 +74,7 @@ class UserService(CoreService):
         user_in: user_schemas.UserCreate,
         with_commit: bool = True,
     ) -> user_models.User:
-        user = await self._pg_repository.user.create(
+        user = await self.repository.user.create(
             obj_in=user_schemas.UserCreateWithoutPassword.model_validate(
                 user_in.model_dump()
             ),
@@ -91,7 +91,7 @@ class UserService(CoreService):
         user_in: user_schemas.UserCreate,
         with_commit: bool = True,
     ) -> user_models.User:
-        user = await self._pg_repository.user.create(
+        user = await self.repository.user.create(
             obj_in=user_schemas.UserCreateWithoutPassword.model_validate(
                 user_in.model_dump()
             ),
@@ -114,7 +114,7 @@ class UserService(CoreService):
         user_in: user_schemas.UserUpdate,
         with_commit: bool = True,
     ) -> user_models.User:
-        return await self._pg_repository.user.update(
+        return await self.repository.user.update(
             obj=user,
             obj_in=user_in,
             with_commit=with_commit,
@@ -123,7 +123,7 @@ class UserService(CoreService):
     async def update_user_password(
         self, user: user_models.User, password: str, with_commit: bool = True
     ) -> user_models.User:
-        return await self._pg_repository.user.update_user_password(
+        return await self.repository.user.update_user_password(
             user=user,
             hashed_password=SecurityCrypto.get_password_hash(password),
             with_commit=with_commit,
@@ -132,7 +132,7 @@ class UserService(CoreService):
     async def update_user_verify(
         self, user: user_models.User, is_verify: bool, with_commit: bool = True
     ) -> user_models.User:
-        return await self._pg_repository.user.update_user_verify(
+        return await self.repository.user.update_user_verify(
             user=user,
             is_verify=is_verify,
             with_commit=with_commit,
@@ -141,7 +141,7 @@ class UserService(CoreService):
     async def update_user_active(
         self, user: user_models.User, is_active: bool, with_commit: bool = True
     ) -> user_models.User:
-        return await self._pg_repository.user.update_user_active(
+        return await self.repository.user.update_user_active(
             user=user,
             is_active=is_active,
             with_commit=with_commit,
@@ -153,7 +153,7 @@ class UserService(CoreService):
         last_login_at: datetime | None,
         with_commit: bool = True,
     ) -> user_models.User:
-        return await self._pg_repository.user.update_last_login_at(
+        return await self.repository.user.update_last_login_at(
             user=user,
             last_login_at=last_login_at,
             with_commit=with_commit,
@@ -164,7 +164,7 @@ class UserService(CoreService):
         user: user_models.User,
         with_commit: bool = True,
     ) -> None:
-        return await self._pg_repository.user.remove(
+        return await self.repository.user.remove(
             obj=user,
             with_commit=with_commit,
         )

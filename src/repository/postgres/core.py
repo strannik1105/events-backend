@@ -9,13 +9,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from common.db.postgres import PostgresBaseModel
-from repository.interface import IRepository
+from repository.interfaces.core import ICoreRepository
 
 
 T = TypeVar("T", bound=PostgresBaseModel)
 
 
-class CoreRepository(Generic[T], IRepository[T]):
+class CoreRepository(Generic[T], ICoreRepository[T]):
     def __init__(self, db: AsyncSession, model: type[T]) -> None:
         self._db = db
         self._model = model
@@ -124,12 +124,12 @@ class CoreRepository(Generic[T], IRepository[T]):
         return await paginate(self._db, query)
 
     async def create(
-        self, obj_in: T | BaseModel, with_commit: bool = True
+        self, obj_in: dict | BaseModel, with_commit: bool = True
     ) -> T:
         if isinstance(obj_in, BaseModel):
-            obj = self._model(**obj_in.model_dump())
-        else:
-            obj = obj_in
+            obj_in = obj_in.model_dump()
+
+        obj = self._model(**obj_in)
 
         self._db.add(obj)
         if with_commit:
@@ -144,13 +144,11 @@ class CoreRepository(Generic[T], IRepository[T]):
         self, obj: T, obj_in: dict | BaseModel, with_commit: bool = True
     ) -> T:
         if isinstance(obj_in, BaseModel):
-            changes = obj_in.model_dump()
-        else:
-            changes = obj_in
+            obj_in = obj_in.model_dump()
 
         for field in obj.__dict__.keys():
-            if field in changes.keys():
-                setattr(obj, field, changes[field])
+            if field in obj_in.keys():
+                setattr(obj, field, obj_in[field])
 
         if with_commit:
             await self._db.commit()

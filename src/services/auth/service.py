@@ -82,7 +82,7 @@ class AuthService(CoreService):
             raise APIException.invalid_refresh_token from exc
 
         creds = auth_schemas.JWTCreds.model_validate(payload)
-        user = await self._pg_repository.user.get_by_sid(
+        user = await self.repository.user.get_by_sid(
             sid=creds.sub,
             custom_options=user_options.SQLUserOptions.permissions(),
         )
