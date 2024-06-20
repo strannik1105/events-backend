@@ -1,10 +1,11 @@
 __all__ = [
     "RoleLabel",
     "EventRoleLabel",
+    "ResourceLabel",
     "PermissionLabel",
-    "PermissionAccessAction",
 ]
 
 
 from .roles import RoleLabel, EventRoleLabel
-from .permissions import PermissionLabel, PermissionAccessAction
+from .resource import ResourceLabel
+from .permission import PermissionLabel

@@ -8,7 +8,7 @@ from models.mixins import DateTimeMixin, Label
 
 if TYPE_CHECKING:
     from models.events import EventPull  # noqa: F401
-    from models.security import RoleXPermission  # noqa: F401
+    from models.security import RoleXResource  # noqa: F401
     from models.users import User  # noqa: F401
 
 
@@ -30,6 +30,6 @@ class Role(PostgresBaseModel, Label, DateTimeMixin):
     event_pulls: Mapped[list["EventPull"]] = relationship(
         back_populates="role"
     )
-    permissions: Mapped[list["RoleXPermission"]] = relationship(
+    permissions: Mapped[list["RoleXResource"]] = relationship(
         back_populates="role"
     )

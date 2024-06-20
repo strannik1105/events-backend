@@ -27,14 +27,14 @@ class EventUseCase(CoreUseCase):
         current_user: user_schemas.CurrentUser,
         event_sids: schemas.EventSids,
     ) -> list[event_models.EventFile]:
-        permission = security_enums.PermissionLabel.EVENT_FILE
+        resource_label = security_enums.ResourceLabel.EVENT_FILE
         if event_sids.event_content_sid is not None:
-            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+            resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
             pg_db=self._pg_db,
-            permission=permission,
-            action=security_enums.PermissionAccessAction.READ,
+            resource_label=resource_label,
+            permission_label=security_enums.PermissionLabel.READ,
             current_user=current_user,
             event_sids=event_sids,
         )
@@ -73,14 +73,14 @@ class EventUseCase(CoreUseCase):
             sid=event_file_sid
         )
 
-        permission = security_enums.PermissionLabel.EVENT_FILE
+        resource_label = security_enums.ResourceLabel.EVENT_FILE
         if event_file.event_content_sid is not None:
-            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+            resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
             pg_db=self._pg_db,
-            permission=permission,
-            action=security_enums.PermissionAccessAction.EXPORT,
+            resource_label=resource_label,
+            permission_label=security_enums.PermissionLabel.EXPORT,
             current_user=current_user,
             event_sids=common_schemas.EventSids(
                 event_sid=event_file.event_sid,
@@ -100,14 +100,14 @@ class EventUseCase(CoreUseCase):
         event_sids: schemas.EventSids,
         file: UploadFile,
     ) -> event_models.EventFile:
-        permission = security_enums.PermissionLabel.EVENT_FILE
+        resource_label = security_enums.ResourceLabel.EVENT_FILE
         if event_sids.event_content_sid is not None:
-            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+            resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
             pg_db=self._pg_db,
-            permission=permission,
-            action=security_enums.PermissionAccessAction.CREATE,
+            resource_label=resource_label,
+            permission_label=security_enums.PermissionLabel.CREATE,
             current_user=current_user,
             event_sids=event_sids,
         )
@@ -160,14 +160,14 @@ class EventUseCase(CoreUseCase):
             sid=event_file_sid
         )
 
-        permission = security_enums.PermissionLabel.EVENT_FILE
+        resource_label = security_enums.ResourceLabel.EVENT_FILE
         if event_file.event_content_sid is not None:
-            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+            resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
             pg_db=self._pg_db,
-            permission=permission,
-            action=security_enums.PermissionAccessAction.DELETE,
+            resource_label=resource_label,
+            permission_label=security_enums.PermissionLabel.DELETE,
             current_user=current_user,
             event_sids=common_schemas.EventSids(
                 event_sid=event_file.event_sid,

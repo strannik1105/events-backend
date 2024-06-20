@@ -1,10 +1,10 @@
 __all__ = [
     "Role",
-    "Permission",
-    "RoleXPermission",
+    "Resource",
+    "RoleXResource",
 ]
 
 
 from .role import Role
-from .permission import Permission
-from .role_x_permission import RoleXPermission
+from .resource import Resource
+from .role_x_resource import RoleXResource

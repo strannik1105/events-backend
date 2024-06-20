@@ -36,15 +36,15 @@ class SecurityService(CoreService):
             )
         return role
 
-    async def get_permission_by_label(
+    async def get_resource_by_label(
         self,
         label: int,
         validate: bool = True,
         is_exists: bool = True,
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
-    ) -> security_models.Permission | None:
-        permission = await self._pg_repository.permission.get_by_label(
+    ) -> security_models.Resource | None:
+        permission = await self._pg_repository.resource.get_by_label(
             label=label, custom_options=custom_options
         )
         if validate:
@@ -52,24 +52,24 @@ class SecurityService(CoreService):
                 obj=permission,
                 is_exists=is_exists,
                 is_rollback=is_rollback,
-                exists_exception=APIException.permission_already_exists,
-                not_found_exception=APIException.permission_not_found,
+                exists_exception=APIException.resource_already_exists,
+                not_found_exception=APIException.resource_not_found,
             )
         return permission
 
-    async def get_role_x_permission_by_labels(
+    async def get_role_x_resource_by_labels(
         self,
         role_label: int,
-        permission_label: int,
+        resource_label: int,
         validate: bool = True,
         is_exists: bool = True,
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
-    ) -> security_models.RoleXPermission | None:
+    ) -> security_models.RoleXResource | None:
         role_x_permission = (
-            await self._pg_repository.role_x_permission.get_by_labels(
+            await self._pg_repository.role_x_resource.get_by_labels(
                 role_label=role_label,
-                permission_label=permission_label,
+                resource_label=resource_label,
                 custom_options=custom_options,
             )
         )
@@ -78,8 +78,8 @@ class SecurityService(CoreService):
                 obj=role_x_permission,
                 is_exists=is_exists,
                 is_rollback=is_rollback,
-                exists_exception=APIException.role_x_permission_already_exists,
-                not_found_exception=APIException.role_x_permission_not_found,
+                exists_exception=APIException.role_x_resource_already_exists,
+                not_found_exception=APIException.role_x_resource_not_found,
             )
         return role_x_permission
 
@@ -98,22 +98,22 @@ class SecurityService(CoreService):
             with_commit=with_commit,
         )
 
-    async def create_permission(
+    async def create_resource(
         self,
-        permission_in: security_schemas.PermissionCreate,
+        resource_in: security_schemas.ResourceCreate,
         with_commit: bool = True,
-    ) -> security_models.Permission:
-        return await self._pg_repository.permission.create(
-            obj_in=permission_in,
+    ) -> security_models.Resource:
+        return await self._pg_repository.resource.create(
+            obj_in=resource_in,
             with_commit=with_commit,
         )
 
-    async def create_role_x_permission(
+    async def create_role_x_resource(
         self,
-        role_x_permission_in: security_schemas.RoleXPermissionCreate,
+        role_x_resource_in: security_schemas.RoleXResourceCreate,
         with_commit: bool = True,
-    ) -> security_models.RoleXPermission:
-        return await self._pg_repository.role_x_permission.create(
-            obj_in=role_x_permission_in,
+    ) -> security_models.RoleXResource:
+        return await self._pg_repository.role_x_resource.create(
+            obj_in=role_x_resource_in,
             with_commit=with_commit,
         )

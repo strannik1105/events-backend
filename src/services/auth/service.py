@@ -38,7 +38,7 @@ class AuthService(CoreService):
             creds=access_token_creds,
             payload=auth_schemas.AuthTokensCreatePayload(
                 role_label=user.role_label,
-                role_permissions=self._utils.get_role_permissions(
+                resource_permissions=self._utils.get_resource_permissions(
                     role=user.role,
                 ),
             ),
@@ -47,7 +47,7 @@ class AuthService(CoreService):
             creds=refresh_token_creds,
             payload=auth_schemas.AuthTokensCreatePayload(
                 role_label=user.role_label,
-                role_permissions=self._utils.get_role_permissions(
+                resource_permissions=self._utils.get_resource_permissions(
                     role=user.role,
                 ),
             ),

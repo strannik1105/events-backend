@@ -2,11 +2,11 @@ from enums import security as security_enums
 from schemas import security as security_schemas
 
 
-R = security_enums.PermissionAccessAction.READ
-C = security_enums.PermissionAccessAction.CREATE
-U = security_enums.PermissionAccessAction.UPDATE
-D = security_enums.PermissionAccessAction.DELETE
-E = security_enums.PermissionAccessAction.EXPORT
+R = security_enums.PermissionLabel.READ
+C = security_enums.PermissionLabel.CREATE
+U = security_enums.PermissionLabel.UPDATE
+D = security_enums.PermissionLabel.DELETE
+E = security_enums.PermissionLabel.EXPORT
 
 CRUD = C + R + U + D
 CRUDE = CRUD + E
@@ -55,173 +55,171 @@ class SecurityTemplate:
         ]
 
     @staticmethod
-    def get_permissions() -> list[security_schemas.PermissionCreate]:
+    def get_resources() -> list[security_schemas.ResourceCreate]:
         return [
-            security_schemas.PermissionCreate(
-                label=security_enums.PermissionLabel.USER,
+            security_schemas.ResourceCreate(
+                label=security_enums.ResourceLabel.USER,
                 name="Пользователь",
                 description="Взаимодействие с пользователем",
             ),
-            security_schemas.PermissionCreate(
-                label=security_enums.PermissionLabel.EVENT,
+            security_schemas.ResourceCreate(
+                label=security_enums.ResourceLabel.EVENT,
                 name="Мероприятие",
                 description="Взаимодействие с мероприятием",
             ),
-            security_schemas.PermissionCreate(
-                label=security_enums.PermissionLabel.EVENT_CONTENT,
+            security_schemas.ResourceCreate(
+                label=security_enums.ResourceLabel.EVENT_CONTENT,
                 name="Контент мероприятия",
                 description="Взаимодействие с контентом мероприятия",
             ),
-            security_schemas.PermissionCreate(
-                label=security_enums.PermissionLabel.EVENT_FILE,
+            security_schemas.ResourceCreate(
+                label=security_enums.ResourceLabel.EVENT_FILE,
                 name="Файлы мероприятия",
                 description="Взаимодействие с файлами мероприятия",
             ),
-            security_schemas.PermissionCreate(
-                label=security_enums.PermissionLabel.EVENT_SPEAKER_FILE,
+            security_schemas.ResourceCreate(
+                label=security_enums.ResourceLabel.EVENT_SPEAKER_FILE,
                 name="Файлы спикера мероприятия",
                 description="Взаимодействие с файлами спикеров мероприятия",
             ),
         ]
 
     @staticmethod
-    def get_roles_x_permissions() -> (
-        list[security_schemas.RoleXPermissionCreate]
-    ):
+    def get_role_x_resources() -> list[security_schemas.RoleXResourceCreate]:
         return [
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.SUPERUSER,
-                permission_label=security_enums.PermissionLabel.USER,
-                access_actions=CRUD,
+                resource_label=security_enums.ResourceLabel.USER,
+                permissions=CRUD,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.SUPERUSER,
-                permission_label=security_enums.PermissionLabel.EVENT,
-                access_actions=CRUD,
+                resource_label=security_enums.ResourceLabel.EVENT,
+                permissions=CRUD,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.SUPERUSER,
-                permission_label=security_enums.PermissionLabel.EVENT_CONTENT,
-                access_actions=CRUD,
+                resource_label=security_enums.ResourceLabel.EVENT_CONTENT,
+                permissions=CRUD,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.SUPERUSER,
-                permission_label=security_enums.PermissionLabel.EVENT_FILE,
-                access_actions=CRUDE,
+                resource_label=security_enums.ResourceLabel.EVENT_FILE,
+                permissions=CRUDE,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.SUPERUSER,
-                permission_label=security_enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                access_actions=CRUDE,
+                resource_label=security_enums.ResourceLabel.EVENT_SPEAKER_FILE,
+                permissions=CRUDE,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.ADMIN,
-                permission_label=security_enums.PermissionLabel.USER,
-                access_actions=CRUD,
+                resource_label=security_enums.ResourceLabel.USER,
+                permissions=CRUD,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.ADMIN,
-                permission_label=security_enums.PermissionLabel.EVENT,
-                access_actions=CRUD,
+                resource_label=security_enums.ResourceLabel.EVENT,
+                permissions=CRUD,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.ADMIN,
-                permission_label=security_enums.PermissionLabel.EVENT_CONTENT,
-                access_actions=CRUD,
+                resource_label=security_enums.ResourceLabel.EVENT_CONTENT,
+                permissions=CRUD,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.ADMIN,
-                permission_label=security_enums.PermissionLabel.EVENT_FILE,
-                access_actions=CRUDE,
+                resource_label=security_enums.ResourceLabel.EVENT_FILE,
+                permissions=CRUDE,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.ADMIN,
-                permission_label=security_enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                access_actions=CRUDE,
+                resource_label=security_enums.ResourceLabel.EVENT_SPEAKER_FILE,
+                permissions=CRUDE,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.USER,
-                permission_label=security_enums.PermissionLabel.USER,
-                access_actions=R,
+                resource_label=security_enums.ResourceLabel.USER,
+                permissions=R,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.USER,
-                permission_label=security_enums.PermissionLabel.EVENT,
-                access_actions=R,
+                resource_label=security_enums.ResourceLabel.EVENT,
+                permissions=R,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.USER,
-                permission_label=security_enums.PermissionLabel.EVENT_CONTENT,
-                access_actions=R,
+                resource_label=security_enums.ResourceLabel.EVENT_CONTENT,
+                permissions=R,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.USER,
-                permission_label=security_enums.PermissionLabel.EVENT_FILE,
-                access_actions=R + E,
+                resource_label=security_enums.ResourceLabel.EVENT_FILE,
+                permissions=R + E,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.RoleLabel.USER,
-                permission_label=security_enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                access_actions=R,
+                resource_label=security_enums.ResourceLabel.EVENT_SPEAKER_FILE,
+                permissions=R,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.CREATOR,
-                permission_label=security_enums.PermissionLabel.EVENT,
-                access_actions=R + U + D,
+                resource_label=security_enums.ResourceLabel.EVENT,
+                permissions=R + U + D,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.CREATOR,
-                permission_label=security_enums.PermissionLabel.EVENT_CONTENT,
-                access_actions=CRUD,
+                resource_label=security_enums.ResourceLabel.EVENT_CONTENT,
+                permissions=CRUD,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.CREATOR,
-                permission_label=security_enums.PermissionLabel.EVENT_FILE,
-                access_actions=CRUDE,
+                resource_label=security_enums.ResourceLabel.EVENT_FILE,
+                permissions=CRUDE,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.CREATOR,
-                permission_label=security_enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                access_actions=CRUDE,
+                resource_label=security_enums.ResourceLabel.EVENT_SPEAKER_FILE,
+                permissions=CRUDE,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.SPEAKER,
-                permission_label=security_enums.PermissionLabel.EVENT,
-                access_actions=R,
+                resource_label=security_enums.ResourceLabel.EVENT,
+                permissions=R,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.SPEAKER,
-                permission_label=security_enums.PermissionLabel.EVENT_CONTENT,
-                access_actions=R + U,
+                resource_label=security_enums.ResourceLabel.EVENT_CONTENT,
+                permissions=R + U,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.SPEAKER,
-                permission_label=security_enums.PermissionLabel.EVENT_FILE,
-                access_actions=R + E,
+                resource_label=security_enums.ResourceLabel.EVENT_FILE,
+                permissions=R + E,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.SPEAKER,
-                permission_label=security_enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                access_actions=CRUDE,
+                resource_label=security_enums.ResourceLabel.EVENT_SPEAKER_FILE,
+                permissions=CRUDE,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.MEMBER,
-                permission_label=security_enums.PermissionLabel.EVENT,
-                access_actions=R,
+                resource_label=security_enums.ResourceLabel.EVENT,
+                permissions=R,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.MEMBER,
-                permission_label=security_enums.PermissionLabel.EVENT_CONTENT,
-                access_actions=R,
+                resource_label=security_enums.ResourceLabel.EVENT_CONTENT,
+                permissions=R,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.MEMBER,
-                permission_label=security_enums.PermissionLabel.EVENT_FILE,
-                access_actions=R + E,
+                resource_label=security_enums.ResourceLabel.EVENT_FILE,
+                permissions=R + E,
             ),
-            security_schemas.RoleXPermissionCreate(
+            security_schemas.RoleXResourceCreate(
                 role_label=security_enums.EventRoleLabel.MEMBER,
-                permission_label=security_enums.PermissionLabel.EVENT_SPEAKER_FILE,
-                access_actions=R + E,
+                resource_label=security_enums.ResourceLabel.EVENT_SPEAKER_FILE,
+                permissions=R + E,
             ),
         ]
