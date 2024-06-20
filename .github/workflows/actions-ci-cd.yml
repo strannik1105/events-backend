@@ -10,10 +10,9 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
-
+    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v4
     
@@ -22,12 +21,16 @@ jobs:
       with:
         python-version: "3.11"
     
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        
-    - name: Test with pytest
-      run: |
-        pytest
+    - name: Run command on remote server
+        uses: D3rHase/ssh-command-action@v0.2.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          user: ${{secrets.SSH_USER}}
+          private_key: ${{secrets.SSH_PRIVATE_KEY}}
+          command: |
+            cd ${{ secrets.PROJECT_FOLDER }};
+            git checkout main;
+            git pull;
+            docker-compose --file docker-compose.prod.yml down;
+            docker-compose --file docker-compose.prod.yml up -d;
+            docker system prune --all --force;
