@@ -36,7 +36,7 @@ class User(PostgresBaseModel, Sid, DateTimeMixin):
     is_active: Mapped[bool] = mapped_column(
         default=True, server_default="true", comment="User active status"
     )
-    is_verified: Mapped[bool] = mapped_column(
+    is_verify: Mapped[bool] = mapped_column(
         default=False, server_default="false", comment="User verified status"
     )
     last_login_at: Mapped[datetime | None] = mapped_column(

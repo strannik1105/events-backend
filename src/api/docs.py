@@ -19,8 +19,20 @@ class APIDoc:
                 "description": "Auth methods",
             },
             {
+                "name": "User",
+                "description": "User methods",
+            },
+            {
                 "name": "Security",
                 "description": "Security methods",
+            },
+            {
+                "name": "Event",
+                "description": "Event methods",
+            },
+            {
+                "name": "Event content",
+                "description": "Event content methods",
             },
             {
                 "name": "Event file",

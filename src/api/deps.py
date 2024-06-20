@@ -3,6 +3,7 @@ from typing import Annotated, Any, AsyncIterator
 from botocore.client import BaseClient
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi_pagination import LimitOffsetParams
 from jose import JWTError
 from redis import asyncio as aioredis
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -130,3 +131,6 @@ class RolePermissionValidate:
             self.permission, ""
         ):
             raise APIException.not_allowed
+
+
+PaginationParams = Annotated[LimitOffsetParams, Depends(LimitOffsetParams)]

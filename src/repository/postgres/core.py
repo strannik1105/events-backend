@@ -148,9 +148,9 @@ class CoreRepository(Generic[T], IRepository[T]):
         else:
             changes = obj_in
 
-        for change in changes.keys():
-            if getattr(obj, change):
-                setattr(obj, change, changes[change])
+        for field in obj.__dict__.keys():
+            if field in changes.keys():
+                setattr(obj, field, changes[field])
 
         if with_commit:
             await self._db.commit()

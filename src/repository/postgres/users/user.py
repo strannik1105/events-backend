@@ -30,6 +30,28 @@ class UserRepository(CoreRepository[User]):
             await self._db.flush()
         return user
 
+    async def update_user_verify(
+        self, user: User, is_verify: bool, with_commit: bool = True
+    ) -> User:
+        user.is_verify = is_verify
+        if with_commit:
+            await self._db.commit()
+            await self._db.refresh(user)
+        else:
+            await self._db.flush()
+        return user
+
+    async def update_user_active(
+        self, user: User, is_active: bool, with_commit: bool = True
+    ) -> User:
+        user.is_active = is_active
+        if with_commit:
+            await self._db.commit()
+            await self._db.refresh(user)
+        else:
+            await self._db.flush()
+        return user
+
     async def update_last_login_at(
         self,
         user: User,

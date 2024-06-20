@@ -42,6 +42,8 @@ async def init() -> None:
     await SecurityInit.set_roles()
     await SecurityInit.set_permissions()
     await SecurityInit.set_role_x_permissions()
+    await EventInit.set_event_types()
+    await EventInit.set_event_content_types()
     await EventInit.set_event_file_types()
     await UserInit.superuser()
 

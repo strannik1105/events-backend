@@ -167,7 +167,7 @@ class SecurityTemplate:
             security_schemas.RoleXPermissionCreate(
                 role_label=security_enums.EventRoleLabel.CREATOR,
                 permission_label=security_enums.PermissionLabel.EVENT,
-                access_actions=CRUD,
+                access_actions=R + U + D,
             ),
             security_schemas.RoleXPermissionCreate(
                 role_label=security_enums.EventRoleLabel.CREATOR,

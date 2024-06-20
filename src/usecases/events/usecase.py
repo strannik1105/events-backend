@@ -22,36 +22,6 @@ class EventUseCase(CoreUseCase):
         super().__init__(pg_db)
         self._utils = EventUseCaseUtils(pg_db)
 
-    async def export_event_file_by_sid(
-        self,
-        current_user: user_schemas.CurrentUser,
-        s3_client: BaseClient,
-        event_file_sid: UUID,
-    ) -> str:
-        event_file = await self._service.event.get_event_file_by_sid(
-            sid=event_file_sid
-        )
-
-        permission = security_enums.PermissionLabel.EVENT_FILE
-        if event_file.event_content_sid is not None:
-            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
-
-        await SecurityRole.validate_role_event_permission(
-            pg_db=self._pg_db,
-            permission=permission,
-            action=security_enums.PermissionAccessAction.EXPORT,
-            current_user=current_user,
-            event_sids=common_schemas.EventSids(
-                event_sid=event_file.event_sid,
-                event_content_sid=event_file.event_content_sid,
-            ),
-        )
-
-        return await self._service.event.export_event_file(
-            s3_client=s3_client,
-            event_file=event_file,
-        )
-
     async def get_event_files(
         self,
         current_user: user_schemas.CurrentUser,
@@ -61,7 +31,7 @@ class EventUseCase(CoreUseCase):
         if event_sids.event_content_sid is not None:
             permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
 
-        await SecurityRole.validate_role_event_permission(
+        await SecurityRole.validate_event_role_permission(
             pg_db=self._pg_db,
             permission=permission,
             action=security_enums.PermissionAccessAction.READ,
@@ -82,8 +52,46 @@ class EventUseCase(CoreUseCase):
             event_sids=event_sids,
         )
 
+    async def get_event_types(self) -> list[event_models.EventType]:
+        return await self._service.event.get_event_types()
+
+    async def get_event_content_types(
+        self,
+    ) -> list[event_models.EventContentType]:
+        return await self._service.event.get_event_content_types()
+
     async def get_event_file_types(self) -> list[event_models.EventFileType]:
         return await self._service.event.get_event_file_types()
+
+    async def export_event_file_by_sid(
+        self,
+        current_user: user_schemas.CurrentUser,
+        s3_client: BaseClient,
+        event_file_sid: UUID,
+    ) -> str:
+        event_file = await self._service.event.get_event_file_by_sid(
+            sid=event_file_sid
+        )
+
+        permission = security_enums.PermissionLabel.EVENT_FILE
+        if event_file.event_content_sid is not None:
+            permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
+
+        await SecurityRole.validate_event_role_permission(
+            pg_db=self._pg_db,
+            permission=permission,
+            action=security_enums.PermissionAccessAction.EXPORT,
+            current_user=current_user,
+            event_sids=common_schemas.EventSids(
+                event_sid=event_file.event_sid,
+                event_content_sid=event_file.event_content_sid,
+            ),
+        )
+
+        return await self._service.event.export_event_file(
+            s3_client=s3_client,
+            event_file=event_file,
+        )
 
     async def create_event_file(
         self,
@@ -96,7 +104,7 @@ class EventUseCase(CoreUseCase):
         if event_sids.event_content_sid is not None:
             permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
 
-        await SecurityRole.validate_role_event_permission(
+        await SecurityRole.validate_event_role_permission(
             pg_db=self._pg_db,
             permission=permission,
             action=security_enums.PermissionAccessAction.CREATE,
@@ -156,7 +164,7 @@ class EventUseCase(CoreUseCase):
         if event_file.event_content_sid is not None:
             permission = security_enums.PermissionLabel.EVENT_SPEAKER_FILE
 
-        await SecurityRole.validate_role_event_permission(
+        await SecurityRole.validate_event_role_permission(
             pg_db=self._pg_db,
             permission=permission,
             action=security_enums.PermissionAccessAction.DELETE,
