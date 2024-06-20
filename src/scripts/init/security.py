@@ -27,53 +27,53 @@ class SecurityInit:
             await db.close()
 
     @classmethod
-    async def set_permissions(cls) -> None:
+    async def set_resources(cls) -> None:
         db = PostgresSession.get_async()
         service = Service(db)
         try:
-            cls._logger.info("Start permissions init")
-            permissions_in = SecurityTemplate.get_permissions()
-            for permission_in in permissions_in:
-                permission = await service.security.get_permission_by_label(
-                    label=permission_in.label, validate=False
+            cls._logger.info("Start resources init")
+            resources_in = SecurityTemplate.get_resources()
+            for resource_in in resources_in:
+                resource = await service.security.get_resource_by_label(
+                    label=resource_in.label, validate=False
                 )
-                if not permission:
-                    await service.security.create_permission(
-                        permission_in=permission_in
+                if not resource:
+                    await service.security.create_resource(
+                        resource_in=resource_in
                     )
-            cls._logger.info("Finish permissions init")
+            cls._logger.info("Finish resources init")
         except Exception as exc:
-            cls._logger.error(f"Permissions init error: {exc}")
+            cls._logger.error(f"Resources init error: {exc}")
         finally:
             await db.close()
 
     @classmethod
-    async def set_role_x_permissions(cls) -> None:
+    async def set_role_x_resources(cls) -> None:
         db = PostgresSession.get_async()
         service = Service(db)
         try:
-            cls._logger.info("Start permissions of role init")
-            role_x_permissions_in = SecurityTemplate.get_roles_x_permissions()
-            for role_x_permission_in in role_x_permissions_in:
+            cls._logger.info("Start resources of role init")
+            role_x_resources_in = SecurityTemplate.get_role_x_resources()
+            for role_x_resource_in in role_x_resources_in:
                 await service.security.get_role_by_label(
-                    label=role_x_permission_in.role_label
+                    label=role_x_resource_in.role_label
                 )
-                await service.security.get_permission_by_label(
-                    label=role_x_permission_in.permission_label
+                await service.security.get_resource_by_label(
+                    label=role_x_resource_in.resource_label
                 )
-                role_x_permission = (
-                    await service.security.get_role_x_permission_by_labels(
-                        role_label=role_x_permission_in.role_label,
-                        permission_label=role_x_permission_in.permission_label,
+                role_x_resource = (
+                    await service.security.get_role_x_resource_by_labels(
+                        role_label=role_x_resource_in.role_label,
+                        resource_label=role_x_resource_in.resource_label,
                         validate=False,
                     )
                 )
-                if not role_x_permission:
-                    await service.security.create_role_x_permission(
-                        role_x_permission_in=role_x_permission_in
+                if not role_x_resource:
+                    await service.security.create_role_x_resource(
+                        role_x_resource_in=role_x_resource_in
                     )
-            cls._logger.info("Finish permissions of role init")
+            cls._logger.info("Finish resources of role init")
         except Exception as exc:
-            cls._logger.error(f"Permissions of role init error: {exc}")
+            cls._logger.error(f"Resources of role init error: {exc}")
         finally:
             await db.close()

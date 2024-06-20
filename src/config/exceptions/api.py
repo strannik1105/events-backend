@@ -65,32 +65,32 @@ class APIExceptionBook(metaclass=IteratorMeta):
             description="Role not found",
         ),
     )
-    permission_already_exists = schemas.APIException(
+    resource_already_exists = schemas.APIException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=schemas.APIExceptionDetail(
             code=107,
-            description="Permission already exists",
+            description="Resource already exists",
         ),
     )
-    permission_not_found = schemas.APIException(
+    resource_not_found = schemas.APIException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=schemas.APIExceptionDetail(
             code=108,
-            description="Permission not found",
+            description="Resource not found",
         ),
     )
-    role_x_permission_already_exists = schemas.APIException(
+    role_x_resource_already_exists = schemas.APIException(
         status_code=status.HTTP_400_BAD_REQUEST,
         detail=schemas.APIExceptionDetail(
             code=109,
-            description="Permission of role already exists",
+            description="Resource of role already exists",
         ),
     )
-    role_x_permission_not_found = schemas.APIException(
+    role_x_resource_not_found = schemas.APIException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=schemas.APIExceptionDetail(
             code=110,
-            description="Permission of role not found",
+            description="Resource of role not found",
         ),
     )
     invalid_password = schemas.APIException(
@@ -284,21 +284,21 @@ class APIException:
         status_code=APIExceptionBook.role_not_found.status_code,
         detail=APIExceptionBook.role_not_found.detail.model_dump(),
     )
-    permission_already_exists = HTTPException(
-        status_code=APIExceptionBook.permission_already_exists.status_code,
-        detail=APIExceptionBook.permission_already_exists.detail.model_dump(),
+    resource_already_exists = HTTPException(
+        status_code=APIExceptionBook.resource_already_exists.status_code,
+        detail=APIExceptionBook.resource_already_exists.detail.model_dump(),
     )
-    permission_not_found = HTTPException(
-        status_code=APIExceptionBook.permission_not_found.status_code,
-        detail=APIExceptionBook.permission_not_found.detail.model_dump(),
+    resource_not_found = HTTPException(
+        status_code=APIExceptionBook.resource_not_found.status_code,
+        detail=APIExceptionBook.resource_not_found.detail.model_dump(),
     )
-    role_x_permission_already_exists = HTTPException(
-        status_code=APIExceptionBook.role_x_permission_already_exists.status_code,
-        detail=APIExceptionBook.role_x_permission_already_exists.detail.model_dump(),
+    role_x_resource_already_exists = HTTPException(
+        status_code=APIExceptionBook.role_x_resource_already_exists.status_code,
+        detail=APIExceptionBook.role_x_resource_already_exists.detail.model_dump(),
     )
-    role_x_permission_not_found = HTTPException(
-        status_code=APIExceptionBook.role_x_permission_not_found.status_code,
-        detail=APIExceptionBook.role_x_permission_not_found.detail.model_dump(),
+    role_x_resource_not_found = HTTPException(
+        status_code=APIExceptionBook.role_x_resource_not_found.status_code,
+        detail=APIExceptionBook.role_x_resource_not_found.detail.model_dump(),
     )
     invalid_password = HTTPException(
         status_code=APIExceptionBook.invalid_password.status_code,

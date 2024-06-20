@@ -53,6 +53,6 @@ class User(UserBase, Sid, Email, DateTimeMixin):
 
 
 class CurrentUser(User):
-    role_permissions: dict[security_enums.PermissionLabel, str] = Field(
-        ..., description="Role permissions"
+    resource_permissions: dict[security_enums.ResourceLabel, str] = Field(
+        ..., description="Resource permissions"
     )

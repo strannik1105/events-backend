@@ -32,9 +32,9 @@ async def get_me(
     response_model=user_schemas.User,
     dependencies=[
         Depends(
-            deps.RolePermissionValidate(
-                permission=security_enums.PermissionLabel.USER,
-                action=security_enums.PermissionAccessAction.READ,
+            deps.ResourcePermissionValidate(
+                resource_label=security_enums.ResourceLabel.USER,
+                permission_label=security_enums.PermissionLabel.READ,
             ),
         )
     ],
@@ -52,9 +52,9 @@ async def get_user_by_sid(
     response_model=LimitOffsetPage[user_schemas.User],
     dependencies=[
         Depends(
-            deps.RolePermissionValidate(
-                permission=security_enums.PermissionLabel.USER,
-                action=security_enums.PermissionAccessAction.READ,
+            deps.ResourcePermissionValidate(
+                resource_label=security_enums.ResourceLabel.USER,
+                permission_label=security_enums.PermissionLabel.READ,
             ),
         )
     ],
@@ -87,9 +87,9 @@ async def update_me(
     response_model=user_schemas.User,
     dependencies=[
         Depends(
-            deps.RolePermissionValidate(
-                permission=security_enums.PermissionLabel.USER,
-                action=security_enums.PermissionAccessAction.UPDATE,
+            deps.ResourcePermissionValidate(
+                resource_label=security_enums.ResourceLabel.USER,
+                permission_label=security_enums.PermissionLabel.UPDATE,
             ),
         )
     ],
@@ -112,9 +112,9 @@ async def update_user(
     response_model=user_schemas.User,
     dependencies=[
         Depends(
-            deps.RolePermissionValidate(
-                permission=security_enums.PermissionLabel.USER,
-                action=security_enums.PermissionAccessAction.UPDATE,
+            deps.ResourcePermissionValidate(
+                resource_label=security_enums.ResourceLabel.USER,
+                permission_label=security_enums.PermissionLabel.UPDATE,
             ),
         )
     ],
@@ -137,9 +137,9 @@ async def update_user_active_status(
     response_model=user_schemas.User,
     dependencies=[
         Depends(
-            deps.RolePermissionValidate(
-                permission=security_enums.PermissionLabel.USER,
-                action=security_enums.PermissionAccessAction.UPDATE,
+            deps.ResourcePermissionValidate(
+                resource_label=security_enums.ResourceLabel.USER,
+                permission_label=security_enums.PermissionLabel.UPDATE,
             ),
         )
     ],
@@ -162,9 +162,9 @@ async def update_user_verify_status(
     response_model=common_schemas.Msg,
     dependencies=[
         Depends(
-            deps.RolePermissionValidate(
-                permission=security_enums.PermissionLabel.USER,
-                action=security_enums.PermissionAccessAction.DELETE,
+            deps.ResourcePermissionValidate(
+                resource_label=security_enums.ResourceLabel.USER,
+                permission_label=security_enums.PermissionLabel.DELETE,
             ),
         )
     ],

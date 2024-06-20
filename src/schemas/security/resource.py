@@ -3,9 +3,9 @@ from pydantic import Field, field_validator
 from common.schemas import CoreModel, DateTimeMixin, Label
 
 
-class PermissionBase(CoreModel, Label):
-    name: str = Field(..., description="Permission name")
-    description: str = Field(..., description="Permission description")
+class ResourceBase(CoreModel, Label):
+    name: str = Field(..., description="Resource name")
+    description: str = Field(..., description="Resource description")
 
     @field_validator("name", mode="after")
     def validate_name(cls, v: str) -> str:
@@ -16,9 +16,9 @@ class PermissionBase(CoreModel, Label):
         return v.strip()
 
 
-class PermissionCreate(PermissionBase):
+class ResourceCreate(ResourceBase):
     pass
 
 
-class Permission(PermissionBase, DateTimeMixin):
+class Resource(ResourceBase, DateTimeMixin):
     pass

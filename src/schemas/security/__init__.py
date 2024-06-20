@@ -1,13 +1,13 @@
 __all__ = [
     "Role",
     "RoleCreate",
-    "Permission",
-    "PermissionCreate",
-    "RoleXPermission",
-    "RoleXPermissionCreate",
+    "Resource",
+    "ResourceCreate",
+    "RoleXResource",
+    "RoleXResourceCreate",
 ]
 
 
 from .role import Role, RoleCreate
-from .permission import Permission, PermissionCreate
-from .role_x_permission import RoleXPermission, RoleXPermissionCreate
+from .resource import Resource, ResourceCreate
+from .role_x_resource import RoleXResource, RoleXResourceCreate

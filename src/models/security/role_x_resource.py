@@ -14,11 +14,11 @@ if TYPE_CHECKING:
 SECURITY_SCHEMA = PostgresDBSchemas.SECURITY
 
 
-class RoleXPermission(PostgresBaseModel, Sid, DateTimeMixin):
-    __tablename__ = "role_x_permission"
+class RoleXResource(PostgresBaseModel, Sid, DateTimeMixin):
+    __tablename__ = "role_x_resource"
     __table_args__ = {
         "schema": SECURITY_SCHEMA,
-        "comment": "Table with all role permissions",
+        "comment": "Table with all role resource permissions",
     }
 
     role_label: Mapped[int] = mapped_column(
@@ -27,14 +27,14 @@ class RoleXPermission(PostgresBaseModel, Sid, DateTimeMixin):
         index=True,
         comment="Role label",
     )
-    permission_label: Mapped[int] = mapped_column(
+    resource_label: Mapped[int] = mapped_column(
         SMALLINT,
-        ForeignKey(f"{SECURITY_SCHEMA}.permission.label", ondelete="CASCADE"),
+        ForeignKey(f"{SECURITY_SCHEMA}.resource.label", ondelete="CASCADE"),
         index=True,
-        comment="Permission label",
+        comment="Resource label",
     )
-    access_actions: Mapped[str] = mapped_column(
-        VARCHAR(5), comment="Access actions of role permission"
+    permissions: Mapped[str] = mapped_column(
+        VARCHAR(5), comment="Permissions of role resource"
     )
 
     role: Mapped[list["Role"]] = relationship(back_populates="permissions")

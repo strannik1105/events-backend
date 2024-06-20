@@ -16,6 +16,10 @@ class SecurityRole:
     _event_speaker_label = security_enums.EventRoleLabel.SPEAKER
     _event_member_label = security_enums.EventRoleLabel.MEMBER
 
+    _c_label = security_enums.PermissionLabel.CREATE
+    _u_label = security_enums.PermissionLabel.UPDATE
+    _d_label = security_enums.PermissionLabel.DELETE
+
     _invalid_role_transitions = {
         (_admin_label, _superuser_label),
         (_admin_label, _admin_label),
@@ -32,15 +36,18 @@ class SecurityRole:
         (_event_member_label, _event_creator_label),
     }
 
-    @staticmethod
+    @classmethod
     async def validate_event_role_permission(
+        cls,
         pg_db: AsyncSession,
-        permission: security_enums.PermissionLabel,
-        action: security_enums.PermissionAccessAction,
+        resource_label: security_enums.ResourceLabel,
+        permission_label: security_enums.PermissionLabel,
         current_user: user_schemas.CurrentUser,
         event_sids: common_schemas.EventSids,
     ) -> None:
-        if action in current_user.role_permissions.get(permission, ""):
+        if permission_label in current_user.resource_permissions.get(
+            resource_label, ""
+        ):
             return
 
         repository = PostgresRepository(pg_db)
@@ -55,21 +62,17 @@ class SecurityRole:
         if not event_pull:
             raise APIException.not_allowed
 
-        for role_permission in event_pull.role.permissions:
+        for permission in event_pull.role.permissions:
             if (
-                role_permission.permission_label == permission
-                and action in role_permission.access_actions
+                permission.resource_label == resource_label
+                and permission_label in permission.permissions
             ):
                 if (
                     event_pull.event_role_label
                     == security_enums.EventRoleLabel.SPEAKER
                     and event_sids.event_content_sid is not None
-                    and action
-                    in (
-                        security_enums.PermissionAccessAction.CREATE,
-                        security_enums.PermissionAccessAction.UPDATE,
-                        security_enums.PermissionAccessAction.DELETE,
-                    )
+                    and permission_label
+                    in (cls._c_label, cls._u_label, cls._d_label)
                 ):
                     event_pull = await repository.event_pull.get_by_sids(
                         event_pull_sids=common_schemas.EventPullSids(

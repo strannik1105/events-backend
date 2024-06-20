@@ -11,7 +11,7 @@ from models.events import (
     EventType,
 )
 from models.metrics import EventLike, EventView, Subscribe
-from models.security import Permission, Role, RoleXPermission
+from models.security import Resource, Role, RoleXResource
 from models.users import User
 
 from .events import (
@@ -30,9 +30,9 @@ from .metrics import (
     SubscribeRepository,
 )
 from .security import (
-    PermissionRepository,
+    ResourceRepository,
     RoleRepository,
-    RoleXPermissionRepository,
+    RoleXResourceRepository,
 )
 from .users import UserRepository
 
@@ -57,9 +57,9 @@ class PostgresRepository:
         self._subscribe = SubscribeRepository(db=db, model=Subscribe)
 
         self._role = RoleRepository(db=db, model=Role)
-        self._permission = PermissionRepository(db=db, model=Permission)
-        self._role_x_permission = RoleXPermissionRepository(
-            db=db, model=RoleXPermission
+        self._resource = ResourceRepository(db=db, model=Resource)
+        self._role_x_resource = RoleXResourceRepository(
+            db=db, model=RoleXResource
         )
 
         self._user = UserRepository(db=db, model=User)
@@ -113,12 +113,12 @@ class PostgresRepository:
         return self._role
 
     @property
-    def permission(self) -> PermissionRepository:
-        return self._permission
+    def resource(self) -> ResourceRepository:
+        return self._resource
 
     @property
-    def role_x_permission(self) -> RoleXPermissionRepository:
-        return self._role_x_permission
+    def role_x_resource(self) -> RoleXResourceRepository:
+        return self._role_x_resource
 
     @property
     def user(self) -> UserRepository:

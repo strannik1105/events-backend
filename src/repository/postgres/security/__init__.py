@@ -1,10 +1,10 @@
 __all__ = [
     "RoleRepository",
-    "PermissionRepository",
-    "RoleXPermissionRepository",
+    "ResourceRepository",
+    "RoleXResourceRepository",
 ]
 
 
 from .role import RoleRepository
-from .permission import PermissionRepository
-from .role_x_permission import RoleXPermissionRepository
+from .resource import ResourceRepository
+from .role_x_resource import RoleXResourceRepository

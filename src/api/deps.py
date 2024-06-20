@@ -92,7 +92,7 @@ async def get_current_user(
     )
     return user_schemas.CurrentUser(
         **user.__dict__,
-        role_permissions=payload.role_permissions,
+        resource_permissions=payload.resource_permissions,
     )
 
 
@@ -112,14 +112,14 @@ CurrentActiveUser = Annotated[
 ]
 
 
-class RolePermissionValidate:
+class ResourcePermissionValidate:
     def __init__(
         self,
-        permission: security_enums.PermissionLabel,
-        action: security_enums.PermissionAccessAction,
+        resource_label: security_enums.ResourceLabel,
+        permission_label: security_enums.PermissionLabel,
     ):
-        self.permission = permission
-        self.action = action
+        self.resource_label = resource_label
+        self.permission_label = permission_label
 
     def __call__(
         self,
@@ -127,8 +127,8 @@ class RolePermissionValidate:
             auth_schemas.AuthTokensPayload, Depends(validate_access_token)
         ],
     ) -> Any:
-        if self.action not in payload.role_permissions.get(
-            self.permission, ""
+        if self.permission_label not in payload.resource_permissions.get(
+            self.resource_label, ""
         ):
             raise APIException.not_allowed
 

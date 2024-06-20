@@ -34,8 +34,8 @@ class JWTPayload(CoreModel):
 
 class AuthTokensCreatePayload(CoreModel):
     role_label: security_enums.RoleLabel = Field(..., description="Role label")
-    role_permissions: dict[security_enums.PermissionLabel, str] = Field(
-        ..., description="Role permissions"
+    resource_permissions: dict[security_enums.ResourceLabel, str] = Field(
+        ..., description="Resource permissions"
     )
 
 
