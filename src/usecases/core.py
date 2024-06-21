@@ -7,10 +7,10 @@ from services import Service
 
 class CoreUseCase(ICoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
-        self.pg_db = pg_db
-        self.service: IService = Service(pg_db)
+        self._pg_db = pg_db
+        self._service: IService = Service(pg_db)
 
 
 class CoreUseCaseUtils(ICoreUseCaseUtils):
     def __init__(self, pg_db: AsyncSession) -> None:
-        self.pg_db = pg_db
+        self._pg_db = pg_db
