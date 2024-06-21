@@ -10,6 +10,7 @@ from common import schemas as common_schemas
 from common.managers import S3Manager
 from config.exceptions import APIException
 from config.settings import settings
+from interfaces.services.events import IEventService
 from models import events as event_models
 from schemas import events as event_schemas
 from services.core import CoreService
@@ -17,7 +18,7 @@ from services.core import CoreService
 from .utils import EventServiceUtils
 
 
-class EventService(CoreService):
+class EventService(IEventService, CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
         self._utils = EventServiceUtils(pg_db)
@@ -278,7 +279,7 @@ class EventService(CoreService):
     async def get_event_files_by_event_sids(
         self,
         event_sids: common_schemas.EventSids,
-    ) -> list[event_models.EventFileType]:
+    ) -> list[event_models.EventFile]:
         return await self.repository.event_file.get_all_by_event_sids(
             event_sids=event_sids,
         )

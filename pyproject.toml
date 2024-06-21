@@ -16,6 +16,7 @@ select = [
     "B",  # flake8-bugbear
 ]
 ignore = [
+    "B024",  # has no abstract methods
     "C416",  # unnecessary `list` comprehension
     "E501",  # line too long, обрабатывается black
     "E402",  # module level import not at top of file
