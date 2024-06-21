@@ -2,7 +2,7 @@ from common import schemas as common_schemas
 from common.sql.options import events as event_options
 from config.exceptions import APIException
 from enums import security as security_enums
-from repository.interfaces import IRepository
+from interfaces.repository import IRepository
 from schemas import users as user_schemas
 
 

@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.metrics import Subscribe
-from repository.interfaces.metrics import ISubscribeRepository
+from interfaces.repository.metrics import ISubscribeRepository
 from repository.postgres.core import CoreRepository
 
 

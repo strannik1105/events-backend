@@ -2,7 +2,7 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from interfaces.repository import IRepository
+from repository.interfaces.repository import IRepository
 from repository.postgres import PostgresRepository
 
 
