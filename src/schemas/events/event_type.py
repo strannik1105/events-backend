@@ -16,7 +16,7 @@ class EventTypeBase(CoreModel, Label):
         return v.strip()
 
 
-class EventTypeCreate(EventTypeBase):
+class EventTypeDTOCreate(EventTypeBase):
     pass
 
 

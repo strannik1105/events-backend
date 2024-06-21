@@ -71,11 +71,11 @@ class UserService(CoreService):
 
     async def create_user(
         self,
-        user_in: user_schemas.UserCreate,
+        user_in: user_schemas.UserDTOCreate,
         with_commit: bool = True,
     ) -> user_models.User:
         user = await self.repository.user.create(
-            obj_in=user_schemas.UserCreateWithoutPassword.model_validate(
+            obj_in=user_schemas.UserDTOCreateWithoutPassword.model_validate(
                 user_in.model_dump()
             ),
             with_commit=with_commit,
@@ -88,11 +88,11 @@ class UserService(CoreService):
 
     async def create_verify_user(
         self,
-        user_in: user_schemas.UserCreate,
+        user_in: user_schemas.UserDTOCreate,
         with_commit: bool = True,
     ) -> user_models.User:
         user = await self.repository.user.create(
-            obj_in=user_schemas.UserCreateWithoutPassword.model_validate(
+            obj_in=user_schemas.UserDTOCreateWithoutPassword.model_validate(
                 user_in.model_dump()
             ),
             with_commit=with_commit,
@@ -111,7 +111,7 @@ class UserService(CoreService):
     async def update_user(
         self,
         user: user_models.User,
-        user_in: user_schemas.UserUpdate,
+        user_in: user_schemas.UserDTOUpdate,
         with_commit: bool = True,
     ) -> user_models.User:
         return await self.repository.user.update(

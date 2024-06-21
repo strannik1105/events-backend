@@ -17,7 +17,7 @@ class RoleBase(CoreModel, Label):
         return v.strip()
 
 
-class RoleCreate(RoleBase):
+class RoleDTOCreate(RoleBase):
     pass
 
 

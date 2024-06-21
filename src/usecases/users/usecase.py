@@ -26,7 +26,7 @@ class UserUseCase(CoreUseCase):
     async def update_me(
         self,
         current_user: user_schemas.CurrentUser,
-        user_in: user_schemas.UserUpdate,
+        user_in: user_schemas.UserDTOUpdate,
     ) -> user_models.User:
         user = await self.service.user.get_user_by_email(
             email=current_user.email
@@ -72,7 +72,7 @@ class UserUseCase(CoreUseCase):
         self,
         current_user: user_schemas.CurrentUser,
         user_sid: UUID,
-        user_in: user_schemas.UserUpdate,
+        user_in: user_schemas.UserDTOUpdate,
     ) -> user_models.User:
         user = await self.service.user.get_user_by_sid(sid=user_sid)
         SecurityRole.validate_role_branch(
@@ -85,7 +85,7 @@ class UserUseCase(CoreUseCase):
         )
 
     async def create_user(
-        self, user_in: user_schemas.UserCreate
+        self, user_in: user_schemas.UserDTOCreate
     ) -> user_models.User:
         await self.service.user.get_user_by_email(
             email=user_in.email, is_exists=False

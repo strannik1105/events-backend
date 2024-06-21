@@ -10,5 +10,9 @@ class EventLikeBase(CoreModel):
     event_sid: UUID = Field(..., description="Event SID")
 
 
+class EventLikeDTOCreate(EventLikeBase):
+    pass
+
+
 class EventLike(EventLikeBase, Sid, CreatedAtMixin):
     pass

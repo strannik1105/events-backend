@@ -91,7 +91,7 @@ class SecurityService(CoreService):
         )
 
     async def create_role(
-        self, role_in: security_schemas.RoleCreate, with_commit: bool = True
+        self, role_in: security_schemas.RoleDTOCreate, with_commit: bool = True
     ) -> security_models.Role:
         return await self.repository.role.create(
             obj_in=role_in,
@@ -100,7 +100,7 @@ class SecurityService(CoreService):
 
     async def create_resource(
         self,
-        resource_in: security_schemas.ResourceCreate,
+        resource_in: security_schemas.ResourceDTOCreate,
         with_commit: bool = True,
     ) -> security_models.Resource:
         return await self.repository.resource.create(
@@ -110,7 +110,7 @@ class SecurityService(CoreService):
 
     async def create_role_x_resource(
         self,
-        role_x_resource_in: security_schemas.RoleXResourceCreate,
+        role_x_resource_in: security_schemas.RoleXResourceDTOCreate,
         with_commit: bool = True,
     ) -> security_models.RoleXResource:
         return await self.repository.role_x_resource.create(

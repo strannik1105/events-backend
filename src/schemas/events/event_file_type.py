@@ -16,7 +16,7 @@ class EventFileTypeBase(CoreModel, Label):
         return v.strip()
 
 
-class EventFileTypeCreate(EventFileTypeBase):
+class EventFileTypeDTOCreate(EventFileTypeBase):
     pass
 
 

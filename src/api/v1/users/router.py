@@ -74,7 +74,7 @@ async def get_users(
 async def update_me(
     current_user: deps.CurrentActiveUser,
     use_case: deps.UseCase,
-    user_in: Annotated[user_schemas.UserUpdate, APIParam.body(...)],
+    user_in: Annotated[user_schemas.UserDTOUpdate, APIParam.body(...)],
 ) -> user_models.User:
     return await use_case.user.update_me(
         current_user=current_user,
@@ -98,7 +98,7 @@ async def update_user(
     current_user: deps.CurrentActiveUser,
     use_case: deps.UseCase,
     user_sid: Annotated[UUID, APIParam.path(..., alias="userSid")],
-    user_in: Annotated[user_schemas.UserUpdate, APIParam.body(...)],
+    user_in: Annotated[user_schemas.UserDTOUpdate, APIParam.body(...)],
 ) -> user_models.User:
     return await use_case.user.update_user(
         current_user=current_user,
