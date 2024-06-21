@@ -2,10 +2,11 @@ from fastapi import UploadFile
 
 from config.exceptions import APIException
 from config.settings import settings
+from interfaces.usecases.events import IEventUseCaseUtils
 from usecases.core import CoreUseCaseUtils
 
 
-class EventUseCaseUtils(CoreUseCaseUtils):
+class EventUseCaseUtils(IEventUseCaseUtils, CoreUseCaseUtils):
     @staticmethod
     def validate_file_size(
         file: UploadFile, is_raise: bool = True

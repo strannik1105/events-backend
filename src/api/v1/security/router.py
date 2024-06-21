@@ -19,16 +19,16 @@ router = APIRouter()
 )
 async def get_role_by_label(
     _: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     role_label: Annotated[int, APIParam.path(..., alias="roleLabel")],
 ) -> security_models.Role:
-    return await use_case.security.get_role_by_label(role_label=role_label)
+    return await usecase.security.get_role_by_label(role_label=role_label)
 
 
 @router.get(path=APIPath.GET_ROLES, response_model=list[security_schemas.Role])
 async def get_roles(
     _: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     filter_params: Annotated[security_filters.RoleFilter, Depends()],
 ) -> list[security_models.Role]:
-    return await use_case.security.get_roles(filter_params=filter_params)
+    return await usecase.security.get_roles(filter_params=filter_params)

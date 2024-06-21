@@ -10,7 +10,7 @@ from common import schemas as common_schemas
 from common.managers import S3Manager
 from config.exceptions import APIException
 from config.settings import settings
-from interfaces.services.events import IEventService
+from interfaces.services.events import IEventService, IEventServiceUtils
 from models import events as event_models
 from schemas import events as event_schemas
 from services.core import CoreService
@@ -21,7 +21,7 @@ from .utils import EventServiceUtils
 class EventService(IEventService, CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
-        self._utils = EventServiceUtils(pg_db)
+        self._utils: IEventServiceUtils = EventServiceUtils(pg_db)
         self._events_bucket: str = settings.s3.EVENTS_BUCKET
 
     async def get_event_by_sid(

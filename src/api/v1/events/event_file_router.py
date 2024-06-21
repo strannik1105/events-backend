@@ -22,10 +22,10 @@ router = APIRouter()
 async def export_event_file_by_sid(
     current_user: deps.CurrentActiveUser,
     s3_client: deps.S3Client,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     event_file_sid: Annotated[UUID, APIParam.query(..., alias="eventFileSid")],
 ) -> str:
-    return await use_case.event.export_event_file_by_sid(
+    return await usecase.event.export_event_file_by_sid(
         current_user=current_user,
         s3_client=s3_client,
         event_file_sid=event_file_sid,
@@ -38,10 +38,10 @@ async def export_event_file_by_sid(
 )
 async def get_event_files(
     current_user: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     event_sids: Annotated[common_schemas.EventSids, Depends()],
 ) -> list[event_models.EventFile]:
-    return await use_case.event.get_event_files(
+    return await usecase.event.get_event_files(
         current_user=current_user,
         event_sids=event_sids,
     )
@@ -53,9 +53,9 @@ async def get_event_files(
 )
 async def get_event_file_types(
     _: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
 ) -> list[event_models.EventFileType]:
-    return await use_case.event.get_event_file_types()
+    return await usecase.event.get_event_file_types()
 
 
 @router.post(
@@ -65,11 +65,11 @@ async def get_event_file_types(
 async def create_event_file(
     current_user: deps.CurrentActiveUser,
     s3_client: deps.S3Client,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     event_sids: Annotated[common_schemas.EventSids, Depends()],
     file: Annotated[UploadFile, APIParam.file(...)],
 ) -> event_models.EventFile:
-    return await use_case.event.create_event_file(
+    return await usecase.event.create_event_file(
         current_user=current_user,
         s3_client=s3_client,
         event_sids=event_sids,
@@ -84,10 +84,10 @@ async def create_event_file(
 async def remove_event_file_by_sid(
     current_user: deps.CurrentActiveUser,
     s3_client: deps.S3Client,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     event_file_sid: Annotated[UUID, APIParam.query(..., alias="eventFileSid")],
 ) -> common_schemas.Msg:
-    return await use_case.event.remove_event_file_by_sid(
+    return await usecase.event.remove_event_file_by_sid(
         current_user=current_user,
         s3_client=s3_client,
         event_file_sid=event_file_sid,

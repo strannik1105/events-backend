@@ -6,12 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from common import enums as common_enums
 from common import schemas as common_schemas
 from common.security import SecurityRole
+from interfaces.usecases.users import IUserUseCase
 from models import users as user_models
 from schemas import users as user_schemas
 from usecases.core import CoreUseCase
 
 
-class UserUseCase(CoreUseCase):
+class UserUseCase(IUserUseCase, CoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
 
