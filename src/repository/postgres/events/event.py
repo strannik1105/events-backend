@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.events import Event
 from interfaces.repository.events import IEventRepository
+from models.events import Event
 from repository.postgres.core import CoreRepository
 
 

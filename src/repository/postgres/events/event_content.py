@@ -3,8 +3,8 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
-from models.events import EventContent
 from interfaces.repository.events import IEventContentRepository
+from models.events import EventContent
 from repository.postgres.core import CoreRepository
 
 

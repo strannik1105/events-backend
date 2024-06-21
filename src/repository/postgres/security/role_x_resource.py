@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
-from models.security import RoleXResource
 from interfaces.repository.security import IRoleXResourceRepository
+from models.security import RoleXResource
 from repository.postgres.core import CoreRepository
 
 

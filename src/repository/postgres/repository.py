@@ -1,18 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.events import (
-    Event,
-    EventAddress,
-    EventContent,
-    EventContentType,
-    EventFile,
-    EventFileType,
-    EventPull,
-    EventType,
-)
-from models.metrics import EventLike, EventView, Subscribe
-from models.security import Resource, Role, RoleXResource
-from models.users import User
 from interfaces.repository import IRepository
 from interfaces.repository.events import (
     IEventAddressRepository,
@@ -35,6 +22,19 @@ from interfaces.repository.security import (
     IRoleXResourceRepository,
 )
 from interfaces.repository.users import IUserRepository
+from models.events import (
+    Event,
+    EventAddress,
+    EventContent,
+    EventContentType,
+    EventFile,
+    EventFileType,
+    EventPull,
+    EventType,
+)
+from models.metrics import EventLike, EventView, Subscribe
+from models.security import Resource, Role, RoleXResource
+from models.users import User
 
 from .events import (
     EventAddressRepository,
