@@ -9,13 +9,13 @@ from repository.postgres import PostgresRepository
 
 class CoreService(ICoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
-        self.pg_db = pg_db
-        self.repository: IRepository = PostgresRepository(pg_db)
+        self._pg_db = pg_db
+        self._repository: IRepository = PostgresRepository(pg_db)
 
 
 class CoreServiceUtils(ICoreServiceUtils):
     def __init__(self, pg_db: AsyncSession) -> None:
-        self.pg_db = pg_db
+        self._pg_db = pg_db
 
     async def exists_validate(
         self,
@@ -28,10 +28,10 @@ class CoreServiceUtils(ICoreServiceUtils):
         if is_exists:
             if not obj:
                 if is_rollback:
-                    await self.pg_db.rollback()
+                    await self._pg_db.rollback()
                 raise not_found_exception
         else:
             if obj:
                 if is_rollback:
-                    await self.pg_db.rollback()
+                    await self._pg_db.rollback()
                 raise exists_exception

@@ -19,7 +19,7 @@ class AuthUseCase(IAuthUseCase, CoreUseCase):
         redis_client: aioredis.Redis,
         login_in: auth_schemas.LogIn,
     ) -> auth_schemas.AuthTokens:
-        user = await self.service.user.get_user_by_email(
+        user = await self._service.user.get_user_by_email(
             email=login_in.email,
             custom_options=user_options.SQLUserOptions.permissions(),
         )
@@ -27,11 +27,11 @@ class AuthUseCase(IAuthUseCase, CoreUseCase):
             password=login_in.password,
             hashed_password=user.hashed_password,
         )
-        await self.service.user.update_last_login_at(
+        await self._service.user.update_last_login_at(
             user=user,
             last_login_at=DateTimeManager.get_utcnow_without_timezone(),
         )
-        return await self.service.auth.get_auth_tokens(
+        return await self._service.auth.get_auth_tokens(
             redis_client=redis_client,
             user=user,
         )
@@ -41,7 +41,7 @@ class AuthUseCase(IAuthUseCase, CoreUseCase):
         redis_client: aioredis.Redis,
         refresh_token: str,
     ) -> auth_schemas.AuthTokens:
-        return await self.service.auth.refresh_auth_tokens(
+        return await self._service.auth.refresh_auth_tokens(
             redis_client=redis_client,
             refresh_token=refresh_token,
         )
@@ -52,7 +52,7 @@ class AuthUseCase(IAuthUseCase, CoreUseCase):
         access_token_payload: auth_schemas.AuthTokensPayload,
         is_everywhere: bool,
     ) -> schemas.Msg:
-        await self.service.auth.logout(
+        await self._service.auth.logout(
             redis_client=redis_client,
             access_token_payload=access_token_payload,
             is_everywhere=is_everywhere,
