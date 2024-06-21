@@ -1,10 +1,11 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from interfaces.services.auth import IAuthServiceUtils
 from models import security as security_models
 from services.core import CoreServiceUtils
 
 
-class AuthServiceUtils(CoreServiceUtils):
+class AuthServiceUtils(IAuthServiceUtils, CoreServiceUtils):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
 

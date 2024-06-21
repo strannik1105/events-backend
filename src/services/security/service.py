@@ -3,6 +3,7 @@ from sqlalchemy.sql.base import ExecutableOption
 
 from config.exceptions import APIException
 from filters import security as security_filters
+from interfaces.services.security import ISecurityService
 from models import security as security_models
 from schemas import security as security_schemas
 from services.core import CoreService
@@ -10,7 +11,7 @@ from services.core import CoreService
 from .utils import SecurityServiceUtils
 
 
-class SecurityService(CoreService):
+class SecurityService(ISecurityService, CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
         self._utils = SecurityServiceUtils(pg_db)

@@ -3,16 +3,17 @@ from typing import Any
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from interfaces.repository import IRepository
+from interfaces.services import ICoreService, ICoreServiceUtils
 from repository.postgres import PostgresRepository
 
 
-class CoreService:
+class CoreService(ICoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         self.pg_db = pg_db
         self.repository: IRepository = PostgresRepository(pg_db)
 
 
-class CoreServiceUtils:
+class CoreServiceUtils(ICoreServiceUtils):
     def __init__(self, pg_db: AsyncSession) -> None:
         self.pg_db = pg_db
 
