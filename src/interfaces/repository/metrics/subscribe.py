@@ -1,7 +1,7 @@
 from abc import ABCMeta
 from typing import Generic, TypeVar
 
-from repository.interfaces.core import ICoreRepository
+from interfaces.repository.core import ICoreRepository
 
 
 T = TypeVar("T")

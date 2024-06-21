@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from common.db.postgres import PostgresBaseModel
-from repository.interfaces.core import ICoreRepository
+from interfaces.repository import ICoreRepository
 
 
 T = TypeVar("T", bound=PostgresBaseModel)

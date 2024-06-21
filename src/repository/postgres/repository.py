@@ -13,8 +13,8 @@ from models.events import (
 from models.metrics import EventLike, EventView, Subscribe
 from models.security import Resource, Role, RoleXResource
 from models.users import User
-from repository.interfaces import IRepository
-from repository.interfaces.events import (
+from interfaces.repository import IRepository
+from interfaces.repository.events import (
     IEventAddressRepository,
     IEventContentRepository,
     IEventContentTypeRepository,
@@ -24,17 +24,17 @@ from repository.interfaces.events import (
     IEventRepository,
     IEventTypeRepository,
 )
-from repository.interfaces.metrics import (
+from interfaces.repository.metrics import (
     IEventLikeRepository,
     IEventViewRepository,
     ISubscribeRepository,
 )
-from repository.interfaces.security import (
+from interfaces.repository.security import (
     IResourceRepository,
     IRoleRepository,
     IRoleXResourceRepository,
 )
-from repository.interfaces.users import IUserRepository
+from interfaces.repository.users import IUserRepository
 
 from .events import (
     EventAddressRepository,

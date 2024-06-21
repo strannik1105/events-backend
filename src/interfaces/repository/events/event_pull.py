@@ -4,7 +4,7 @@ from typing import Generic, TypeVar
 from sqlalchemy.sql.base import ExecutableOption
 
 from common import schemas as common_schemas
-from repository.interfaces.core import ICoreRepository
+from interfaces.repository.core import ICoreRepository
 
 
 T = TypeVar("T")

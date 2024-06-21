@@ -3,7 +3,7 @@ from sqlalchemy.sql.base import ExecutableOption
 
 from filters import security as security_filters
 from models.security import Role
-from repository.interfaces.security import IRoleRepository
+from interfaces.repository.security import IRoleRepository
 from repository.postgres.core import CoreRepository
 
 

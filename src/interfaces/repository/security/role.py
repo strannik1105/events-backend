@@ -1,22 +1,20 @@
 from abc import ABCMeta, abstractmethod
 from typing import Generic, TypeVar
-from uuid import UUID
 
 from sqlalchemy.sql.base import ExecutableOption
 
-from repository.interfaces.core import ICoreRepository
+from filters import security as security_filters
+from interfaces.repository.core import ICoreRepository
 
 
 T = TypeVar("T")
 
 
-class IEventContentRepository(
-    Generic[T], ICoreRepository[T], metaclass=ABCMeta
-):
+class IRoleRepository(Generic[T], ICoreRepository[T], metaclass=ABCMeta):
     @abstractmethod
-    async def get_all_by_event_sid(
+    async def get_all_by_filter(
         self,
-        event_sid: UUID,
+        filter_params: security_filters.RoleFilter,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[T]:
         raise NotImplementedError

@@ -3,7 +3,7 @@ from sqlalchemy.sql.base import ExecutableOption
 
 from common import schemas as common_schemas
 from models.events import EventFile
-from repository.interfaces.events import IEventFileRepository
+from interfaces.repository.events import IEventFileRepository
 from repository.postgres.core import CoreRepository
 
 
