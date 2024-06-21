@@ -2,8 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from common import schemas as common_schemas
-from models.events import EventFile
 from interfaces.repository.events import IEventFileRepository
+from models.events import EventFile
 from repository.postgres.core import CoreRepository
 
 

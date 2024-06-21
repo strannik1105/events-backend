@@ -3,8 +3,8 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
-from models.users import User
 from interfaces.repository.users import IUserRepository
+from models.users import User
 from repository.postgres.core import CoreRepository
 
 

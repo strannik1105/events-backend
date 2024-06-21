@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.security import Resource
 from interfaces.repository.security import IResourceRepository
+from models.security import Resource
 from repository.postgres.core import CoreRepository
 
 
