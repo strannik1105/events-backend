@@ -28,7 +28,7 @@ jobs:
           private_key: ${{secrets.SSH_PRIVATE_KEY}}
           command: |
             cd ${{ secrets.PROJECT_FOLDER }};
-            git checkout main;
+            git checkout master;
             git pull;
             echo ${{ secrets.PROD_ENV }} > .env
             sudo docker-compose --file docker-compose.prod.yaml down;
