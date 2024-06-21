@@ -7,7 +7,7 @@ from sqlalchemy.sql.base import ExecutableOption
 
 from common.security import SecurityCrypto
 from config.exceptions import APIException
-from interfaces.services.users import IUserService
+from interfaces.services.users import IUserService, IUserServiceUtils
 from models import users as user_models
 from schemas import users as user_schemas
 from services.core import CoreService
@@ -18,7 +18,7 @@ from .utils import UserServiceUtils
 class UserService(IUserService, CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
-        self._utils = UserServiceUtils(pg_db)
+        self._utils: IUserServiceUtils = UserServiceUtils(pg_db)
 
     async def get_user_by_sid(
         self,

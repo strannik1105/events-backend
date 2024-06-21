@@ -15,6 +15,8 @@ from common.managers import JWTManager
 from config.exceptions import APIException
 from enums import auth as auth_enums
 from enums import security as security_enums
+from interfaces import services as i_services
+from interfaces import usecases as i_usecases
 from schemas import auth as auth_schemas
 from schemas import users as user_schemas
 
@@ -36,23 +38,23 @@ async def get_redis_token_client() -> aioredis.Redis:
     return redis.RedisTokenClient.get_async()
 
 
-def get_use_case(
+def get_usecase(
     pg_db: AsyncSession = Depends(get_pg_session),
-) -> usecases.UseCase:
+) -> i_usecases.IUseCase:
     return usecases.UseCase(pg_db)
 
 
 def get_service(
     pg_db: AsyncSession = Depends(get_pg_session),
-) -> services.Service:
+) -> i_services.IService:
     return services.Service(pg_db)
 
 
 PgSession = Annotated[AsyncSession, Depends(get_pg_session)]
 S3Client = Annotated[BaseClient, Depends(get_s3_client)]
 RedisTokenClient = Annotated[aioredis.Redis, Depends(get_redis_token_client)]
-UseCase = Annotated[usecases.UseCase, Depends(get_use_case)]
-Service = Annotated[services.Service, Depends(get_service)]
+UseCase = Annotated[i_usecases.IUseCase, Depends(get_usecase)]
+Service = Annotated[i_services.IService, Depends(get_service)]
 
 
 bearer_schema = HTTPBearer(auto_error=False)

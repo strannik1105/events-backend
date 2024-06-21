@@ -9,6 +9,7 @@ from common import schemas
 from common import schemas as common_schemas
 from common.security import SecurityRole
 from enums import security as security_enums
+from interfaces.usecases.events import IEventUseCase, IEventUseCaseUtils
 from models import events as event_models
 from schemas import events as event_schemas
 from schemas import users as user_schemas
@@ -17,10 +18,10 @@ from usecases.core import CoreUseCase
 from .utils import EventUseCaseUtils
 
 
-class EventUseCase(CoreUseCase):
+class EventUseCase(IEventUseCase, CoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
-        self._utils = EventUseCaseUtils(pg_db)
+        self._utils: IEventUseCaseUtils = EventUseCaseUtils(pg_db)
 
     async def get_event_files(
         self,
@@ -32,7 +33,7 @@ class EventUseCase(CoreUseCase):
             resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
-            repository=self.service.repository,
+            service=self.service,
             resource_label=resource_label,
             permission_label=security_enums.PermissionLabel.READ,
             current_user=current_user,
@@ -78,7 +79,7 @@ class EventUseCase(CoreUseCase):
             resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
-            repository=self.service.repository,
+            service=self.service,
             resource_label=resource_label,
             permission_label=security_enums.PermissionLabel.EXPORT,
             current_user=current_user,
@@ -105,7 +106,7 @@ class EventUseCase(CoreUseCase):
             resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
-            repository=self.service.repository,
+            service=self.service,
             resource_label=resource_label,
             permission_label=security_enums.PermissionLabel.CREATE,
             current_user=current_user,
@@ -163,7 +164,7 @@ class EventUseCase(CoreUseCase):
             resource_label = security_enums.ResourceLabel.EVENT_SPEAKER_FILE
 
         await SecurityRole.validate_event_role_permission(
-            repository=self.service.repository,
+            service=self.service,
             resource_label=resource_label,
             permission_label=security_enums.PermissionLabel.DELETE,
             current_user=current_user,
