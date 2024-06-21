@@ -19,19 +19,6 @@ services:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5444:5432"
-    command:
-      - "postgres"
-      - "-c"
-      - "shared_buffers=512MB"
-      - "-c"
-      - "work_mem=12MB"
-      - "-c"
-      - "maintenance_work_mem=128MB"
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
-      interval: 1m
-      timeout: 10s
-      retries: 3
     networks:
       - net
   
@@ -52,7 +39,7 @@ services:
       retries: 3
     networks:
       - net
-  
+
   minio:
     container_name: minio-events-prod
     image: minio/minio:RELEASE.2024-01-18T22-51-28Z
@@ -72,3 +59,24 @@ services:
       retries: 3
     networks:
       - net
+
+
+  events-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    restart: always
+
+    env_file: .env
+
+    ports:
+      - "8000:8000"
+
+    networks:
+      - net
+
+    depends_on:
+      - postgres
+      - redis
+      - minio
