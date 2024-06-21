@@ -1,18 +1,18 @@
 __all__ = [
     "User",
     "CurrentUser",
-    "UserCreate",
-    "UserCreateWithoutPassword",
-    "UserCreateWithoutRoleLabel",
-    "UserUpdate",
+    "UserDTOCreate",
+    "UserDTOCreateWithoutPassword",
+    "UserDTOCreateWithoutRoleLabel",
+    "UserDTOUpdate",
 ]
 
 
 from .user import (
     User,
     CurrentUser,
-    UserCreate,
-    UserCreateWithoutPassword,
-    UserCreateWithoutRoleLabel,
-    UserUpdate,
+    UserDTOCreate,
+    UserDTOCreateWithoutPassword,
+    UserDTOCreateWithoutRoleLabel,
+    UserDTOUpdate,
 )

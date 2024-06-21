@@ -13,7 +13,7 @@ class RoleXResourceBase(CoreModel):
     )
 
 
-class RoleXResourceCreate(RoleXResourceBase):
+class RoleXResourceDTOCreate(RoleXResourceBase):
     pass
 
 

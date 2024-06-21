@@ -10,5 +10,9 @@ class EventViewBase(CoreModel):
     event_sid: UUID = Field(..., description="Event SID")
 
 
+class EventViewDTOCreate(EventViewBase):
+    pass
+
+
 class EventView(EventViewBase, Sid, CreatedAtMixin):
     pass

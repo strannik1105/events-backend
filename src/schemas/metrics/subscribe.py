@@ -11,5 +11,9 @@ class SubscribeBase(CoreModel):
     is_notify: bool = Field(True, description="Notify status")
 
 
+class SubscribeDTOCreate(SubscribeBase):
+    pass
+
+
 class Subscribe(SubscribeBase, Sid, DateTimeMixin):
     pass

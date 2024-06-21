@@ -20,11 +20,11 @@ class EventAddressBase(CoreModel):
         return v.strip()
 
 
-class EventAddressCreate(EventAddressBase):
+class EventAddressDTOCreate(EventAddressBase):
     pass
 
 
-class EventAddressUpdate(EventAddressBase):
+class EventAddressDTOUpdate(EventAddressBase):
     pass
 
 

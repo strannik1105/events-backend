@@ -128,7 +128,7 @@ class EventUseCase(CoreUseCase):
             )
 
         event_file = await self.service.event.create_event_file(
-            event_file_in=event_schemas.EventFileCreate(
+            event_file_in=event_schemas.EventFileDTOCreate(
                 file_name=file.filename,
                 file_bytes=file.size,
                 event_sid=event_sids.event_sid,

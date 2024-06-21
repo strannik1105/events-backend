@@ -20,11 +20,11 @@ router = APIRouter()
 async def signup(
     use_case: deps.UseCase,
     user_in: Annotated[
-        user_schemas.UserCreateWithoutRoleLabel, APIParam.body(...)
+        user_schemas.UserDTOCreateWithoutRoleLabel, APIParam.body(...)
     ],
 ) -> user_models.User:
     return await use_case.user.create_user(
-        user_in=user_schemas.UserCreate(
+        user_in=user_schemas.UserDTOCreate(
             **user_in.model_dump(),
             role_label=security_enums.RoleLabel.USER,
         )

@@ -26,19 +26,19 @@ class UserBase(CoreModel):
         return v.strip()
 
 
-class UserCreateWithoutPassword(UserBase, Email):
+class UserDTOCreateWithoutPassword(UserBase, Email):
     role_label: security_enums.RoleLabel = Field(..., description="Role label")
 
 
-class UserCreateWithoutRoleLabel(UserBase, Email, CreatePassword):
+class UserDTOCreateWithoutRoleLabel(UserBase, Email, CreatePassword):
     pass
 
 
-class UserCreate(UserCreateWithoutPassword, CreatePassword):
+class UserDTOCreate(UserDTOCreateWithoutPassword, CreatePassword):
     pass
 
 
-class UserUpdate(UserBase):
+class UserDTOUpdate(UserBase):
     pass
 
 

@@ -19,11 +19,11 @@ class EventContentBase(CoreModel):
         return v.strip()
 
 
-class EventContentCreate(EventContentBase):
+class EventContentDTOCreate(EventContentBase):
     pass
 
 
-class EventContentUpdate(EventContentBase):
+class EventContentDTOUpdate(EventContentBase):
     pass
 
 

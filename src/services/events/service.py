@@ -330,7 +330,7 @@ class EventService(CoreService):
 
     async def create_event(
         self,
-        event_in: event_schemas.EventCreate,
+        event_in: event_schemas.EventDTOCreate,
         with_commit: bool = True,
     ) -> event_models.Event:
         return await self.repository.event.create(
@@ -340,7 +340,7 @@ class EventService(CoreService):
 
     async def create_event_type(
         self,
-        event_type_in: event_schemas.EventTypeCreate,
+        event_type_in: event_schemas.EventTypeDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventType:
         return await self.repository.event_type.create(
@@ -350,7 +350,7 @@ class EventService(CoreService):
 
     async def create_event_content(
         self,
-        event_content_in: event_schemas.EventContentCreate,
+        event_content_in: event_schemas.EventContentDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventContent:
         return await self.repository.event_content.create(
@@ -360,7 +360,7 @@ class EventService(CoreService):
 
     async def create_event_content_type(
         self,
-        event_content_type_in: event_schemas.EventContentTypeCreate,
+        event_content_type_in: event_schemas.EventContentTypeDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventContentType:
         return await self.repository.event_content_type.create(
@@ -370,7 +370,7 @@ class EventService(CoreService):
 
     async def create_event_pull(
         self,
-        event_pull_in: event_schemas.EventPullCreate,
+        event_pull_in: event_schemas.EventPullDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventPull:
         return await self.repository.event_pull.create(
@@ -380,7 +380,7 @@ class EventService(CoreService):
 
     async def create_event_file(
         self,
-        event_file_in: event_schemas.EventFileCreate,
+        event_file_in: event_schemas.EventFileDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventFile:
         return await self.repository.event_file.create(
@@ -400,7 +400,7 @@ class EventService(CoreService):
 
     async def create_event_file_type(
         self,
-        event_file_type_in: event_schemas.EventFileTypeCreate,
+        event_file_type_in: event_schemas.EventFileTypeDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventFileType:
         return await self.repository.event_file_type.create(

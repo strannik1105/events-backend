@@ -1,32 +1,40 @@
 __all__ = [
     "Event",
-    "EventCreate",
-    "EventUpdate",
+    "EventDTOCreate",
+    "EventDTOUpdate",
     "EventType",
-    "EventTypeCreate",
+    "EventTypeDTOCreate",
     "EventContent",
-    "EventContentCreate",
-    "EventContentUpdate",
+    "EventContentDTOCreate",
+    "EventContentDTOUpdate",
     "EventContentType",
-    "EventContentTypeCreate",
+    "EventContentTypeDTOCreate",
     "EventPull",
-    "EventPullCreate",
-    "EventPullUpdate",
+    "EventPullDTOCreate",
+    "EventPullDTOUpdate",
     "EventFileType",
-    "EventFileTypeCreate",
+    "EventFileTypeDTOCreate",
     "EventFile",
-    "EventFileCreate",
+    "EventFileDTOCreate",
     "EventAddress",
-    "EventAddressCreate",
-    "EventAddressUpdate",
+    "EventAddressDTOCreate",
+    "EventAddressDTOUpdate",
 ]
 
 
-from .event import Event, EventCreate, EventUpdate
-from .event_type import EventType, EventTypeCreate
-from .event_content import EventContent, EventContentCreate, EventContentUpdate
-from .event_content_type import EventContentType, EventContentTypeCreate
-from .event_pull import EventPull, EventPullCreate, EventPullUpdate
-from .event_file_type import EventFileType, EventFileTypeCreate
-from .event_file import EventFile, EventFileCreate
-from .event_address import EventAddress, EventAddressCreate, EventAddressUpdate
+from .event import Event, EventDTOCreate, EventDTOUpdate
+from .event_type import EventType, EventTypeDTOCreate
+from .event_content import (
+    EventContent,
+    EventContentDTOCreate,
+    EventContentDTOUpdate,
+)
+from .event_content_type import EventContentType, EventContentTypeDTOCreate
+from .event_pull import EventPull, EventPullDTOCreate, EventPullDTOUpdate
+from .event_file_type import EventFileType, EventFileTypeDTOCreate
+from .event_file import EventFile, EventFileDTOCreate
+from .event_address import (
+    EventAddress,
+    EventAddressDTOCreate,
+    EventAddressDTOUpdate,
+)
