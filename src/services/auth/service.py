@@ -8,6 +8,7 @@ from common.managers import JWTManager
 from common.sql.options import users as user_options
 from config.exceptions import APIException
 from enums import auth as auth_enums
+from interfaces.services.auth import IAuthService, IAuthServiceUtils
 from models import users as user_models
 from schemas import auth as auth_schemas
 from services.core import CoreService
@@ -15,10 +16,10 @@ from services.core import CoreService
 from .utils import AuthServiceUtils
 
 
-class AuthService(CoreService):
+class AuthService(IAuthService, CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
-        self._utils = AuthServiceUtils(pg_db)
+        self._utils: IAuthServiceUtils = AuthServiceUtils(pg_db)
 
     async def get_auth_tokens(
         self, redis_client: aioredis.Redis, user: user_models.User
@@ -82,7 +83,7 @@ class AuthService(CoreService):
             raise APIException.invalid_refresh_token from exc
 
         creds = auth_schemas.JWTCreds.model_validate(payload)
-        user = await self._pg_repository.user.get_by_sid(
+        user = await self._repository.user.get_by_sid(
             sid=creds.sub,
             custom_options=user_options.SQLUserOptions.permissions(),
         )

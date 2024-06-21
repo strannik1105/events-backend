@@ -3,11 +3,12 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
+from interfaces.repository.users import IUserRepository
 from models.users import User
 from repository.postgres.core import CoreRepository
 
 
-class UserRepository(CoreRepository[User]):
+class UserRepository(IUserRepository[User], CoreRepository[User]):
     def __init__(self, db: AsyncSession, model: type[User]) -> None:
         super().__init__(db, model)
 

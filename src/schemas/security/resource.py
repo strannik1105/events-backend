@@ -16,7 +16,7 @@ class ResourceBase(CoreModel, Label):
         return v.strip()
 
 
-class ResourceCreate(ResourceBase):
+class ResourceDTOCreate(ResourceBase):
     pass
 
 

@@ -10,6 +10,7 @@ from common import schemas as common_schemas
 from common.managers import S3Manager
 from config.exceptions import APIException
 from config.settings import settings
+from interfaces.services.events import IEventService, IEventServiceUtils
 from models import events as event_models
 from schemas import events as event_schemas
 from services.core import CoreService
@@ -17,10 +18,10 @@ from services.core import CoreService
 from .utils import EventServiceUtils
 
 
-class EventService(CoreService):
+class EventService(IEventService, CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
-        self._utils = EventServiceUtils(pg_db)
+        self._utils: IEventServiceUtils = EventServiceUtils(pg_db)
         self._events_bucket: str = settings.s3.EVENTS_BUCKET
 
     async def get_event_by_sid(
@@ -31,7 +32,7 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.Event | None:
-        event = await self._pg_repository.event.get_by_sid(
+        event = await self._repository.event.get_by_sid(
             sid=sid, custom_options=custom_options
         )
         if validate:
@@ -52,7 +53,7 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventType | None:
-        event_type = await self._pg_repository.event_type.get_by_label(
+        event_type = await self._repository.event_type.get_by_label(
             label=label, custom_options=custom_options
         )
         if validate:
@@ -73,7 +74,7 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventContent | None:
-        event_content = await self._pg_repository.event_content.get_by_sid(
+        event_content = await self._repository.event_content.get_by_sid(
             sid=sid, custom_options=custom_options
         )
         if validate:
@@ -95,7 +96,7 @@ class EventService(CoreService):
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventContentType | None:
         event_content_type = (
-            await self._pg_repository.event_content_type.get_by_label(
+            await self._repository.event_content_type.get_by_label(
                 label=label, custom_options=custom_options
             )
         )
@@ -117,7 +118,7 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventFile | None:
-        event_file = await self._pg_repository.event_file.get_by_sid(
+        event_file = await self._repository.event_file.get_by_sid(
             sid=sid, custom_options=custom_options
         )
         if validate:
@@ -138,7 +139,7 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventPull | None:
-        event_pull = await self._pg_repository.event_pull.get_by_event_sids(
+        event_pull = await self._repository.event_pull.get_by_event_sids(
             event_sids=event_sids,
             custom_options=custom_options,
         )
@@ -160,11 +161,9 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventPull | None:
-        event_pull = (
-            await self._pg_repository.event_pull.get_by_event_user_sids(
-                event_user_sids=event_user_sids,
-                custom_options=custom_options,
-            )
+        event_pull = await self._repository.event_pull.get_by_event_user_sids(
+            event_user_sids=event_user_sids,
+            custom_options=custom_options,
         )
         if validate:
             await self._utils.exists_validate(
@@ -184,7 +183,7 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventPull | None:
-        event_pull = await self._pg_repository.event_pull.get_by_sids(
+        event_pull = await self._repository.event_pull.get_by_sids(
             event_pull_sids=event_pull_sids,
             custom_options=custom_options,
         )
@@ -206,10 +205,8 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventFileType | None:
-        event_file_type = (
-            await self._pg_repository.event_file_type.get_by_label(
-                label=label, custom_options=custom_options
-            )
+        event_file_type = await self._repository.event_file_type.get_by_label(
+            label=label, custom_options=custom_options
         )
         if validate:
             await self._utils.exists_validate(
@@ -229,10 +226,8 @@ class EventService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> event_models.EventFileType | None:
-        event_file_type = (
-            await self._pg_repository.event_file_type.get_by_name(
-                name=name, custom_options=custom_options
-            )
+        event_file_type = await self._repository.event_file_type.get_by_name(
+            name=name, custom_options=custom_options
         )
         if validate:
             await self._utils.exists_validate(
@@ -248,7 +243,7 @@ class EventService(CoreService):
         self,
         custom_options: list[ExecutableOption] | None = None,
     ) -> LimitOffsetPage[event_models.Event]:
-        return await self._pg_repository.event.get_pagination(
+        return await self._repository.event.get_pagination(
             custom_options=custom_options,
         )
 
@@ -256,7 +251,7 @@ class EventService(CoreService):
         self,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[event_models.EventType]:
-        return await self._pg_repository.event_type.get_all(
+        return await self._repository.event_type.get_all(
             custom_options=custom_options,
         )
 
@@ -265,7 +260,7 @@ class EventService(CoreService):
         event_sid: UUID,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[event_models.EventContent]:
-        return await self._pg_repository.event_content.get_all_by_event_sid(
+        return await self._repository.event_content.get_all_by_event_sid(
             event_sid=event_sid,
             custom_options=custom_options,
         )
@@ -274,18 +269,18 @@ class EventService(CoreService):
         self,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[event_models.EventContentType]:
-        return await self._pg_repository.event_content_type.get_all(
+        return await self._repository.event_content_type.get_all(
             custom_options=custom_options,
         )
 
     async def get_event_file_types(self) -> list[event_models.EventFileType]:
-        return await self._pg_repository.event_file_type.get_all()
+        return await self._repository.event_file_type.get_all()
 
     async def get_event_files_by_event_sids(
         self,
         event_sids: common_schemas.EventSids,
-    ) -> list[event_models.EventFileType]:
-        return await self._pg_repository.event_file.get_all_by_event_sids(
+    ) -> list[event_models.EventFile]:
+        return await self._repository.event_file.get_all_by_event_sids(
             event_sids=event_sids,
         )
 
@@ -336,60 +331,60 @@ class EventService(CoreService):
 
     async def create_event(
         self,
-        event_in: event_schemas.EventCreate,
+        event_in: event_schemas.EventDTOCreate,
         with_commit: bool = True,
     ) -> event_models.Event:
-        return await self._pg_repository.event.create(
+        return await self._repository.event.create(
             obj_in=event_in,
             with_commit=with_commit,
         )
 
     async def create_event_type(
         self,
-        event_type_in: event_schemas.EventTypeCreate,
+        event_type_in: event_schemas.EventTypeDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventType:
-        return await self._pg_repository.event_type.create(
+        return await self._repository.event_type.create(
             obj_in=event_type_in,
             with_commit=with_commit,
         )
 
     async def create_event_content(
         self,
-        event_content_in: event_schemas.EventContentCreate,
+        event_content_in: event_schemas.EventContentDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventContent:
-        return await self._pg_repository.event_content.create(
+        return await self._repository.event_content.create(
             obj_in=event_content_in,
             with_commit=with_commit,
         )
 
     async def create_event_content_type(
         self,
-        event_content_type_in: event_schemas.EventContentTypeCreate,
+        event_content_type_in: event_schemas.EventContentTypeDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventContentType:
-        return await self._pg_repository.event_content_type.create(
+        return await self._repository.event_content_type.create(
             obj_in=event_content_type_in,
             with_commit=with_commit,
         )
 
     async def create_event_pull(
         self,
-        event_pull_in: event_schemas.EventPullCreate,
+        event_pull_in: event_schemas.EventPullDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventPull:
-        return await self._pg_repository.event_pull.create(
+        return await self._repository.event_pull.create(
             obj_in=event_pull_in,
             with_commit=with_commit,
         )
 
     async def create_event_file(
         self,
-        event_file_in: event_schemas.EventFileCreate,
+        event_file_in: event_schemas.EventFileDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventFile:
-        return await self._pg_repository.event_file.create(
+        return await self._repository.event_file.create(
             obj_in=event_file_in,
             with_commit=with_commit,
         )
@@ -399,17 +394,17 @@ class EventService(CoreService):
         event_file: event_models.EventFile,
         with_commit: bool = True,
     ) -> None:
-        return await self._pg_repository.event_file.remove(
+        return await self._repository.event_file.remove(
             obj=event_file,
             with_commit=with_commit,
         )
 
     async def create_event_file_type(
         self,
-        event_file_type_in: event_schemas.EventFileTypeCreate,
+        event_file_type_in: event_schemas.EventFileTypeDTOCreate,
         with_commit: bool = True,
     ) -> event_models.EventFileType:
-        return await self._pg_repository.event_file_type.create(
+        return await self._repository.event_file_type.create(
             obj_in=event_file_type_in,
             with_commit=with_commit,
         )

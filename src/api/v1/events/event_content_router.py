@@ -16,6 +16,6 @@ router = APIRouter()
 )
 async def get_event_content_types(
     _: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
 ) -> list[event_models.EventContentType]:
-    return await use_case.event.get_event_content_types()
+    return await usecase.event.get_event_content_types()

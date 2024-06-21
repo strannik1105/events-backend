@@ -1,10 +1,8 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from common import schemas as common_schemas
 from common.sql.options import events as event_options
 from config.exceptions import APIException
 from enums import security as security_enums
-from repository.postgres import PostgresRepository
+from interfaces.services import IService
 from schemas import users as user_schemas
 
 
@@ -39,7 +37,7 @@ class SecurityRole:
     @classmethod
     async def validate_event_role_permission(
         cls,
-        pg_db: AsyncSession,
+        service: IService,
         resource_label: security_enums.ResourceLabel,
         permission_label: security_enums.PermissionLabel,
         current_user: user_schemas.CurrentUser,
@@ -50,13 +48,12 @@ class SecurityRole:
         ):
             return
 
-        repository = PostgresRepository(pg_db)
-
-        event_pull = await repository.event_pull.get_by_event_user_sids(
+        event_pull = await service.event.get_event_pull_by_event_user_sids(
             event_user_sids=common_schemas.EventUserSids(
                 event_sid=event_sids.event_sid,
                 user_sid=current_user.sid,
             ),
+            validate=False,
             custom_options=event_options.SQLEventPullOptions.permissions(),
         )
         if not event_pull:
@@ -74,11 +71,12 @@ class SecurityRole:
                     and permission_label
                     in (cls._c_label, cls._u_label, cls._d_label)
                 ):
-                    event_pull = await repository.event_pull.get_by_sids(
+                    event_pull = await service.event.get_event_pull_by_sids(
                         event_pull_sids=common_schemas.EventPullSids(
                             **event_sids.model_dump(),
                             user_sid=current_user.sid,
                         ),
+                        validate=False,
                         custom_options=event_options.SQLEventPullOptions.permissions(),
                     )
                     if not event_pull:

@@ -14,11 +14,11 @@ class EventPullBase(CoreModel):
     event_role_label: int = Field(..., description="Event role label")
 
 
-class EventPullCreate(EventPullBase):
+class EventPullDTOCreate(EventPullBase):
     pass
 
 
-class EventPullUpdate(EventPullBase):
+class EventPullDTOUpdate(EventPullBase):
     pass
 
 

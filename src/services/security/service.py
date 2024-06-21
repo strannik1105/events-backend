@@ -3,6 +3,10 @@ from sqlalchemy.sql.base import ExecutableOption
 
 from config.exceptions import APIException
 from filters import security as security_filters
+from interfaces.services.security import (
+    ISecurityService,
+    ISecurityServiceUtils,
+)
 from models import security as security_models
 from schemas import security as security_schemas
 from services.core import CoreService
@@ -10,10 +14,10 @@ from services.core import CoreService
 from .utils import SecurityServiceUtils
 
 
-class SecurityService(CoreService):
+class SecurityService(ISecurityService, CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
-        self._utils = SecurityServiceUtils(pg_db)
+        self._utils: ISecurityServiceUtils = SecurityServiceUtils(pg_db)
 
     async def get_role_by_label(
         self,
@@ -23,7 +27,7 @@ class SecurityService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> security_models.Role | None:
-        role = await self._pg_repository.role.get_by_label(
+        role = await self._repository.role.get_by_label(
             label=label, custom_options=custom_options
         )
         if validate:
@@ -44,7 +48,7 @@ class SecurityService(CoreService):
         is_rollback: bool = False,
         custom_options: list[ExecutableOption] | None = None,
     ) -> security_models.Resource | None:
-        permission = await self._pg_repository.resource.get_by_label(
+        permission = await self._repository.resource.get_by_label(
             label=label, custom_options=custom_options
         )
         if validate:
@@ -67,7 +71,7 @@ class SecurityService(CoreService):
         custom_options: list[ExecutableOption] | None = None,
     ) -> security_models.RoleXResource | None:
         role_x_permission = (
-            await self._pg_repository.role_x_resource.get_by_labels(
+            await self._repository.role_x_resource.get_by_labels(
                 role_label=role_label,
                 resource_label=resource_label,
                 custom_options=custom_options,
@@ -86,34 +90,34 @@ class SecurityService(CoreService):
     async def get_roles(
         self, filter_params: security_filters.RoleFilter
     ) -> list[security_models.Role]:
-        return await self._pg_repository.role.get_all_by_filter(
+        return await self._repository.role.get_all_by_filter(
             filter_params=filter_params
         )
 
     async def create_role(
-        self, role_in: security_schemas.RoleCreate, with_commit: bool = True
+        self, role_in: security_schemas.RoleDTOCreate, with_commit: bool = True
     ) -> security_models.Role:
-        return await self._pg_repository.role.create(
+        return await self._repository.role.create(
             obj_in=role_in,
             with_commit=with_commit,
         )
 
     async def create_resource(
         self,
-        resource_in: security_schemas.ResourceCreate,
+        resource_in: security_schemas.ResourceDTOCreate,
         with_commit: bool = True,
     ) -> security_models.Resource:
-        return await self._pg_repository.resource.create(
+        return await self._repository.resource.create(
             obj_in=resource_in,
             with_commit=with_commit,
         )
 
     async def create_role_x_resource(
         self,
-        role_x_resource_in: security_schemas.RoleXResourceCreate,
+        role_x_resource_in: security_schemas.RoleXResourceDTOCreate,
         with_commit: bool = True,
     ) -> security_models.RoleXResource:
-        return await self._pg_repository.role_x_resource.create(
+        return await self._repository.role_x_resource.create(
             obj_in=role_x_resource_in,
             with_commit=with_commit,
         )

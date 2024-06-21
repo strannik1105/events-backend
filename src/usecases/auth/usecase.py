@@ -5,11 +5,12 @@ from common import enums, schemas
 from common.managers import DateTimeManager
 from common.security import SecurityCrypto
 from common.sql.options import users as user_options
+from interfaces.usecases.auth import IAuthUseCase
 from schemas import auth as auth_schemas
 from usecases.core import CoreUseCase
 
 
-class AuthUseCase(CoreUseCase):
+class AuthUseCase(IAuthUseCase, CoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
 

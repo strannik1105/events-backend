@@ -1,11 +1,12 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from filters import security as security_filters
+from interfaces.usecases.security import ISecurityUseCase
 from models import security as security_models
 from usecases.core import CoreUseCase
 
 
-class SecurityUseCase(CoreUseCase):
+class SecurityUseCase(ISecurityUseCase, CoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
 

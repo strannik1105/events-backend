@@ -41,10 +41,10 @@ async def get_me(
 )
 async def get_user_by_sid(
     _: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     user_sid: Annotated[UUID, APIParam.path(..., alias="userSid")],
 ) -> user_models.User:
-    return await use_case.user.get_user_by_sid(user_sid=user_sid)
+    return await usecase.user.get_user_by_sid(user_sid=user_sid)
 
 
 @router.get(
@@ -62,9 +62,9 @@ async def get_user_by_sid(
 async def get_users(
     _: deps.PaginationParams,
     __: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
 ) -> LimitOffsetPage[user_models.User]:
-    return await use_case.user.get_users()
+    return await usecase.user.get_users()
 
 
 @router.put(
@@ -73,10 +73,10 @@ async def get_users(
 )
 async def update_me(
     current_user: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
-    user_in: Annotated[user_schemas.UserUpdate, APIParam.body(...)],
+    usecase: deps.UseCase,
+    user_in: Annotated[user_schemas.UserDTOUpdate, APIParam.body(...)],
 ) -> user_models.User:
-    return await use_case.user.update_me(
+    return await usecase.user.update_me(
         current_user=current_user,
         user_in=user_in,
     )
@@ -96,11 +96,11 @@ async def update_me(
 )
 async def update_user(
     current_user: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     user_sid: Annotated[UUID, APIParam.path(..., alias="userSid")],
-    user_in: Annotated[user_schemas.UserUpdate, APIParam.body(...)],
+    user_in: Annotated[user_schemas.UserDTOUpdate, APIParam.body(...)],
 ) -> user_models.User:
-    return await use_case.user.update_user(
+    return await usecase.user.update_user(
         current_user=current_user,
         user_sid=user_sid,
         user_in=user_in,
@@ -121,11 +121,11 @@ async def update_user(
 )
 async def update_user_active_status(
     current_user: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     user_sid: Annotated[UUID, APIParam.path(..., alias="userSid")],
     is_active: Annotated[bool, APIParam.query(..., alias="isActive")],
 ) -> user_models.User:
-    return await use_case.user.update_user_active(
+    return await usecase.user.update_user_active(
         current_user=current_user,
         user_sid=user_sid,
         is_active=is_active,
@@ -146,11 +146,11 @@ async def update_user_active_status(
 )
 async def update_user_verify_status(
     current_user: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     user_sid: Annotated[UUID, APIParam.path(..., alias="userSid")],
     is_verify: Annotated[bool, APIParam.query(..., alias="isVerify")],
 ) -> user_models.User:
-    return await use_case.user.update_user_verify(
+    return await usecase.user.update_user_verify(
         current_user=current_user,
         user_sid=user_sid,
         is_verify=is_verify,
@@ -171,10 +171,10 @@ async def update_user_verify_status(
 )
 async def remove_user(
     current_user: deps.CurrentActiveUser,
-    use_case: deps.UseCase,
+    usecase: deps.UseCase,
     user_sid: Annotated[UUID, APIParam.path(..., alias="userSid")],
 ) -> common_schemas.Msg:
-    return await use_case.user.remove_user(
+    return await usecase.user.remove_user(
         current_user=current_user,
         user_sid=user_sid,
     )

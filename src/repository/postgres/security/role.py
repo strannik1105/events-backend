@@ -2,11 +2,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.base import ExecutableOption
 
 from filters import security as security_filters
+from interfaces.repository.security import IRoleRepository
 from models.security import Role
 from repository.postgres.core import CoreRepository
 
 
-class RoleRepository(CoreRepository[Role]):
+class RoleRepository(IRoleRepository[Role], CoreRepository[Role]):
     def __init__(self, db: AsyncSession, model: type[Role]) -> None:
         super().__init__(db, model)
 

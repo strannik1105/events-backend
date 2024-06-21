@@ -11,21 +11,21 @@ from sqlalchemy.sql.base import ExecutableOption
 T = TypeVar("T")
 
 
-class IRepository(Generic[T], metaclass=ABCMeta):
+class ICoreRepository(Generic[T], metaclass=ABCMeta):
     @abstractmethod
-    def get_by_sid(
+    async def get_by_sid(
         self, sid: UUID, custom_options: list[ExecutableOption] | None = None
     ) -> T | None:
         raise NotImplementedError
 
     @abstractmethod
-    def get_by_label(
-        self, label: int, custom_options: list[ExecutableOption] | None = None
+    async def get_by_label(
+        self, label: UUID, custom_options: list[ExecutableOption] | None = None
     ) -> T | None:
         raise NotImplementedError
 
     @abstractmethod
-    def get_by(
+    async def get_by(
         self,
         filter_expression: BinaryExpression | None = None,
         custom_options: list[ExecutableOption] | None = None,
@@ -33,13 +33,13 @@ class IRepository(Generic[T], metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def get_all(
+    async def get_all(
         self, custom_options: list[ExecutableOption] | None = None
     ) -> list[T]:
         raise NotImplementedError
 
     @abstractmethod
-    def get_all_by(
+    async def get_all_by(
         self,
         filter_expression: BinaryExpression | None = None,
         custom_options: list[ExecutableOption] | None = None,
@@ -47,7 +47,7 @@ class IRepository(Generic[T], metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def get_few(
+    async def get_few(
         self,
         limit: int,
         offset: int,
@@ -56,14 +56,14 @@ class IRepository(Generic[T], metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def get_pagination(
+    async def get_pagination(
         self,
         custom_options: list[ExecutableOption] | None = None,
     ) -> LimitOffsetPage[T]:
         raise NotImplementedError
 
     @abstractmethod
-    def get_pagination_by(
+    async def get_pagination_by(
         self,
         filter_expression: BinaryExpression | None = None,
         custom_options: list[ExecutableOption] | None = None,
@@ -71,15 +71,17 @@ class IRepository(Generic[T], metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def create(self, obj_in: T | BaseModel, with_commit: bool = True) -> T:
+    async def create(
+        self, obj_in: dict | BaseModel, with_commit: bool = True
+    ) -> T:
         raise NotImplementedError
 
     @abstractmethod
-    def update(
+    async def update(
         self, obj: T, obj_in: dict | BaseModel, with_commit: bool = True
     ) -> T:
         raise NotImplementedError
 
     @abstractmethod
-    def remove(self, obj: T, with_commit: bool = True) -> None:
+    async def remove(self, obj: T, with_commit: bool = True) -> None:
         raise NotImplementedError

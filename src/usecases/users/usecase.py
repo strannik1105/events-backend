@@ -6,12 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from common import enums as common_enums
 from common import schemas as common_schemas
 from common.security import SecurityRole
+from interfaces.usecases.users import IUserUseCase
 from models import users as user_models
 from schemas import users as user_schemas
 from usecases.core import CoreUseCase
 
 
-class UserUseCase(CoreUseCase):
+class UserUseCase(IUserUseCase, CoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
 
@@ -26,7 +27,7 @@ class UserUseCase(CoreUseCase):
     async def update_me(
         self,
         current_user: user_schemas.CurrentUser,
-        user_in: user_schemas.UserUpdate,
+        user_in: user_schemas.UserDTOUpdate,
     ) -> user_models.User:
         user = await self._service.user.get_user_by_email(
             email=current_user.email
@@ -72,7 +73,7 @@ class UserUseCase(CoreUseCase):
         self,
         current_user: user_schemas.CurrentUser,
         user_sid: UUID,
-        user_in: user_schemas.UserUpdate,
+        user_in: user_schemas.UserDTOUpdate,
     ) -> user_models.User:
         user = await self._service.user.get_user_by_sid(sid=user_sid)
         SecurityRole.validate_role_branch(
@@ -85,7 +86,7 @@ class UserUseCase(CoreUseCase):
         )
 
     async def create_user(
-        self, user_in: user_schemas.UserCreate
+        self, user_in: user_schemas.UserDTOCreate
     ) -> user_models.User:
         await self._service.user.get_user_by_email(
             email=user_in.email, is_exists=False

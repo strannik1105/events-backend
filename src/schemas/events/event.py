@@ -17,11 +17,11 @@ class EventBase(CoreModel):
         return v.strip()
 
 
-class EventCreate(EventBase):
+class EventDTOCreate(EventBase):
     pass
 
 
-class EventUpdate(EventBase):
+class EventDTOUpdate(EventBase):
     pass
 
 
