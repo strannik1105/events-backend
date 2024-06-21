@@ -27,8 +27,7 @@ jobs:
           user: ${{secrets.SSH_USER}}
           private_key: ${{secrets.SSH_PRIVATE_KEY}}
           command: |
-            git clone git@github.com:strannik1105/events-backend.git
-            cd events-backend;
+            cd ${{ secrets.PROJECT_FOLDER }};
             git checkout main;
             git pull;
             echo {{ secrets.PROD_ENV }} > .env
