@@ -7,6 +7,8 @@ from pydantic import BaseModel
 from sqlalchemy import BinaryExpression
 from sqlalchemy.sql.base import ExecutableOption
 
+from common.filters import CoreFilter
+
 
 T = TypeVar("T")
 
@@ -34,7 +36,9 @@ class ICoreRepository(Generic[T], metaclass=ABCMeta):
 
     @abstractmethod
     async def get_all(
-        self, custom_options: list[ExecutableOption] | None = None
+        self,
+        filter_params: CoreFilter | None = None,
+        custom_options: list[ExecutableOption] | None = None,
     ) -> list[T]:
         raise NotImplementedError
 
@@ -42,6 +46,7 @@ class ICoreRepository(Generic[T], metaclass=ABCMeta):
     async def get_all_by(
         self,
         filter_expression: BinaryExpression | None = None,
+        filter_params: CoreFilter | None = None,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[T]:
         raise NotImplementedError
@@ -51,6 +56,17 @@ class ICoreRepository(Generic[T], metaclass=ABCMeta):
         self,
         limit: int,
         offset: int,
+        filter_params: CoreFilter | None = None,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> list[T]:
+        raise NotImplementedError
+
+    async def get_few_by(
+        self,
+        limit: int,
+        offset: int,
+        filter_params: CoreFilter | None = None,
+        filter_expression: BinaryExpression | None = None,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[T]:
         raise NotImplementedError
@@ -58,6 +74,7 @@ class ICoreRepository(Generic[T], metaclass=ABCMeta):
     @abstractmethod
     async def get_pagination(
         self,
+        filter_params: CoreFilter | None = None,
         custom_options: list[ExecutableOption] | None = None,
     ) -> LimitOffsetPage[T]:
         raise NotImplementedError
@@ -65,6 +82,7 @@ class ICoreRepository(Generic[T], metaclass=ABCMeta):
     @abstractmethod
     async def get_pagination_by(
         self,
+        filter_params: CoreFilter | None = None,
         filter_expression: BinaryExpression | None = None,
         custom_options: list[ExecutableOption] | None = None,
     ) -> LimitOffsetPage[T]:

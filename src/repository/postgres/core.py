@@ -6,9 +6,11 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from pydantic import BaseModel
 from sqlalchemy import BinaryExpression, Result, Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Query
 from sqlalchemy.sql.base import ExecutableOption
 
 from common.db.postgres import PostgresBaseModel
+from common.filters import CoreFilter
 from interfaces.repository import ICoreRepository
 
 
@@ -22,11 +24,30 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
 
     @staticmethod
     def _set_custom_options(
-        query: Select, custom_options: list[ExecutableOption] | None = None
-    ) -> Select:
+        query: Query | Select,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> Query | Select:
         if custom_options is not None:
             for custom_option in custom_options:
                 query = query.options(custom_option)
+        return query
+
+    @staticmethod
+    def _set_filter_expression(
+        query: Query | Select,
+        filter_expression: BinaryExpression | None = None,
+    ) -> Query | Select:
+        if filter_expression is not None:
+            query = query.where(filter_expression)
+        return query
+
+    @staticmethod
+    def _set_filter_params(
+        query: Query | Select, filter_params: CoreFilter | None = None
+    ) -> Query | Select:
+        if filter_params is not None:
+            query = filter_params.filter(query)
+            query = filter_params.sort(query)
         return query
 
     async def get_by_sid(
@@ -55,8 +76,9 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
         custom_options: list[ExecutableOption] | None = None,
     ) -> T | None:
         query = select(self._model)
-        if filter_expression is not None:
-            query = query.where(filter_expression)
+        query = self._set_filter_expression(
+            query=query, filter_expression=filter_expression
+        )
         query = self._set_custom_options(
             query=query, custom_options=custom_options
         )
@@ -64,9 +86,14 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
         return result.scalars().first()
 
     async def get_all(
-        self, custom_options: list[ExecutableOption] | None = None
+        self,
+        filter_params: CoreFilter | None = None,
+        custom_options: list[ExecutableOption] | None = None,
     ) -> list[T]:
         query = select(self._model)
+        query = self._set_filter_params(
+            query=query, filter_params=filter_params
+        )
         query = self._set_custom_options(
             query=query, custom_options=custom_options
         )
@@ -75,12 +102,17 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
 
     async def get_all_by(
         self,
+        filter_params: CoreFilter | None = None,
         filter_expression: BinaryExpression | None = None,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[T]:
         query = select(self._model)
-        if filter_expression is not None:
-            query = query.where(filter_expression)
+        query = self._set_filter_expression(
+            query=query, filter_expression=filter_expression
+        )
+        query = self._set_filter_params(
+            query=query, filter_params=filter_params
+        )
         query = self._set_custom_options(
             query=query, custom_options=custom_options
         )
@@ -91,9 +123,34 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
         self,
         limit: int,
         offset: int,
+        filter_params: CoreFilter | None = None,
         custom_options: list[ExecutableOption] | None = None,
     ) -> list[T]:
         query = select(self._model).limit(limit).offset(offset)
+        query = self._set_filter_params(
+            query=query, filter_params=filter_params
+        )
+        query = self._set_custom_options(
+            query=query, custom_options=custom_options
+        )
+        result: Result = await self._db.execute(query)
+        return list(result.scalars().all())
+
+    async def get_few_by(
+        self,
+        limit: int,
+        offset: int,
+        filter_params: CoreFilter | None = None,
+        filter_expression: BinaryExpression | None = None,
+        custom_options: list[ExecutableOption] | None = None,
+    ) -> list[T]:
+        query = select(self._model).limit(limit).offset(offset)
+        query = self._set_filter_expression(
+            query=query, filter_expression=filter_expression
+        )
+        query = self._set_filter_params(
+            query=query, filter_params=filter_params
+        )
         query = self._set_custom_options(
             query=query, custom_options=custom_options
         )
@@ -102,9 +159,13 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
 
     async def get_pagination(
         self,
+        filter_params: CoreFilter | None = None,
         custom_options: list[ExecutableOption] | None = None,
     ) -> LimitOffsetPage[T]:
         query = select(self._model)
+        query = self._set_filter_params(
+            query=query, filter_params=filter_params
+        )
         query = self._set_custom_options(
             query=query, custom_options=custom_options
         )
@@ -112,12 +173,17 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
 
     async def get_pagination_by(
         self,
+        filter_params: CoreFilter | None = None,
         filter_expression: BinaryExpression | None = None,
         custom_options: list[ExecutableOption] | None = None,
     ) -> LimitOffsetPage[T]:
         query = select(self._model)
-        if filter_expression is not None:
-            query = query.where(filter_expression)
+        query = self._set_filter_expression(
+            query=query, filter_expression=filter_expression
+        )
+        query = self._set_filter_params(
+            query=query, filter_params=filter_params
+        )
         query = self._set_custom_options(
             query=query, custom_options=custom_options
         )

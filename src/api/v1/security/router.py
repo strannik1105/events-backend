@@ -1,9 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from api import deps
 from api.params import APIParam
+from common.filters import FilterDepends
 from filters import security as security_filters
 from models import security as security_models
 from schemas import security as security_schemas
@@ -29,6 +30,8 @@ async def get_role_by_label(
 async def get_roles(
     _: deps.CurrentActiveUser,
     usecase: deps.UseCase,
-    filter_params: Annotated[security_filters.RoleFilter, Depends()],
+    filter_params: Annotated[
+        security_filters.RoleFilter, FilterDepends(security_filters.RoleFilter)
+    ],
 ) -> list[security_models.Role]:
     return await usecase.security.get_roles(filter_params=filter_params)
