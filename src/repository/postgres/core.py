@@ -6,7 +6,6 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from pydantic import BaseModel
 from sqlalchemy import BinaryExpression, Result, Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Query
 from sqlalchemy.sql.base import ExecutableOption
 
 from common.db.postgres import PostgresBaseModel
@@ -24,9 +23,9 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
 
     @staticmethod
     def _set_custom_options(
-        query: Query | Select,
+        query: Select,
         custom_options: list[ExecutableOption] | None = None,
-    ) -> Query | Select:
+    ) -> Select:
         if custom_options is not None:
             for custom_option in custom_options:
                 query = query.options(custom_option)
@@ -34,17 +33,17 @@ class CoreRepository(Generic[T], ICoreRepository[T]):
 
     @staticmethod
     def _set_filter_expression(
-        query: Query | Select,
+        query: Select,
         filter_expression: BinaryExpression | None = None,
-    ) -> Query | Select:
+    ) -> Select:
         if filter_expression is not None:
             query = query.where(filter_expression)
         return query
 
     @staticmethod
     def _set_filter_params(
-        query: Query | Select, filter_params: CoreFilter | None = None
-    ) -> Query | Select:
+        query: Select, filter_params: CoreFilter | None = None
+    ) -> Select:
         if filter_params is not None:
             query = filter_params.filter(query)
             query = filter_params.sort(query)

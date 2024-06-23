@@ -9,15 +9,13 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Extra,
-    FieldValidationInfo,
     ValidationError,
     create_model,
     field_validator,
 )
 from pydantic.alias_generators import to_camel
 from pydantic.fields import FieldInfo
-from sqlalchemy import Select
-from sqlalchemy.orm import Query
+from pydantic_core.core_schema import ValidationInfo
 
 
 UNION_TYPES: list = [Union]
@@ -32,7 +30,7 @@ class CoreCustomFilter(BaseModel):
     pass
 
 
-class CoreFilter(BaseModel, extra=Extra.forbid):
+class CoreFilter(BaseModel, extra=Extra.forbid):  # type: ignore
     class FilterConfig:
         models: list[Type] = []
         model_field_reserve: dict[str, list[Type]] = {}
@@ -40,20 +38,20 @@ class CoreFilter(BaseModel, extra=Extra.forbid):
         model_field_exclude: dict[Type, list[str]] = {}
         ordering_field_name: str = "order_by"
         ordering_nulls_last: bool = True
-        is_camel_case: bool = True
+        prefix: str
 
     model_config = ConfigDict(
         from_attributes=True, populate_by_name=True, alias_generator=to_camel
     )
 
-    def filter(self, query: Query | Select) -> Query | Select:
+    def filter(self, query: Any) -> Any:
         return query
 
-    def sort(self, query: Query | Select) -> Query | Select:
+    def sort(self, query: Any) -> Any:
         return query
 
     @property
-    def filtering_fields(self) -> tuple[str, Any]:
+    def filtering_fields(self) -> Any:
         fields = self.model_dump(exclude_none=True, exclude_unset=True)
         fields.pop(self.FilterConfig.ordering_field_name, None)
         return fields.items()
@@ -91,9 +89,7 @@ class CoreFilter(BaseModel, extra=Extra.forbid):
         )
 
     @field_validator("*", mode="before", check_fields=False)
-    def strip_order_by_values(
-        cls, value: Any, field: FieldValidationInfo
-    ) -> Any:
+    def strip_order_by_values(cls, value: Any, field: ValidationInfo) -> Any:
         if field.field_name != cls.FilterConfig.ordering_field_name:
             return value
         if not value:
@@ -103,7 +99,7 @@ class CoreFilter(BaseModel, extra=Extra.forbid):
         ]
 
     @field_validator("*", mode="before", check_fields=False)
-    def validate_order_by(cls, value: Any, field: FieldValidationInfo) -> Any:
+    def validate_order_by(cls, value: Any, field: ValidationInfo) -> Any:
         if field.field_name != cls.FilterConfig.ordering_field_name:
             return value
         if not value:
@@ -116,10 +112,7 @@ class CoreFilter(BaseModel, extra=Extra.forbid):
         field_names_set = set()
         for field_name_w_direction in value:
             field_name = field_name_w_direction.lstrip("-+")
-
-            if cls.FilterConfig.is_camel_case:
-                field_name = cls.camel_to_snake(field_name)
-
+            field_name = cls.camel_to_snake(field_name)
             if field_name in field_names_set:
                 raise ValueError(
                     f"The sorting field {field_name} is duplicated"
@@ -151,7 +144,9 @@ class CoreFilter(BaseModel, extra=Extra.forbid):
         return value
 
 
-def _list_to_str_fields(Filter: Type[CoreFilter]):
+def _list_to_str_fields(
+    Filter: Type[CoreFilter],
+) -> dict[str, tuple[object | Type, FieldInfo | None]]:
     ret: dict[str, tuple[object | Type, FieldInfo | None]] = {}
     for name, f in Filter.model_fields.items():
         field_info = deepcopy(f)
@@ -173,12 +168,12 @@ def _list_to_str_fields(Filter: Type[CoreFilter]):
 
 def FilterDepends(Filter: Type[CoreFilter], by_alias: bool = True) -> Any:
     fields = _list_to_str_fields(Filter)
-    GeneratedFilter: Type[CoreFilter] = create_model(
+    GeneratedFilter: Type[CoreFilter] = create_model(  # type: ignore
         Filter.__class__.__name__, **fields
     )
 
-    class FilterWrapper(GeneratedFilter):  # type: ignore[misc,valid-type]
-        def __new__(cls, *args, **kwargs):
+    class FilterWrapper(GeneratedFilter):  # type: ignore
+        def __new__(cls, *args: Any, **kwargs: Any) -> Any:
             try:
                 instance = GeneratedFilter(*args, **kwargs)
                 data = instance.model_dump(

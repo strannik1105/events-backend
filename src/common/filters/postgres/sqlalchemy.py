@@ -1,15 +1,15 @@
 from enum import StrEnum
 from typing import Any, override
 
-from pydantic import FieldValidationInfo, field_validator
+from pydantic import field_validator
+from pydantic_core.core_schema import ValidationInfo
 from sqlalchemy import and_, nullslast, or_
-from sqlalchemy.orm import Query
 from sqlalchemy.sql.selectable import Select
 
 from ..core import CoreFilter
 
 
-def _backward_compatible_value_for_like_and_ilike(value: str):
+def _backward_compatible_value_for_like_and_ilike(value: str) -> str:
     return value if "%" in value else f"%{value}%"
 
 
@@ -49,20 +49,21 @@ class OrderDirection(StrEnum):
 
 class PostgresFilter(CoreFilter):
     @field_validator("*", mode="before")
-    def split_str(cls, value: Any, field: FieldValidationInfo) -> Any:
-        if (
-            field.field_name == cls.FilterConfig.ordering_field_name
-            or field.field_name.endswith("__in")
-            or field.field_name.endswith("__not_in")
-            or field.field_name.endswith("__contains")
-        ) and isinstance(value, str):
-            if not value:
-                return []
-            return list(value.split(","))
+    def split_str(cls, value: Any, field: ValidationInfo) -> Any:
+        if field.field_name:
+            if (
+                field.field_name == cls.FilterConfig.ordering_field_name
+                or field.field_name.endswith("__in")
+                or field.field_name.endswith("__not_in")
+                or field.field_name.endswith("__contains")
+            ) and isinstance(value, str):
+                if not value:
+                    return []
+                return list(value.split(","))
         return value
 
     @override
-    def filter(self, query: Query | Select) -> Query | Select:
+    def filter(self, query: Select) -> Select:
         for field_name, value in self.filtering_fields:
             field_value = getattr(self, field_name)
             if isinstance(field_value, PostgresFilter):
@@ -76,8 +77,7 @@ class PostgresFilter(CoreFilter):
                 else:
                     operator = "__eq__"
 
-                if self.FilterConfig.is_camel_case:
-                    field_name = self.camel_to_snake(field_name)
+                field_name = self.camel_to_snake(field_name)
 
                 for model in self.FilterConfig.models:
                     if not self.reserve_validate(
@@ -120,7 +120,7 @@ class PostgresFilter(CoreFilter):
         return query
 
     @override
-    def sort(self, query: Query | Select) -> Query | Select:
+    def sort(self, query: Select) -> Select:
         if not self.ordering_values:
             return query
 
@@ -130,9 +130,7 @@ class PostgresFilter(CoreFilter):
                 direction = OrderDirection.DESC
 
             field_name = field_name_w_direction.lstrip("-+")
-
-            if self.FilterConfig.is_camel_case:
-                field_name = self.camel_to_snake(field_name)
+            field_name = self.camel_to_snake(field_name)
 
             for model in self.FilterConfig.models:
                 if not self.reserve_validate(
