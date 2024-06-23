@@ -90,9 +90,7 @@ class SecurityService(ISecurityService, CoreService):
     async def get_roles(
         self, filter_params: security_filters.RoleFilter
     ) -> list[security_models.Role]:
-        return await self._repository.role.get_all_by_filter(
-            filter_params=filter_params
-        )
+        return await self._repository.role.get_all(filter_params=filter_params)
 
     async def create_role(
         self, role_in: security_schemas.RoleDTOCreate, with_commit: bool = True
