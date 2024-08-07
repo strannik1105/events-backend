@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master", "ci-cd" ]
+  pull_request:
+    branches: [ "master", "ci-cd" ]
+
+  workflow_dispatch:
+
+jobs:
+  mypy:
+    runs-on: ubuntu-latest
+    name: Mypy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run Mypy
+        uses: jashparekh/mypy-action@v2
+        with:
+          path: '.'
+          python_version: '3.11'
+          requirement_files: 'requirements.txt'
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run command on remote server
+        uses: D3rHase/ssh-command-action@v0.2.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          user: ${{ secrets.SSH_USER }}
+          private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command: |
+            cd ${{ secrets.PROJECT_FOLDER }};
+            git checkout master;
+            git pull;
+            echo "${{ secrets.PROD_ENV }}" >> .env
+            docker-compose --file docker-compose.prod.yaml down;
+            docker-compose --file docker-compose.prod.yaml up -d;
+            docker system prune --all --force;
