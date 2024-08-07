@@ -9,7 +9,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  mypy:
+    runs-on: ubuntu-latest
+    name: Mypy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run Mypy
+        uses: jashparekh/mypy-action@v2
+        with:
+          path: '.'
+          python_version: '3.11'
+          requirement_files: 'requirements.txt'
+
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
