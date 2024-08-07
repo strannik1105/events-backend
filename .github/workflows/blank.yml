@@ -23,6 +23,7 @@ jobs:
             cd ${{ secrets.PROJECT_FOLDER }};
             git checkout main;
             git pull;
+            echo "${{ secrets.PROD_ENV }}" >> .env
             docker-compose --file docker-compose.prod.yaml down;
             docker-compose --file docker-compose.prod.yaml up -d;
             docker system prune --all --force;
