@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from interfaces.repository import IRepository
 from interfaces.services import ICoreService, ICoreServiceUtils
+from interfaces.services.core import ICrudService
 from repository.postgres import PostgresRepository
 
 
@@ -35,3 +36,22 @@ class CoreServiceUtils(ICoreServiceUtils):
                 if is_rollback:
                     await self._pg_db.rollback()
                 raise exists_exception
+
+class CRUDService(ICrudService):
+    def __init__(self, db_session: AsyncSession) -> None:
+        self._db_session
+
+    def get_all(self):
+        
+
+    def get_sid():
+        pass
+
+    def create(obj_instance: PostgresBaseModel):
+        pass
+
+    def update(obj_instance: PostgresBaseModel):
+        pass
+
+    def delete(obj_instance: PostgresBaseModel):
+        pass

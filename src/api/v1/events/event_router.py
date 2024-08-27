@@ -11,6 +11,15 @@ router = APIRouter()
 
 
 @router.get(
+    path=APIPath.GET_EVENTS,
+    response_model=list[event_schemas.Event],
+)
+async def get_events(
+    usecase: deps.UseCase
+):
+    return await usecase.event.get_all()
+
+@router.get(
     path=APIPath.GET_EVENT_TYPES,
     response_model=list[event_schemas.EventType],
 )

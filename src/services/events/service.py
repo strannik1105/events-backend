@@ -13,12 +13,12 @@ from config.settings import settings
 from interfaces.services.events import IEventService, IEventServiceUtils
 from models import events as event_models
 from schemas import events as event_schemas
-from services.core import CoreService
+from services.core import CRUDService, CoreService
 
 from .utils import EventServiceUtils
 
 
-class EventService(IEventService, CoreService):
+class EventService(IEventService, CRUDService, CoreService):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
         self._utils: IEventServiceUtils = EventServiceUtils(pg_db)

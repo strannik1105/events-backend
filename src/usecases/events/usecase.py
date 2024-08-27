@@ -7,8 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from common import enums
 from common import schemas
 from common import schemas as common_schemas
+from common.db.postgres.base import PostgresBaseModel
 from common.security import SecurityRole
 from enums import security as security_enums
+from interfaces.usecases.core import ICrudUseCase
 from interfaces.usecases.events import IEventUseCase, IEventUseCaseUtils
 from models import events as event_models
 from schemas import events as event_schemas
@@ -18,10 +20,16 @@ from usecases.core import CoreUseCase
 from .utils import EventUseCaseUtils
 
 
-class EventUseCase(IEventUseCase, CoreUseCase):
+class EventUseCase(IEventUseCase, ICrudUseCase, CoreUseCase):
     def __init__(self, pg_db: AsyncSession) -> None:
         super().__init__(pg_db)
         self._utils: IEventUseCaseUtils = EventUseCaseUtils(pg_db)
+
+    def get_all(self) -> list[PostgresBaseModel]:
+        await self._service.event.get_all()
+
+    def get_by_sid(self, sid: UUID) -> PostgresBaseModel:
+        pass
 
     async def get_event_files(
         self,
