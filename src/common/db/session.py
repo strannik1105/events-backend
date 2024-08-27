@@ -5,19 +5,22 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from common.config.config import Config
+from common.singleton import Singleton
+
 
 config = Config.get_instance()
 
 
-class PostgresSession:
-    @staticmethod
-    def get_async() -> AsyncSession:
-        session = async_sessionmaker(
+class PostgresSession(Singleton):
+    def __init__(self):
+        self._async_session: AsyncSession = async_sessionmaker(
             autocommit=False,
             autoflush=False,
             bind=create_async_engine(
                 echo=True,
                 url=f"postgresql+asyncpg://{config.POSTGRES_USER}:{config.POSTGRES_PASSWORD}@{config.POSTGRES_HOST}:{config.POSTGRES_PORT}/{config.POSTGRES_DB}",
             ),
-        )
-        return session()
+        )()
+        
+    def get_async(self) -> AsyncSession:
+        return self._session
