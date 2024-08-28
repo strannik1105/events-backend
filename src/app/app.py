@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from common.abstract_api import AbstractApi
+from common.api.abstract_api import AbstractApi
 from common.singleton import Singleton
 
 
