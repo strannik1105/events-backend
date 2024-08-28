@@ -1,12 +1,14 @@
 import uvicorn
 
-from app.app import AppMaker
+from app.app import ApiRegistrator, AppMaker
 from events.api.event import EventApi
 
 
 def main() -> None:
     app = AppMaker().get_instance()()
-    app.include_router(EventApi.get_instance().router)
+
+    ApiRegistrator.register(app, EventApi.get_instance(), "event")
+
     uvicorn.run(app)
 
 
