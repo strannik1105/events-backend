@@ -18,7 +18,7 @@ class CrudRepository(AbstractCrudRepository[T]):
             select(self._model).limit(limit).offset(offset)
         )
         return list(objs.scalars().all())
-    
+
     async def create(self, obj, with_commit=True) -> T:
         self._session.get_async().add(obj)
         if with_commit:

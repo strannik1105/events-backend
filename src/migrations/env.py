@@ -30,6 +30,7 @@ target_metadata = metadata
 
 app_config = Config.get_instance()
 
+
 def _get_url() -> str:
     return UrlMaker.sync_pg_url(
         app_config.POSTGRES_USER,
