@@ -19,7 +19,7 @@ class PostgresSession(Singleton):
             autoflush=False,
             bind=create_async_engine(
                 echo=True,
-                url=UrlMaker.pg_url(
+                url=UrlMaker.async_pg_url(
                     config.POSTGRES_USER,
                     config.POSTGRES_PASSWORD,
                     config.POSTGRES_HOST,
