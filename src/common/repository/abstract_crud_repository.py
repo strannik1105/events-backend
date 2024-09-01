@@ -18,7 +18,7 @@ class AbstractCrudRepository(Generic[T], Protocol):
         pass
 
     # update obj instance
-    def update(obj: T, changes):
+    def update(obj: T, changes, sid):
         pass
 
     # delete obj
