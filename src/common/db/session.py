@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import (
 
 from common.config.config import Config
 from common.singleton import Singleton
+from common.utils.url_maker import UrlMaker
 
 
 config = Config.get_instance()
@@ -18,7 +19,13 @@ class PostgresSession(Singleton):
             autoflush=False,
             bind=create_async_engine(
                 echo=True,
-                url=f"postgresql+asyncpg://{config.POSTGRES_USER}:{config.POSTGRES_PASSWORD}@{config.POSTGRES_HOST}:{config.POSTGRES_PORT}/{config.POSTGRES_DB}",
+                url=UrlMaker.pg_url(
+                    config.POSTGRES_USER,
+                    config.POSTGRES_PASSWORD,
+                    config.POSTGRES_HOST,
+                    config.POSTGRES_PORT,
+                    config.POSTGRES_DB,
+                ),
             ),
         )()
 
