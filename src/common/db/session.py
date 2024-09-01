@@ -21,6 +21,6 @@ class PostgresSession(Singleton):
                 url=f"postgresql+asyncpg://{config.POSTGRES_USER}:{config.POSTGRES_PASSWORD}@{config.POSTGRES_HOST}:{config.POSTGRES_PORT}/{config.POSTGRES_DB}",
             ),
         )()
-        
+
     def get_async(self) -> AsyncSession:
-        return self._session
+        return self._async_session
