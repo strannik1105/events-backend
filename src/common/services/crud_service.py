@@ -11,5 +11,5 @@ class CrudService(AbstractCrudService):
         print(await self._repository.get_all(limit, offset))
         return await self._repository.get_all(limit, offset)
 
-    async def create(self, obj):
-        await self._repository.create(obj)
+    async def create(self, obj) -> SQLAlchemyBaseModel:
+        return await self._repository.create(obj)

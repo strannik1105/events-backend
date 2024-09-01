@@ -19,8 +19,11 @@ class CrudRepository(AbstractCrudRepository[T]):
         )
         return list(objs.scalars().all())
     
-    async def create(self, obj):
+    async def create(self, obj, with_commit=True) -> T:
         self._session.get_async().add(obj)
-        await self._session.get_async().commit()
+        if with_commit:
+            await self._session.get_async().commit()
+        else:
+            await self._session.get_async().flush()
         await self._session.get_async().refresh(obj)
         return obj
