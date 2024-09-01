@@ -41,5 +41,3 @@ class CrudRepository(AbstractCrudRepository[T]):
     async def delete(self, obj):
         await self._session.get_async().delete(obj)
         await self._session.get_async().commit()
-        await self._session.get_async().refresh(obj)
-        return obj
