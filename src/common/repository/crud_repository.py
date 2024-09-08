@@ -1,6 +1,7 @@
 from typing import Type, TypeVar
+from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, update, delete
 
 from common.db.session import PostgresSession
 from common.repository.abstract_crud_repository import AbstractCrudRepository
@@ -19,11 +20,24 @@ class CrudRepository(AbstractCrudRepository[T]):
         )
         return list(objs.scalars().all())
 
-    async def create(self, obj, with_commit=True) -> T:
+    async def get(self, sid: UUID) -> T:
+        obj = await self._session.get_async().execute(
+            select(self._model).where(self._model.c.sid == sid)
+        )
+        return obj.scalar_one_or_none()
+    
+    async def create(self, obj):
         self._session.get_async().add(obj)
-        if with_commit:
-            await self._session.get_async().commit()
-        else:
-            await self._session.get_async().flush()
+        await self._session.get_async().commit()
         await self._session.get_async().refresh(obj)
         return obj
+
+    async def update(self, changes, sid):
+        obj = await self._session.get_async().execute(
+            update(self._model).where(self._model.c.sid == sid).values(changes)
+        )
+        return obj
+
+    async def delete(self, obj):
+        await self._session.get_async().delete(obj)
+        await self._session.get_async().commit()
