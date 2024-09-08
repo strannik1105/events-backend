@@ -1,9 +1,11 @@
 from typing import Any, Callable, Coroutine
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Path
+from fastapi import Body, Path
 
 from common.api.abstract_api import AbstractApi
+from common.enums.http_method import HttpMethod
+from common.router.router import AsyncRouteCallback, Router
 from common.schemas.schemas import BaseSchema
 from common.services.abstract_crud_service import AbstractCrudService
 from events.models.event import EventModel
@@ -17,7 +19,7 @@ class CrudApi(AbstractApi):
         get_schema: BaseSchema = None,
         create_schema: BaseSchema = None,
     ) -> None:
-        self._router = APIRouter()
+        self._router = Router()
         self._servive = service
 
         self._get_schema = get_schema
@@ -26,46 +28,71 @@ class CrudApi(AbstractApi):
         self.register_handlers()
 
     @property
-    def router(self) -> APIRouter:
+    def router(self) -> Router:
         return self._router
 
     def register_handlers(self) -> None:
-        self._get_all()
-        self._get_one()
-        self._create()
+        self._router.register_async_handler(
+            "/get_all",
+            self._get_get_all_callback(),
+            HttpMethod.GET,
+            list[self._get_schema] if self._get_schema is not None else None,
+        )
+        self._router.register_async_handler(
+            "/get_one",
+            self._get_get_one_callback(),
+            HttpMethod.GET,
+            self._get_schema,
+        )
+        self._router.register_async_handler(
+            "/create",
+            self._get_create_callback(),
+            HttpMethod.POST,
+            self._get_schema,
+        )
+        self._router.register_async_handler(
+            "/update",
+            self._get_update_callback(),
+            HttpMethod.PUT,
+            self._get_schema,
+        )
+        self._router.register_async_handler(
+            "/delete",
+            self._get_delete_callback(),
+            HttpMethod.DELETE,
+            self._get_schema,
+        )
 
-    def _get_all(self):
+    def _get_get_all_callback(self) -> AsyncRouteCallback:
         async def callback(limit: int = 100, offset: int = 0):
             return await self._servive.get_all(limit, offset)
 
-        self._router.add_api_route(
-            "/get_all",
-            callback,
-            methods=["GET"],
-            response_model=list[self._get_schema]
-            if self._get_schema is not None
-            else None,
-        )
+        return AsyncRouteCallback(callback)
 
-    def _get_one(self, sid: UUID = Path(...)):
+    def _get_get_one_callback(self, sid: UUID = Path(...)):
         async def callback():
             pass
 
-        self._router.add_api_route("/get/{sid}", callback)
+        return AsyncRouteCallback(callback)
 
-    def _create(self) -> Callable[..., Coroutine[Any, Any, None]]:
+    def _get_create_callback(self) -> AsyncRouteCallback:
         async def callback(obj: self._create_schema = Body(...)):
             return await self._servive.create(EventModel(**dict(obj)))
 
-        self._router.add_api_route(
-            "/create",
-            callback,
-            methods=["POST"],
-            response_model=self._get_schema,
-        )
+        return AsyncRouteCallback(callback)
 
-    def _update(self, sid: UUID = Path(...)):
-        pass
+    def _get_update_callback(
+        self, sid: UUID = Path(...)
+    ) -> AsyncRouteCallback:
+        async def callback(obj: self._create_schema = Body(...)):
+            pass
 
-    def _delete(self, sid: UUID = Path(...)):
-        pass
+        return AsyncRouteCallback(callback)
+
+    def _get_delete_callback(
+        self, sid: UUID = Path(...)
+    ) -> AsyncRouteCallback:
+        async def callback(obj: self._create_schema = Body(...)):
+            pass
+
+        return AsyncRouteCallback(callback)
