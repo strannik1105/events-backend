@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from fastapi import APIRouter
+from common.router.router import Router
 
 
 class AbstractApi(Protocol):
@@ -8,5 +8,5 @@ class AbstractApi(Protocol):
         pass
 
     @property
-    def router(self) -> APIRouter:
+    def router(self) -> Router:
         pass

@@ -14,5 +14,7 @@ class AppMaker(Singleton):
 
 class ApiRegistrator:
     @staticmethod
-    def register(app: FastAPI, api: AbstractApi, url: str):
-        app.include_router(api.router, prefix=f"/{url}", tags=[url])
+    def register(app: FastAPI, api: AbstractApi, url: str) -> None:
+        app.include_router(
+            api.router.fast_api_router, prefix=f"/{url}", tags=[url]
+        )

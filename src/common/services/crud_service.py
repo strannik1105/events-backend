@@ -23,4 +23,3 @@ class CrudService(AbstractCrudService):
 
     async def delete(self, obj):
         await self._repository.delete(obj)
-

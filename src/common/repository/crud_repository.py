@@ -25,7 +25,7 @@ class CrudRepository(AbstractCrudRepository[T]):
             select(self._model).where(self._model.c.sid == sid)
         )
         return obj.scalar_one_or_none()
-    
+
     async def create(self, obj):
         self._session.get_async().add(obj)
         await self._session.get_async().commit()
