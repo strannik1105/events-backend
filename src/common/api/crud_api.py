@@ -1,4 +1,3 @@
-from typing import Any, Callable, Coroutine
 from uuid import UUID
 
 from fastapi import Body, Path
@@ -85,7 +84,7 @@ class CrudApi(AbstractApi):
         self, sid: UUID = Path(...)
     ) -> AsyncRouteCallback:
         async def callback(obj: self._create_schema = Body(...)):
-            pass
+            return await self._servive(sid)
 
         return AsyncRouteCallback(callback)
 
@@ -93,6 +92,6 @@ class CrudApi(AbstractApi):
         self, sid: UUID = Path(...)
     ) -> AsyncRouteCallback:
         async def callback(obj: self._create_schema = Body(...)):
-            pass
+            return await self._servive.delete(sid)
 
         return AsyncRouteCallback(callback)

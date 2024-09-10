@@ -9,3 +9,9 @@ class AbstractCrudService(Protocol):
 
     async def create(self, obj):
         pass
+
+    async def update(self, changes, sid):
+        pass
+
+    async def delete(self, sid):
+        pass
