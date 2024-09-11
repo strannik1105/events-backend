@@ -1,4 +1,4 @@
-from typing import Generic, Protocol, TypeVar
+from typing import Generic, Protocol, TypeVar, Any
 from uuid import UUID
 
 T = TypeVar("T")
@@ -18,7 +18,7 @@ class AbstractCrudRepository(Generic[T], Protocol):
         pass
 
     # update obj instance
-    async def update(self, changes, sid):
+    async def update(self, changes: dict[str, Any], sid: UUID):
         pass
 
     # delete obj
