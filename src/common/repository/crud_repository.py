@@ -1,7 +1,7 @@
-from typing import Type, TypeVar
+from typing import Type, TypeVar, Any
 from uuid import UUID
 
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, update
 
 from common.db.session import PostgresSession
 from common.repository.abstract_crud_repository import AbstractCrudRepository
@@ -32,7 +32,7 @@ class CrudRepository(AbstractCrudRepository[T]):
         await self._session.get_async().refresh(obj)
         return obj
 
-    async def update(self, changes, sid):
+    async def update(self, changes: dict[str, Any], sid: UUID):
         obj = await self._session.get_async().execute(
             update(self._model).where(self._model.c.sid == sid).values(changes)
         )

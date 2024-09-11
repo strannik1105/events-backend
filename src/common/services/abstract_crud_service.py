@@ -4,7 +4,10 @@ from common.db.base import SQLAlchemyBaseModel
 
 
 class AbstractCrudService(Protocol):
-    def get_all(self, limit, offset) -> list[SQLAlchemyBaseModel]:
+    async def get_all(self, limit, offset) -> list[SQLAlchemyBaseModel]:
+        pass
+
+    async def get_one(self, id) -> SQLAlchemyBaseModel:
         pass
 
     async def create(self, obj):

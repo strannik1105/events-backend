@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import Body, Path
+from fastapi import Body, Path, HTTPException
 
 from common.api.abstract_api import AbstractApi
 from common.enums.http_method import HttpMethod
@@ -12,11 +12,11 @@ from events.models.event import EventModel
 
 class CrudApi(AbstractApi):
     def __init__(
-        self,
-        service: AbstractCrudService,
-        *,
-        get_schema: BaseSchema = None,
-        create_schema: BaseSchema = None,
+            self,
+            service: AbstractCrudService,
+            *,
+            get_schema: BaseSchema = None,
+            create_schema: BaseSchema = None,
     ) -> None:
         self._router = Router()
         self._servive = service
@@ -81,17 +81,23 @@ class CrudApi(AbstractApi):
         return AsyncRouteCallback(callback)
 
     def _get_update_callback(
-        self, sid: UUID = Path(...)
+            self, sid: UUID = Path(...)
     ) -> AsyncRouteCallback:
-        async def callback(obj: self._create_schema = Body(...)):
-            return await self._servive(sid)
+        async def callback(obj_changes: self._create_schema = Body(...)):
+            obj = await self._servive.get_one(sid)
+            if obj is None:
+                raise HTTPException(404, detail="Not Found")
+            return await self._servive.update(obj_changes, sid)
 
         return AsyncRouteCallback(callback)
 
     def _get_delete_callback(
-        self, sid: UUID = Path(...)
+            self, sid: UUID = Path(...)
     ) -> AsyncRouteCallback:
         async def callback(obj: self._create_schema = Body(...)):
+            obj = await self._servive.get_one(sid)
+            if obj is None:
+                raise HTTPException(404, detail="Not Found")
             return await self._servive.delete(sid)
 
         return AsyncRouteCallback(callback)

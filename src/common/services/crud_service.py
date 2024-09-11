@@ -1,3 +1,4 @@
+from typing import Any
 from uuid import UUID
 
 from common.db.base import SQLAlchemyBaseModel
@@ -18,7 +19,7 @@ class CrudService(AbstractCrudService):
     async def create(self, obj):
         await self._repository.create(obj)
 
-    async def update(self, obj, changes, sid):
+    async def update(self, obj, changes: dict[str, Any], sid: UUID):
         return await self._repository.update(obj, changes, sid)
 
     async def delete(self, obj):
