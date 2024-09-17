@@ -22,19 +22,20 @@ class CrudRepository(AbstractCrudRepository[T]):
 
     async def get(self, sid: UUID) -> T:
         obj = await self._session.get_async().execute(
-            select(self._model).where(self._model.c.sid == sid)
+            select(self._model).where(self._model.sid == sid)
         )
         return obj.scalar_one_or_none()
 
     async def create(self, obj):
-        self._session.get_async().add(obj)
+        model_obj = self._model(**dict(obj))
+        self._session.get_async().add(model_obj)
         await self._session.get_async().commit()
-        await self._session.get_async().refresh(obj)
-        return obj
+        await self._session.get_async().refresh(model_obj)
+        return model_obj
 
     async def update(self, changes: dict[str, Any], sid: UUID):
         obj = await self._session.get_async().execute(
-            update(self._model).where(self._model.c.sid == sid).values(changes)
+            update(self._model).where(self._model.sid == sid).values(changes)
         )
         return obj
 
