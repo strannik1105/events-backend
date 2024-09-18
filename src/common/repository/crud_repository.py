@@ -27,7 +27,6 @@ class CrudRepository(AbstractCrudRepository[T]):
         return obj.scalar_one_or_none()
 
     async def create(self, obj: dict[str, Any]):
-        print(obj)
         model_obj = self._model(**dict(obj))
         self._session.get_async().add(model_obj)
         await self._session.get_async().commit()
