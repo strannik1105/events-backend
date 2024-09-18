@@ -17,5 +17,5 @@ class AbstractCrudService(Protocol):
     async def update(self, obj: dict[str, Any], changes: dict[str, Any], sid: UUID):
         pass
 
-    async def delete(self, sid: UUID):
+    async def delete(self, obj: dict[str, Any]):
         pass

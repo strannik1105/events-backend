@@ -14,7 +14,7 @@ class AbstractCrudRepository(Generic[T], Protocol):
         pass
 
     # return created obj or None
-    async def create(self, obj: T) -> T | None:
+    async def create(self, obj: T, with_commit: bool = True) -> T | None:
         pass
 
     # update obj instance
