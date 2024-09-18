@@ -11,7 +11,7 @@ class AbstractCrudService(Protocol):
     async def get_one(self, sid: UUID) -> SQLAlchemyBaseModel:
         pass
 
-    async def create(self, obj) -> SQLAlchemyBaseModel:
+    async def create(self, obj: dict[str, Any]) -> SQLAlchemyBaseModel:
         pass
 
     async def update(self, changes: dict[str, Any], sid: UUID):
