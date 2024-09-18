@@ -19,8 +19,8 @@ class CrudService(AbstractCrudService):
     async def create(self, obj):
         await self._repository.create(obj)
 
-    async def update(self, changes: dict[str, Any], sid: UUID):
-        return await self._repository.update(changes, sid)
+    async def update(self, obj, changes: dict[str, Any], sid: UUID):
+        return await self._repository.update(obj, changes, sid)
 
     async def delete(self, obj):
         await self._repository.delete(obj)

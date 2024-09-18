@@ -86,10 +86,8 @@ class CrudApi(AbstractApi):
             obj = await self._service.get_one(sid)
             if obj is None:
                 raise HTTPException(404, detail="Not Found")
-            await self._service.update(dict(obj_changes), sid)
-            res = dict(obj_changes)
-            res["sid"] = sid
-            return self._get_schema(**res)
+            await self._service.update(obj, dict(obj_changes), sid)
+            return obj.__dict__
 
         return AsyncRouteCallback(callback)
 

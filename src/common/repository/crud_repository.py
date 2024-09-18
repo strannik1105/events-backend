@@ -33,7 +33,7 @@ class CrudRepository(AbstractCrudRepository[T]):
         await self._session.get_async().refresh(model_obj)
         return model_obj
 
-    async def update(self, changes: dict[str, Any], sid: UUID):
+    async def update(self, obj, changes: dict[str, Any], sid: UUID):
         obj = await self._session.get_async().execute(
             update(self._model).where(self._model.sid == sid).values(changes)
         )
