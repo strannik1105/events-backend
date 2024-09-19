@@ -62,20 +62,13 @@ services:
 
 
   events-backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-
+    image: strannik1105/events-backend:latest
     restart: always
-
     env_file: .env
-
     ports:
       - "8000:8000"
-
     networks:
       - net
-
     depends_on:
       - postgres
       - redis

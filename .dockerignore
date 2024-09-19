@@ -8,3 +8,6 @@ venv
 Makefile
 changelog.md
 README.md
+
+.vscode
+.devcontainer
