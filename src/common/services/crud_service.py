@@ -10,7 +10,9 @@ class CrudService(AbstractCrudService):
     def __init__(self, repository: AbstractCrudRepository):
         self._repository = repository
 
-    async def get_all(self, limit: int, offset: int) -> list[SQLAlchemyBaseModel]:
+    async def get_all(
+        self, limit: int, offset: int
+    ) -> list[SQLAlchemyBaseModel]:
         return await self._repository.get_all(limit, offset)
 
     async def get_one(self, sid: UUID) -> SQLAlchemyBaseModel:
@@ -19,7 +21,9 @@ class CrudService(AbstractCrudService):
     async def create(self, obj: dict[str, Any]):
         await self._repository.create(obj)
 
-    async def update(self, obj: dict[str, Any], changes: dict[str, Any], sid: UUID):
+    async def update(
+        self, obj: dict[str, Any], changes: dict[str, Any], sid: UUID
+    ):
         return await self._repository.update(obj, changes, sid)
 
     async def delete(self, obj: dict[str, Any]):
