@@ -12,11 +12,11 @@ from events.models.event import EventModel
 
 class CrudApi(AbstractApi):
     def __init__(
-            self,
-            service: AbstractCrudService,
-            *,
-            get_schema: BaseSchema = None,
-            create_schema: BaseSchema = None,
+        self,
+        service: AbstractCrudService,
+        *,
+        get_schema: BaseSchema = None,
+        create_schema: BaseSchema = None,
     ) -> None:
         self._router = Router()
         self._service = service
@@ -82,7 +82,9 @@ class CrudApi(AbstractApi):
         return AsyncRouteCallback(callback)
 
     def _get_update_callback(self) -> AsyncRouteCallback:
-        async def callback(sid: UUID, obj_changes: self._create_schema = Body(...)):
+        async def callback(
+            sid: UUID, obj_changes: self._create_schema = Body(...)
+        ):
             obj = await self._service.get_one(sid)
             if obj is None:
                 raise HTTPException(404, detail="Not Found")

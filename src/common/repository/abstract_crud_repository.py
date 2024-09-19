@@ -18,7 +18,9 @@ class AbstractCrudRepository(Generic[T], Protocol):
         pass
 
     # update obj instance
-    async def update(self, obj: dict[str, Any], changes: dict[str, Any], sid: UUID):
+    async def update(
+        self, obj: dict[str, Any], changes: dict[str, Any], sid: UUID
+    ):
         pass
 
     # delete obj

@@ -26,13 +26,21 @@ class CrudRepository(AbstractCrudRepository[T]):
         )
         return obj.scalar_one_or_none()
 
-    async def create(self, obj: dict[str, Any], with_commit: bool = True) -> T | None:
+    async def create(
+        self, obj: dict[str, Any], with_commit: bool = True
+    ) -> T | None:
         model_obj = self._model(**dict(obj))
         self._session.get_async().add(model_obj)
         await self._commit_or_flush(obj, with_commit)
         return model_obj
 
-    async def update(self, obj: dict[str, Any], changes: dict[str, Any], sid: UUID, with_commit: bool = True):
+    async def update(
+        self,
+        obj: dict[str, Any],
+        changes: dict[str, Any],
+        sid: UUID,
+        with_commit: bool = True,
+    ):
         obj = await self._session.get_async().execute(
             update(self._model).where(self._model.sid == sid).values(changes)
         )
@@ -49,4 +57,3 @@ class CrudRepository(AbstractCrudRepository[T]):
         else:
             await self._session.get_async().flush()
         await self._session.get_async().refresh(obj)
-

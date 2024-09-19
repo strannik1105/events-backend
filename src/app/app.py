@@ -21,7 +21,7 @@ class App(Singleton):
         self._app.include_router(
             api.router.fast_api_router, prefix=f"/{url}", tags=[url]
         )
-        
+
 
 class ApiRegistrator:
     @staticmethod
