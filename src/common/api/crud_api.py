@@ -7,7 +7,6 @@ from common.enums.http_method import HttpMethod
 from common.router.router import AsyncRouteCallback, Router
 from common.schemas.schemas import BaseSchema
 from common.services.abstract_crud_service import AbstractCrudService
-from events.models.event import EventModel
 
 
 class CrudApi(AbstractApi):
@@ -89,7 +88,7 @@ class CrudApi(AbstractApi):
             if obj is None:
                 raise HTTPException(404, detail="Not Found")
             await self._service.update(obj, dict(obj_changes), sid)
-            return obj.__dict__
+            return self._get_schema(**obj.__dict__)
 
         return AsyncRouteCallback(callback)
 
