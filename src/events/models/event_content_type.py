@@ -9,7 +9,7 @@ from common.db.base import SQLAlchemyBaseModel
 class EventContentTypeModel(SQLAlchemyBaseModel):
     __tablename__ = 'event_content_type'
     __table_args__ = {
-        "schema": "event_type",
+        "schema": "event_content_type",
         "extend_existing": True,
     }
 
