@@ -1,6 +1,6 @@
 from common.api.crud_api import CrudApi
 from common.singleton import Singleton
-from events.api.event_schema import EventCreateSchema, EventSchema
+from events.schemas.event import EventSchema, EventCreateSchema
 from events.services.event_service import EventService
 
 
