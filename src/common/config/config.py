@@ -13,3 +13,13 @@ class Config(Singleton, BaseSettings):
     POSTGRES_DB: str = "POSTGRES_DB"
     POSTGRES_HOST: str = "POSTGRES_HOST"
     POSTGRES_PORT: int = 5432
+    
+
+class S3StorageSettings(BaseSettings):
+    endpoint: str | None = 'localhost:9000'
+    bucket_name: str = 'events'
+    access_key: str | None = None
+    secret_key: str | None = None
+    session_token: str | None = None
+    secure: bool = False
+    region: str | None = None

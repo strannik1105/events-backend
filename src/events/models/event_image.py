@@ -1,0 +1,17 @@
+from uuid import uuid4
+
+from sqlalchemy import String, UUID, ForeignKey
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+
+from common.db.base import SQLAlchemyBaseModel
+
+
+class EventImageModel(SQLAlchemyBaseModel): 
+    __tablename__ = 'event_image'
+    __table_args__ = {
+        "schema": "event_image",
+        "extend_existing": True,
+    }
+    
+    sid: Mapped[UUID] = mapped_column(UUID, primary_key=True, default=uuid4)
+    name: Mapped[str] = mapped_column(String, nullable=False)
