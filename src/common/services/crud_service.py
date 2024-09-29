@@ -19,7 +19,8 @@ class CrudService(AbstractCrudService):
         return await self._repository.get(sid)
 
     async def create(self, obj: dict[str, Any]):
-        await self._repository.create(obj)
+        res = await self._repository.create(obj)
+        return res
 
     async def update(
         self, obj: dict[str, Any], changes: dict[str, Any], sid: UUID
