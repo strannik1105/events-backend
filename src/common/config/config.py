@@ -13,3 +13,7 @@ class Config(Singleton, BaseSettings):
     POSTGRES_DB: str = "POSTGRES_DB"
     POSTGRES_HOST: str = "POSTGRES_HOST"
     POSTGRES_PORT: int = 5432
+
+    # TELEGRAM
+    TG_API_TOKEN: str = "7965879569:AAFnoTLPsrMalvsYXCbAXjK7FdIyTrDcVWs"
+    TG_CHANNEL_ID: str = "-1002356469022"
