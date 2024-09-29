@@ -13,6 +13,9 @@ class Config(Singleton, BaseSettings):
     POSTGRES_DB: str = "events"
     POSTGRES_HOST: str = "postgres"
     POSTGRES_PORT: int = 5432
+    # TELEGRAM
+    TG_API_TOKEN: str = "7965879569:AAFnoTLPsrMalvsYXCbAXjK7FdIyTrDcVWs"
+    TG_CHANNEL_ID: str = "-1002356469022"
     
 
 class S3StorageSettings(BaseSettings):
@@ -23,7 +26,3 @@ class S3StorageSettings(BaseSettings):
     session_token: str | None = None
     secure: bool = False
     region: str | None = None
-
-    # TELEGRAM
-    TG_API_TOKEN: str = "7965879569:AAFnoTLPsrMalvsYXCbAXjK7FdIyTrDcVWs"
-    TG_CHANNEL_ID: str = "-1002356469022"
