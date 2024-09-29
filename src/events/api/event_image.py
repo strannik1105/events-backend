@@ -31,9 +31,7 @@ class EventImageApi(CrudApi, Singleton):
                file=image.file,
                size=image.size
             )
-           # self._service.create({'name': image.filename})
+           await self._service.create({'name': image.filename})
            return ImageDescr(name=image.filename, size=image.size)
-        return AsyncRouteCallback(callback)
-        
-        
+        return AsyncRouteCallback(callback)      
         

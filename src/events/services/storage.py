@@ -4,14 +4,18 @@ import urllib3
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import AsyncGenerator, BinaryIO
+from typing import Any, AsyncGenerator, BinaryIO
 
 import imgspy
 from minio import Minio
 from miniopy_async import S3Error
 
 from common.config.config import S3StorageSettings
+from common.db.session import PostgresSession
+from common.services.crud_service import CrudService
 from common.singleton import Singleton
+from events.models.event_image import EventImageModel
+from events.repository.event_image import EventImageRepository
 
 
 _filename_ascii_strip_re = re.compile(r"[^A-Za-z0-9_.-]")
@@ -46,10 +50,11 @@ class ImageDescr(ImageInfo):
     created_at: datetime
 
 
-class S3ImageStorage(Singleton):
+class S3ImageStorage(CrudService, Singleton):
     base_image_url = '/media/'
 
     def __init__(self):
+        super().__init__(EventImageRepository.get_instance())
         self.client = Minio(**(S3StorageSettings().model_dump(exclude={'bucket_name'})))
         self.bucket_name = S3StorageSettings().bucket_name
 
@@ -108,3 +113,4 @@ class S3ImageStorage(Singleton):
     async def create_new_id(self, filename: str) -> str:
         identity = secure_filename(filename)
         return identity
+    
