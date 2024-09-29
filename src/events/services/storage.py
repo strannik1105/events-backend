@@ -69,7 +69,7 @@ class S3ImageStorage(CrudService, Singleton):
 
     async def get(self, image_id: str) -> ImageDescr:
         try:
-            return self._create_image_descr(await self.client.stat_object(self.bucket_name, image_id))
+            return self.client.get_object(self.bucket_name, image_id)
         except S3Error as e:
             if e.code == 'NoSuchKey':
                 raise f'Image {image_id} not found in storage'

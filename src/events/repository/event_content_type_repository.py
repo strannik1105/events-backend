@@ -4,6 +4,6 @@ from common.singleton import Singleton
 from events.models.event_content_type import EventContentTypeModel
 
 
-class EventTypeTypeRepository(CrudRepository, Singleton):
+class EventContentTypeRepository(CrudRepository, Singleton):
     def __init__(self) -> None:
         super().__init__(PostgresSession.get_instance(), EventContentTypeModel)
