@@ -2,9 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ "master", "ci-cd", "feature/dockerhub-in-ci-cd" ]
-  pull_request:
-    branches: [ "master", "ci-cd", "feature/dockerhub-in-ci-cd" ]
+    branches: [ "master"]
 
   workflow_dispatch:
 
@@ -41,5 +39,6 @@ jobs:
             git pull;
             echo "${{ secrets.PROD_ENV }}" > .env
             docker-compose --file docker-compose.prod.yaml down;
+            docker image rm strannik1105/events-backend strannik1105/events-backend --force
             docker-compose --file docker-compose.prod.yaml up -d;
             docker system prune --all --force;
