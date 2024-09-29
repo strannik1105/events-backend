@@ -1,8 +1,8 @@
 """Added event table
 
-Revision ID: 9dc95c86b110
-Revises: 
-Create Date: 2024-09-27 20:09:42.690947
+Revision ID: ff27ddeb027c
+Revises: 6a1345c9a46b
+Create Date: 2024-09-29 12:47:24.366701
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9dc95c86b110'
-down_revision = None
+revision = 'ff27ddeb027c'
+down_revision = '6a1345c9a46b'
 branch_labels = None
 depends_on = None
 
@@ -22,6 +22,11 @@ def upgrade() -> None:
     op.create_table('event',
     sa.Column('sid', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
+    sa.Column('description', sa.String(), nullable=False),
+    sa.Column('event_type_sid', sa.UUID(), nullable=True),
+    sa.Column('event_image_sid', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['event_image_sid'], ['event_image.event_image.sid'], ),
+    sa.ForeignKeyConstraint(['event_type_sid'], ['event_type.event_type.sid'], ),
     sa.PrimaryKeyConstraint('sid'),
     schema='events'
     )
