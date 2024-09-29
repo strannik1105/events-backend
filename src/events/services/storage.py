@@ -52,11 +52,13 @@ class ImageDescr(ImageInfo):
 
 class S3ImageStorage(CrudService, Singleton):
     base_image_url = '/media/'
+    settings = S3StorageSettings()
 
     def __init__(self):
         super().__init__(EventImageRepository.get_instance())
-        self.client = Minio(**(S3StorageSettings().model_dump(exclude={'bucket_name'})))
-        self.bucket_name = S3StorageSettings().bucket_name
+        self.client = Minio(endpoint=self.settings.endpoint, access_key=self.settings.access_key,
+                            secret_key=self.settings.secret_key, secure=False)
+        self.bucket_name = self.settings.bucket_name
 
     async def list(self,
                    prefix: str | None = None,
