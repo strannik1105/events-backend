@@ -1,19 +1,26 @@
-from fastapi import UploadFile, Depends
+from typing import Optional
+from uuid import UUID
+import base64
 
 from common.api.crud_api import CrudApi
 from common.router.router import AsyncRouteCallback
 from common.singleton import Singleton
 from events.services.storage import S3ImageStorage
 
-from dataclasses import dataclass
+from pydantic import BaseModel
+from fastapi import UploadFile, Depends, Path
 
 
-
-@dataclass(frozen=True)
-class ImageDescr:
+class ImageDescr(BaseModel):
+    sid: Optional[UUID]
+    name: str
+    image: str
+    
+    
+class ImageCreate(BaseModel):
+    sid: Optional[UUID]
     name: str
     size: int
-
     
     
 class EventImageApi(CrudApi, Singleton):
@@ -21,7 +28,7 @@ class EventImageApi(CrudApi, Singleton):
         super().__init__(
             S3ImageStorage.get_instance(),
             get_schema=ImageDescr,
-            create_schema=ImageDescr,
+            create_schema=ImageCreate,
         )
         
     def _get_create_callback(self) -> AsyncRouteCallback:
@@ -33,5 +40,17 @@ class EventImageApi(CrudApi, Singleton):
             )
            await self._service.create({'name': image.filename})
            return ImageDescr(name=image.filename, size=image.size)
-        return AsyncRouteCallback(callback)      
+        return AsyncRouteCallback(callback)   
+    
+    def _get_get_one_callback(self):
+        async def callback(sid: UUID, storage: S3ImageStorage=Depends(S3ImageStorage)):
+            res = await self._service.get_one(sid)
+            obj = res.__dict__
+            del obj['_sa_instance_state']
+            name = obj['name']
+            a = await storage.get(name)
+            encoded_data = base64.b64encode(a.data)
+            obj['image'] = encoded_data
+            return obj
+        return AsyncRouteCallback(callback)
         
