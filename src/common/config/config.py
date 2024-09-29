@@ -8,10 +8,10 @@ class Config(Singleton, BaseSettings):
     PORT: int = 8000
 
     # POSTGRES
-    POSTGRES_USER: str = "POSTGRES_USER"
-    POSTGRES_PASSWORD: str = "POSTGRES_PASSWORD"
-    POSTGRES_DB: str = "POSTGRES_DB"
-    POSTGRES_HOST: str = "POSTGRES_HOST"
+    POSTGRES_USER: str = "events"
+    POSTGRES_PASSWORD: str = "password"
+    POSTGRES_DB: str = "events"
+    POSTGRES_HOST: str = "postgres"
     POSTGRES_PORT: int = 5432
     
 
@@ -23,3 +23,7 @@ class S3StorageSettings(BaseSettings):
     session_token: str | None = None
     secure: bool = False
     region: str | None = None
+
+    # TELEGRAM
+    TG_API_TOKEN: str = "7965879569:AAFnoTLPsrMalvsYXCbAXjK7FdIyTrDcVWs"
+    TG_CHANNEL_ID: str = "-1002356469022"
