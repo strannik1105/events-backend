@@ -18,7 +18,6 @@ class ImageDescr(BaseModel):
     
     
 class ImageCreate(BaseModel):
-    sid: Optional[UUID]
     name: str
     size: int
     
@@ -38,8 +37,8 @@ class EventImageApi(CrudApi, Singleton):
                file=image.file,
                size=image.size
             )
-           await self._service.create({'name': image.filename})
-           return ImageDescr(name=image.filename, size=image.size)
+           a = await self._service.create({'name': image.filename})
+           return {'name': image.filename, "size": image.size}
         return AsyncRouteCallback(callback)   
     
     def _get_get_one_callback(self):
