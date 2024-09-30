@@ -4,6 +4,7 @@ import uvicorn
 from common.api.abstract_api import AbstractApi
 from common.config.config import Config
 from common.singleton import Singleton
+from starlette.middleware.cors import CORSMiddleware
 
 
 class App(Singleton):
@@ -15,6 +16,13 @@ class App(Singleton):
         self._port = config.PORT
 
     def run(self):
+        self._app.add_middleware(
+            CORSMiddleware,
+            allow_origins=['*'],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
         uvicorn.run(self._app, host=self._host, port=self._port)
 
     def register_route(self, api: AbstractApi, url):
