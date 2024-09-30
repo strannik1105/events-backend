@@ -52,7 +52,7 @@ def upgrade() -> None:
     schema='event_content'
     )
     op.execute("CREATE SCHEMA events")
-    op.create_table('events',
+    op.create_table('event',
     sa.Column('sid', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=False),

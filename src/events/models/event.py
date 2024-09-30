@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from sqlalchemy import String, UUID, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from common.db.base import SQLAlchemyBaseModel
 from events.models.event_image import EventImageModel
@@ -21,9 +21,9 @@ class EventModel(SQLAlchemyBaseModel):
     event_type_sid = mapped_column(ForeignKey(EventTypeModel.sid))
     event_image_sid = mapped_column(ForeignKey(EventImageModel.sid))
     
-    event_type = relationship(
-        EventTypeModel, foreign_keys=[event_type_sid], lazy='joined'
-    )
-    event_image = relationship(
-        EventImageModel, foreign_keys=[event_image_sid], lazy='joined'
-    )
+    # event_type = relationship(
+    #     EventTypeModel, foreign_keys=[event_type_sid], lazy='joined'
+    # )
+    # event_image = relationship(
+    #     EventImageModel, foreign_keys=[event_image_sid], lazy='joined'
+    # )
