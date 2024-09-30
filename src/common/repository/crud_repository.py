@@ -55,5 +55,4 @@ class CrudRepository(AbstractCrudRepository[T]):
             await self._session.get_async().commit()
         else:
             await self._session.get_async().flush()
-        print("zzzz", obj)
         await self._session.get_async().refresh(obj)
