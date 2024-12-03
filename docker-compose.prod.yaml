@@ -11,7 +11,7 @@ networks:
 
 services:
   postgres:
-    container_name: postgres-events-prod
+    container_name: postgres
     image: postgres:15
     restart: always
     env_file: .env

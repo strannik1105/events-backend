@@ -19,6 +19,6 @@ class EventContentModel(SQLAlchemyBaseModel):
     description: Mapped[str] = mapped_column(String, nullable=False)
     event_content_type_sid = mapped_column(ForeignKey(EventContentTypeModel.sid))
     
-    event_type = relationship(
-        EventContentTypeModel, foreign_keys=[event_content_type_sid], lazy='joined'
-    )
+    # event_type = relationship(
+    #     EventContentTypeModel, foreign_keys=[event_content_type_sid], lazy='joined'
+    # )

@@ -37,8 +37,6 @@ jobs:
             cd ${{ secrets.PROJECT_FOLDER }};
             git checkout master;
             git pull;
-            echo "${{ secrets.PROD_ENV }}" > .env
-            docker-compose --file docker-compose.prod.yaml down;
-            docker image rm strannik1105/events-backend strannik1105/events-backend --force
-            docker-compose --file docker-compose.prod.yaml up -d;
+            docker image rm strannik1105/events-backend strannik1105/events-backend --force;
+            docker compose -f /opt/events-backend/docker-compose.prod.yaml up -d --build;
             docker system prune --all --force;
