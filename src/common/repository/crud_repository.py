@@ -51,8 +51,11 @@ class CrudRepository(AbstractCrudRepository[T]):
         await self._session.get_async().delete(obj)
 
     async def _commit_or_flush(self, obj: dict[str, Any], with_commit: bool):
-        if with_commit:
-            await self._session.get_async().commit()
-        else:
-            await self._session.get_async().flush()
-        await self._session.get_async().refresh(obj)
+        try:
+            if with_commit:
+                await self._session.get_async().commit()
+            else:
+                await self._session.get_async().flush()
+            await self._session.get_async().refresh(obj)
+        except:
+            self._session.get_async().rollback()
