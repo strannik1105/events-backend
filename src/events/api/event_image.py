@@ -18,6 +18,7 @@ class ImageDescr(BaseModel):
     
     
 class ImageCreate(BaseModel):
+    sid: Optional[UUID]
     name: str
     size: int
     
@@ -38,7 +39,8 @@ class EventImageApi(CrudApi, Singleton):
                size=image.size
             )
            a = await self._service.create({'name': image.filename})
-           return {'name': image.filename, "size": image.size}
+           img_sid = a.__dict__['sid']
+           return {'name': image.filename, "size": image.size, "sid": img_sid}
         return AsyncRouteCallback(callback)   
     
     def _get_get_one_callback(self):
