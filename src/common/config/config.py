@@ -19,7 +19,7 @@ class Config(Singleton, BaseSettings):
     
 
 class S3StorageSettings(BaseSettings):
-    endpoint: str | None = 'localhost:9000'
+    endpoint: str | None = 'minio:9000'
     bucket_name: str = 'events'
     access_key: str | None = None
     secret_key: str | None = None
