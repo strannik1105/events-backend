@@ -1,58 +1,18 @@
 import os.path
-import re
-import urllib3
-from dataclasses import dataclass
-from datetime import datetime
-from pathlib import Path
-from typing import Any, AsyncGenerator, BinaryIO
+from typing import AsyncGenerator, BinaryIO
 
 import imgspy
 from minio import Minio
 from miniopy_async import S3Error
 
 from common.config.config import S3StorageSettings
-from common.db.session import PostgresSession
-from common.services.crud_service import CrudService
+from common.services.abstract_service import AbstractService
+from common.services.image_service import ImageUtils
 from common.singleton import Singleton
-from events.models.event_image import EventImageModel
 from events.repository.event_image import EventImageRepository
 
 
-_filename_ascii_strip_re = re.compile(r"[^A-Za-z0-9_.-]")
-
-
-def secure_filename(filename: str) -> str:
-    """
-    From Werkzeug secure_filename.
-    """
-
-    for sep in os.path.sep, os.path.altsep:
-        if sep:
-            filename = filename.replace(sep, " ")
-
-    normalized_filename = _filename_ascii_strip_re.sub(
-        "", "_".join(filename.split())
-    )
-    filename = str(normalized_filename).strip("._")
-    return filename
-
-
-@dataclass(frozen=True)
-class ImageInfo:
-    content_type: str
-    width: int
-    height: int
-
-
-@dataclass(frozen=True)
-class ImageDescr(ImageInfo):
-    name: str
-    url: str
-    size: int
-    created_at: datetime
-
-
-class S3ImageStorage(CrudService, Singleton):
+class S3ImageStorage(AbstractService, Singleton):
     base_image_url = "/media/"
     settings = S3StorageSettings()
 
@@ -68,7 +28,7 @@ class S3ImageStorage(CrudService, Singleton):
 
     async def list(
         self, prefix: str | None = None, start_after: str | None = None
-    ) -> AsyncGenerator[ImageDescr, None]:
+    ) -> AsyncGenerator[ImageUtils.ImageDescr, None]:
         for obj in await self.client.list_objects(
             self.bucket_name,
             prefix=prefix,
@@ -77,16 +37,16 @@ class S3ImageStorage(CrudService, Singleton):
         ):
             yield self._create_image_descr(obj)
 
-    async def get(self, image_id: str) -> ImageDescr:
+    async def get(self, image_id: str) -> ImageUtils.ImageDescr:
         try:
             return self.client.get_object(self.bucket_name, image_id)
         except S3Error as e:
             if e.code == "NoSuchKey":
-                raise f"Image {image_id} not found in storage"
+                raise f"Image {image_id} not found in storage" from e
             raise
 
-    def _create_image_descr(self, obj) -> ImageDescr:
-        return ImageDescr(
+    def _create_image_descr(self, obj) -> ImageUtils.ImageDescr:
+        return ImageUtils.ImageDescr(
             name=obj.object_name,
             content_type=obj.metadata["content-type"],
             width=int(obj.metadata["X-Amz-Meta-Width"]),
@@ -121,16 +81,16 @@ class S3ImageStorage(CrudService, Singleton):
         return size
 
     @staticmethod
-    def _get_image_info(file: BinaryIO) -> ImageInfo:
+    def _get_image_info(file: BinaryIO) -> ImageUtils.ImageInfo:
         info = imgspy.info(file)
         file.seek(0, os.SEEK_SET)
         type = {"jpg": "jpeg"}.get(info["type"], info["type"])
-        return ImageInfo(
+        return ImageUtils.ImageInfo(
             content_type=f"image/{type}",
             width=info["width"],
             height=info["height"],
         )
 
     async def create_new_id(self, filename: str) -> str:
-        identity = secure_filename(filename)
+        identity = ImageUtils.secure_filename(filename)
         return identity

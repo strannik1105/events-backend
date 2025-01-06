@@ -1,29 +1,16 @@
-from typing import Optional
 from uuid import UUID
 import base64
 
-from common.api.crud_api import CrudApi
+from common.api.abstract_api import AbstractApi
 from common.router.router import AsyncRouteCallback
 from common.singleton import Singleton
+from events.schemas import ImageDescr, ImageCreate
 from events.services.storage import S3ImageStorage
 
-from pydantic import BaseModel
-from fastapi import UploadFile, Depends, Path
+from fastapi import UploadFile, Depends
 
 
-class ImageDescr(BaseModel):
-    sid: Optional[UUID]
-    name: str
-    image: str
-
-
-class ImageCreate(BaseModel):
-    sid: Optional[UUID]
-    name: str
-    size: int
-
-
-class EventImageApi(CrudApi, Singleton):
+class EventImageApi(AbstractApi, Singleton):
     def __init__(self) -> None:
         super().__init__(
             S3ImageStorage.get_instance(),
