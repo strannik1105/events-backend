@@ -7,7 +7,7 @@ from common.db.base import SQLAlchemyBaseModel
 
 
 class EventTypeModel(SQLAlchemyBaseModel):
-    __tablename__ = 'event_type'
+    __tablename__ = "event_type"
     __table_args__ = {
         "schema": "event_type",
         "extend_existing": True,

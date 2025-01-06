@@ -15,16 +15,22 @@ class TgApi(AbstractApi, Singleton):
         self.register_handlers()
 
     def register_handlers(self) -> None:
-        self._router.register_async_handler("publish", self._get_publish_message_callback(), HttpMethod.POST)
-    
+        self._router.register_async_handler(
+            "publish", self._get_publish_message_callback(), HttpMethod.POST
+        )
+
     @property
     def router(self) -> Router:
         return self._router
 
     def _get_publish_message_callback(self) -> AsyncRouteCallback:
-        async def callback(image: Annotated[bytes, File()], title: str = Body(...), description: str = Body(...)) -> None:
+        async def callback(
+            image: Annotated[bytes, File()],
+            title: str = Body(...),
+            description: str = Body(...),
+        ) -> None:
             client = TelegramClient()
             await client.publish_message(image, title, description)
             return {}
-        
+
         return AsyncRouteCallback(callback)

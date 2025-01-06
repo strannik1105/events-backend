@@ -16,11 +16,11 @@ class Config(Singleton, BaseSettings):
     # TELEGRAM
     TG_API_TOKEN: str = "7965879569:AAFnoTLPsrMalvsYXCbAXjK7FdIyTrDcVWs"
     TG_CHANNEL_ID: str = "-1002356469022"
-    
+
 
 class S3StorageSettings(BaseSettings):
-    endpoint: str | None = 'minio:9000'
-    bucket_name: str = 'events'
+    endpoint: str | None = "minio:9000"
+    bucket_name: str = "events"
     access_key: str | None = None
     secret_key: str | None = None
     session_token: str | None = None

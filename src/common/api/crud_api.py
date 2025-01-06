@@ -70,7 +70,7 @@ class CrudApi(AbstractApi):
     def _get_get_one_callback(self) -> AsyncRouteCallback:
         async def callback(sid: UUID):
             return self._get_schema(await self._service.get_one(sid))
-        
+
         return AsyncRouteCallback(callback)
 
     def _get_create_callback(self) -> AsyncRouteCallback:
