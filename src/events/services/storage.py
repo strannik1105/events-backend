@@ -1,5 +1,5 @@
 import os.path
-from typing import AsyncGenerator, BinaryIO
+from typing import BinaryIO
 
 import imgspy
 from minio import Minio
@@ -26,17 +26,6 @@ class S3ImageStorage(AbstractService, Singleton):
         )
         self.bucket_name = self.settings.bucket_name
 
-    async def list(
-        self, prefix: str | None = None, start_after: str | None = None
-    ) -> AsyncGenerator[ImageUtils.ImageDescr, None]:
-        for obj in await self.client.list_objects(
-            self.bucket_name,
-            prefix=prefix,
-            start_after=start_after,
-            include_user_meta=True,
-        ):
-            yield self._create_image_descr(obj)
-
     async def get(self, image_id: str) -> ImageUtils.ImageDescr:
         try:
             return self.client.get_object(self.bucket_name, image_id)
@@ -44,17 +33,6 @@ class S3ImageStorage(AbstractService, Singleton):
             if e.code == "NoSuchKey":
                 raise f"Image {image_id} not found in storage" from e
             raise
-
-    def _create_image_descr(self, obj) -> ImageUtils.ImageDescr:
-        return ImageUtils.ImageDescr(
-            name=obj.object_name,
-            content_type=obj.metadata["content-type"],
-            width=int(obj.metadata["X-Amz-Meta-Width"]),
-            height=int(obj.metadata["X-Amz-Meta-Height"]),
-            url=f"{self.base_image_url}{self.bucket_name}/{obj.object_name}",
-            size=obj.size,
-            created_at=obj.last_modified,
-        )
 
     async def upload(
         self, filename: str, file: BinaryIO, size: int | None = None
