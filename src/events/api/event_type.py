@@ -1,6 +1,9 @@
 from common.api.crud_api import CrudApi
 from common.singleton import Singleton
-from events.schemas.event_type import EventTypeBaseSchema, EventTypeCreateSchema
+from events.schemas.event_type import (
+    EventTypeBaseSchema,
+    EventTypeCreateSchema,
+)
 from events.services.event_type_service import EventTypeService
 
 
@@ -9,5 +12,5 @@ class EventTypeApi(CrudApi, Singleton):
         super().__init__(
             EventTypeService.get_instance(),
             get_schema=EventTypeBaseSchema,
-            create_schema=EventTypeCreateSchema
+            create_schema=EventTypeCreateSchema,
         )

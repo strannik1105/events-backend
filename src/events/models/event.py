@@ -20,7 +20,7 @@ class EventModel(SQLAlchemyBaseModel):
     description: Mapped[str] = mapped_column(String, nullable=False)
     event_type_sid = mapped_column(ForeignKey(EventTypeModel.sid))
     event_image_sid = mapped_column(ForeignKey(EventImageModel.sid))
-    
+
     # event_type = relationship(
     #     EventTypeModel, foreign_keys=[event_type_sid], lazy='joined'
     # )

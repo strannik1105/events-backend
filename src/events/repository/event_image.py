@@ -7,4 +7,3 @@ from events.models.event_image import EventImageModel
 class EventImageRepository(CrudRepository, Singleton):
     def __init__(self) -> None:
         super().__init__(PostgresSession.get_instance(), EventImageModel)
-        
