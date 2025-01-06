@@ -1,7 +1,4 @@
-import os.path
 from typing import BinaryIO
-
-import imgspy
 from minio import Minio
 from miniopy_async import S3Error
 
@@ -37,10 +34,10 @@ class S3ImageStorage(AbstractService, Singleton):
     async def upload(
         self, filename: str, file: BinaryIO, size: int | None = None
     ) -> str:
-        identity = await self.create_new_id(filename)
+        identity = await ImageUtils.create_new_id(filename)
         if not size:
-            size = self._get_file_size(file)
-        img_info = self._get_image_info(file)
+            size = ImageUtils._get_file_size(file)
+        img_info = ImageUtils._get_image_info(file)
         self.client.put_object(
             bucket_name=self.bucket_name,
             object_name=identity,
@@ -49,26 +46,4 @@ class S3ImageStorage(AbstractService, Singleton):
             content_type=img_info.content_type,
             metadata={"height": img_info.height, "width": img_info.width},
         )
-        return identity
-
-    @staticmethod
-    def _get_file_size(file: BinaryIO) -> int:
-        file.seek(0, os.SEEK_END)
-        size = file.tell()
-        file.seek(0, os.SEEK_SET)
-        return size
-
-    @staticmethod
-    def _get_image_info(file: BinaryIO) -> ImageUtils.ImageInfo:
-        info = imgspy.info(file)
-        file.seek(0, os.SEEK_SET)
-        type = {"jpg": "jpeg"}.get(info["type"], info["type"])
-        return ImageUtils.ImageInfo(
-            content_type=f"image/{type}",
-            width=info["width"],
-            height=info["height"],
-        )
-
-    async def create_new_id(self, filename: str) -> str:
-        identity = ImageUtils.secure_filename(filename)
         return identity
